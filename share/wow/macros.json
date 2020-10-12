@@ -1,0 +1,481 @@
+[
+    {
+        "characterClass": "General",
+        "macros": [
+            {
+                "name": "Battle Standard",
+                "macro": "#showtooltip<br />/cast [mod:alt] Horde Battle Standard; [mod:ctrl] Frostwolf Battle Standard; Standard of Unity"
+            },
+            {
+                "name": "Belt",
+                "macro": "#showtooltip<br />/use 6"
+            },
+            {
+                "name": "Boots",
+                "macro": "#showtooltip<br />/use 8"
+            },
+            {
+                "name": "Cloak",
+                "macro": "#showtooltip<br />/use 15"
+            },
+            {
+                "name": "Gloves",
+                "macro": "#showtooltip<br />/use 10"
+            },
+            {
+                "name": "Trinket 13",
+                "macro": "#showtooltip<br />/stopcasting<br />/use 13"
+            },
+            {
+                "name": "Trinket 14",
+                "macro": "#showtooltip<br />/stopcasting<br />/use 14"
+            },
+            {
+                "name": "Cancel BoP",
+                "macro": "#showtooltip Hand of Protection<br />/cancelaura Ice Block<br />/cancelaura Hand of Protection"
+            },
+            {
+                "name": "Quaking Palm",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Quaking Palm; Quaking Palm"
+            }
+        ]
+    },
+    {
+        "characterClass": "Death Knight",
+        "macros": [
+            {
+                "name": "Parry (Swordshatter)",
+                "macro": "/run d=GetDodgeChance() n=3.22 b=5.01 if UnitRace(\"player\")==\"Gnome\" then n=n-.01 end if UnitRace(\"player\")==\"Night Elf\" then b=b+2 end p=235.5*d/90.6425-((235.5/90.6425)*b-n)+4 DEFAULT_CHAT_FRAME:AddMessage(\"Ideal parry: \"..string.format(\"%%.2f\",p))"
+            },
+            {
+                "name": "Focus Asphyxiate",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Asphyxiate; Asphyxiate"
+            },
+            {
+                "name": "Focus Chains of Ice",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Chains of Ice; Chains of Ice"
+            },
+            {
+                "name": "Claw",
+                "macro": "#showtooltip Claw<br />/petautocasttoggle Claw"
+            },
+            {
+                "name": "Conversion",
+                "macro": "#showtooltip<br />/cast !Conversion"
+            },
+            {
+                "name": "Focus Dark Simulacrum",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Dark Simulacrum; Dark Simulacrum"
+            },
+            {
+                "name": "Death Coil (Unholy)",
+                "macro": "#showtooltip<br />/cast [mod:alt, @pet] Death Coil; Death Coil"
+            },
+            {
+                "name": "Focus Death Grip",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Death Grip; Death Grip"
+            },
+            {
+                "name": "Gargoyle (Unholy)",
+                "macro": "#showtooltip Summon Gargoyle<br />/use 13<br />/cast Lifeblood<br />/cast Summon Gargoyle"
+            },
+            {
+                "name": "Focus Gnaw",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Gnaw; Gnaw"
+            },
+            {
+                "name": "Icebound Fortitude",
+                "macro": "#showtooltip<br />/use Healthstone<br />/cast Icebound Fortitude"
+            },
+            {
+                "name": "Focus Leap",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Leap; Leap"
+            },
+            {
+                "name": "Focus Mind Freeze",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Mind Freeze; Mind Freeze"
+            },
+            {
+                "name": "Oh Shit (Blood)",
+                "macro": "#showtooltip Dancing Rune Weapon<br />/use 13<br />/use Healthstone<br />/cast Lifeblood<br />/cast Dancing Rune Weapon"
+            },
+            {
+                "name": "Summon Pet (Unholy - for blood/frost use death pact macro)",
+                "macro": "#showtooltip<br />/cast [nopet] Raise Dead; Death Pact"
+            },
+            {
+                "name": "Pillar of Frost",
+                "macro": "#showtooltip Pillar of Frost<br />/use 13<br />/cast Lifeblood<br />/cast Pillar of Frost"
+            },
+            {
+                "name": "Presence Dance (Frost)",
+                "macro": "#showtooltip<br />/cast [stance:1/3] Frost Presence; Blood Presence"
+            },
+            {
+                "name": "Presence Dance (Unholy)",
+                "macro": "#showtooltip<br />/cast [stance:1/2] Unholy Presence; Blood Presence"
+            },
+            {
+                "name": "Focus Strangulate",
+                "macro": "#showtooltip Strangulate<br />/stopcasting<br />/cast Blood Tap<br />/cast [mod:alt, @focus] Strangulate; Strangulate"
+            }
+        ]
+    },
+    {
+        "characterClass": "Druid",
+        "macros": [
+            {
+                "name": "Barkskin (Resto)",
+                "macro": "#showtooltip Barkskin<br />/use 13<br />/cast Barkskin"
+            },
+            {
+                "name": "Cancel Shapeshift",
+                "macro": "/stopcasting<br />/cast [nostance:1/2, nomod] Cat Form; [mod:ctrl] Bear Form; [mod:alt] !Cat Form<br />/cancelform [nostance:0]"
+            },
+            {
+                "name": "Celestial Alignment",
+                "macro": "#showtooltip Celestial Alignment<br />/use 13<br />/cast Nature's Vigil<br />/cast Celestial Alignment"
+            },
+            {
+                "name": "Focus Cyclone",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Cyclone; Cyclone"
+            },
+            {
+                "name": "Instant Cyclone",
+                "macro": "#showtooltip Cyclone<br />/stopcasting<br />/cast Nature's Swiftness<br />/cast [mod:alt, @focus] Cyclone; Cyclone"
+            },
+            {
+                "name": "Focus Entangling Roots",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Entangling Roots; Entangling Roots"
+            },
+            {
+                "name": "Focus Faerie Fire",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Faerie Fire; Faerie Fire"
+            },
+            {
+                "name": "Focus Mighty Bash",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Mighty Bash; Mighty Bash"
+            },
+            {
+                "name": "Nature's Swiftness",
+                "macro": "#showtooltip Nature's Swiftness<br />/stopcasting<br />/cast Nature's Swiftness"
+            },
+            {
+                "name": "Focus Solar Beam",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Solar Beam; Solar Beam"
+            },
+            {
+                "name": "Focus Skull Bash",
+                "macro": "#showtooltip Skull Bash<br />/stopcasting<br />/cast [nostance:1, nostance:2] Cat Form<br />/cast [mod:alt, @focus] Skull Bash; Skull Bash"
+            },
+            {
+                "name": "Nascar",
+                "macro": "#showtooltip<br />/cast [mod:alt] Stampeding Roar; Dash"
+            },
+            {
+                "name": "Focus Soothe",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Soothe; Soothe"
+            },
+            {
+                "name": "Swifty",
+                "macro": "#showtooltip Berserk<br />/use 13<br />/cast Incarnation: King of the Jungle<br />/cast Berserk"
+            },
+            {
+                "name": "Travel Form",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast !Travel Form"
+            },
+            {
+                "name": "Tree of Life",
+                "macro": "#showtooltip Incarnation: Tree of Life<br />/stopcasting<br />/cast Nature's Vigil<br />/cast Incarnation: Tree of Life"
+            },
+            {
+                "name": "Wild Charge",
+                "macro": "#showtooltip<br />/cancelform [mod:alt]<br />/cast [mod:alt, @Kriek] Wild Charge; Wild Charge"
+            }
+        ]
+    },
+    {
+        "characterClass": "Hunter",
+        "macros": [
+            {
+                "name": "Focus Counter Shot",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Counter Shot; Counter Shot"
+            },
+            {
+                "name": "Feign Death",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Feign Death"
+            },
+            {
+                "name": "Freezing Trap",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Freezing Trap"
+            },
+            {
+                "name": "Focus Intimidation",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Intimidation; Intimidation"
+            },
+            {
+                "name": "Kill Command",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Kill Command"
+            },
+            {
+                "name": "Kill Shot",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Kill Shot"
+            },
+            {
+                "name": "Focus Tranq Shot",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Tranquilizing Shot; Tranquilizing Shot"
+            }
+        ]
+    },
+    {
+        "characterClass": "Mage",
+        "macros": [
+            {
+                "name": "Focus Counterspell",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Counterspell; Counterspell"
+            },
+            {
+                "name": "Summon Freeze",
+                "macro": "#showtooltip<br />/cast [nopet] Summon Water Elemental<br />/cast Freeze"
+            },
+            {
+                "name": "Ice Block",
+                "macro": "#showtooltip Ice Block<br />/stopcasting<br />/use Healthstone<br />/cast Ice Block"
+            },
+            {
+                "name": "Focus Polymorph",
+                "macro": "#showtoolip<br />/stopcasting<br />/cast [mod:alt, @focus] Polymorph(Pig); Polymorph(Pig)"
+            },
+            {
+                "name": "Swifty",
+                "macro": "#showtooltip Mirror Image<br />/use 13<br />/cast Icy Veins<br />/cast Mirror Image"
+            }
+        ]
+    },
+    {
+        "characterClass": "Monk",
+        "macros": [
+            {
+                "name": "Focus Disable",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Disable; Disable"
+            },
+            {
+                "name": "Detox",
+                "macro": "#showtooltip<br />/cast [mod:alt, @Kriek] Detox; Detox"
+            },
+            {
+                "name": "Elusive Brew",
+                "macro": "#showtooltip Elusive Brew<br />/use 13<br />/cast Elusive Brew"
+            },
+            {
+                "name": "Fortifying Brew",
+                "macro": "#showtooltip Fortifying Brew<br />/use Healthstone<br />/cast Fortifying Brew"
+            },
+            {
+                "name": "Focus Paralysis",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Paralysis; Paralysis"
+            },
+            {
+                "name": "Provoke",
+                "macro": "#showtooltip<br />/target [mod:alt] Black Ox Statue<br />/cast Provoke<br />/targetlasttarget [mod:alt]"
+            },
+            {
+                "name": "Rushing Jade Wind",
+                "macro": "#showtooltip<br />/cancelaura Rushing Jade Wind<br />/cast Spinning Crane Kick"
+            },
+            {
+                "name": "Focus Spear Hand Strike",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Spear Hand Strike; Spear Hand Strike"
+            },
+            {
+                "name": "Focus Storm, Earth, and Fire",
+                "macro": "#showtooltip<br />/cancelaura [mod:ctrl] Storm, Earth, and Fire<br />/cast [mod:alt, @focus] Storm, Earth, and Fire; Storm, Earth, and Fire"
+            },
+            {
+                "name": "Focus Touch of Death",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Touch of Death; Touch of Death"
+            },
+            {
+                "name": "Focus Touch of Karma",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Touch of Karma; Touch of Karma"
+            },
+            {
+                "name": "Transcendence (broken?)",
+                "macro": "#showtooltip<br />/cast [pet,nomod:alt] Transcendence: Transfer; Transcendence"
+            },
+            {
+                "name": "Transcendence",
+                "macro": "#showtooltip<br />/cast [mod:alt] Transcendence: Transfer; Transendence"
+            }
+        ]
+    },
+    {
+        "characterClass": "Paladin",
+        "macros": [
+            {
+                "name": "Avenging Wrath",
+                "macro": "#showtooltip Avenging Wrath<br />/use 13<br />/cast Avenging Wrath"
+            },
+            {
+                "name": "Focus Hammer of Justice",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Hammer of Justice; Hammer of Justice"
+            },
+            {
+                "name": "Focus Rebuke",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Rebuke; Rebuke"
+            },
+            {
+                "name": "Focus Repentance",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Repentance; Repentance"
+            }
+        ]
+    },
+    {
+        "characterClass": "Priest",
+        "macros": [
+            {
+                "name": "Dispersion",
+                "macro": "#showtooltip<br />/cancelaura [mod:alt] Dispersion<br />/cast Dispersion"
+            },
+            {
+                "name": "Mind Flay",
+                "macro": "#showtooltip Mind Flay<br />/cast [nochanneling] Mind Flay"
+            },
+            {
+                "name": "Power Infusion",
+                "macro": "#showtooltip Power Infusion<br />/cast Lifeblood<br />/cast Berserking<br />/use 13<br />/cast Power Infusion"
+            }
+        ]
+    },
+    {
+        "characterClass": "Rogue",
+        "macros": [
+            {
+                "name": "Adrenaline Rush",
+                "macro": "#showtooltip Adrenaline Rush<br />/use 13<br />/cast Adrenaline Rush"
+            },
+            {
+                "name": "Premeditated Ambush",
+                "macro": "#showtooltip Ambush<br />/cast Premeditation<br />/cast Ambush"
+            },
+            {
+                "name": "Focus Blind",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Blind; Blind"
+            },
+            {
+                "name": "Premeditated Cheap Shot",
+                "macro": "#showtooltip Cheap Shot<br />/cast Premeditation<br />/cast Cheap Shot"
+            },
+            {
+                "name": "Premeditated Garrote",
+                "macro": "#showtooltip Garrote<br />/cast Premeditation<br />/cast Garrote"
+            },
+            {
+                "name": "Focus Gouge",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Gouge; Gouge"
+            },
+            {
+                "name": "Focus Kick",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Kick; Kick"
+            },
+            {
+                "name": "Spammable Sap (PvP)",
+                "macro": "#showtooltip<br />/stopattack<br />/cleartarget [nomod]<br />/targetenemyplayer [nomod]<br />/cast Sap"
+            },
+            {
+                "name": "Shadow Dance",
+                "macro": "#showtooltip Shadow Dance<br />/use 13<br />/cast Shadow Dance"
+            },
+            {
+                "name": "Focus Shadowstep",
+                "macro": "#showtooltip Shadowstep<br />/cast [mod:alt, @focus] Shadowstep; Shadowstep"
+            },
+            {
+                "name": "Focus Shiv",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Shiv; Shiv"
+            }
+        ]
+    },
+    {
+        "characterClass": "Shaman",
+        "macros": [
+            {
+                "name": "Ancestral Swiftness",
+                "macro": "#showtooltip Ancestral Swiftness<br />/stopcasting<br />/cast Ancestral Swiftness"
+            },
+            {
+                "name": "Ghost Wolf",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Ghost Wolf"
+            },
+            {
+                "name": "Grounding Totem",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Grounding Totem"
+            },
+            {
+                "name": "Focus Hex",
+                "macro": "#showtooltip<br />/cast [mod:alt, @focus] Hex; Hex"
+            },
+            {
+                "name": "Focus Purge",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Purge; Purge"
+            },
+            {
+                "name": "Shamanistic Rage",
+                "macro": "#showtooltip Shamanistic Rage<br />/stopcasting<br />/use Healthstone<br />/cast Shamanistic Rage"
+            },
+            {
+                "name": "Swifty",
+                "macro": "#showtooltip Ascendance<br />/use 13<br />/cast Blood Fury<br />/cast Ascendance"
+            },
+            {
+                "name": "Thunderstorm",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Thunderstorm"
+            },
+            {
+                "name": "Tremor Totem",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast Tremor Totem"
+            },
+            {
+                "name": "Focus Wind Shear",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Wind Shear; Wind Shear"
+            }
+        ]
+    },
+    {
+        "characterClass": "Warlock",
+        "macros": []
+    },
+    {
+        "characterClass": "Warrior",
+        "macros": [
+            {
+                "name": "Bladestorm",
+                "macro": "#showtooltip<br />/cancelaura [mod:alt] Bladestorm<br />/cast Bladestorm"
+            },
+            {
+                "name": "Intervene",
+                "macro": "#showtooltip<br />/targetraid [mod:alt]<br />/cast Intervene<br />/targetlasttarget [mod:alt]"
+            },
+            {
+                "name": "Focus Pummel",
+                "macro": "#showtooltip<br />/stopcasting<br />/cast [mod:alt, @focus] Pummel; Pummel"
+            },
+            {
+                "name": "Focus Shattering Throw",
+                "macro": "#showtooltip Shattering Throw<br />/cast [mod:alt, @focus] Shattering Throw; Shattering Throw"
+            },
+            {
+                "name": "Shield Barrier (PvP)",
+                "macro": "#showtooltip Shield Barrier<br />/use Healthstone<br />/cast Defensive Stance<br />/cast Shield Barrier"
+            },
+            {
+                "name": "Stance Dance",
+                "macro": "#showtooltip<br />/cast [stance:1] Defensive Stance; Battle Stance"
+            },
+            {
+                "name": "Swifty",
+                "macro": "#showtooltip Avatar<br />/use 13<br />/cast Avatar<br />/cast Skull Banner<br />/cast Recklessness"
+            }
+        ]
+    }
+]

@@ -1,0 +1,63 @@
+77d76
+< int k_option = 0;
+122d120
+< "  eject [-vn] -k [<name>]		-- check device status\n"
+136c134
+< "  -h --help   -v --verbose	 -d --default	 -k --status\n"
+---
+> "  -h --help   -v --verbose	 -d --default\n"
+154c152
+< 	const char *flags = "a:c:x:dfhknqrstvVp";
+---
+> 	const char *flags = "a:c:x:dfhnqrstvVp";
+161d158
+< 		{"status",	no_argument,	   NULL, 'k'},
+235,237d231
+< 		  case 'k':
+< 			  k_option = 1;
+< 			  break;
+424,456d417
+<  * Checks status.
+<  */
+< static void CheckStatus(int fd)
+< {
+< #ifdef CDROM_DRIVE_STATUS
+< 	switch(ioctl(fd, CDROM_DRIVE_STATUS))
+< 	{
+< 	case CDS_NO_INFO:
+< 		fprintf(stderr, _("%s: Status is not supported by your drive.\n"), programName);
+< 		exit(1);
+< 	case CDS_NO_DISC:
+< 		printf(_("%s: No disc in drive\n"), programName);
+< 		break;
+< 	case CDS_TRAY_OPEN:
+< 		printf(_("%s: Tray is open\n"), programName);
+< 		break;
+< 	case CDS_DRIVE_NOT_READY:
+< 		printf(_("%s: Drive not ready\n"), programName);
+< 		break;
+< 	case CDS_DISC_OK:
+< 		printf(_("%s: Disk OK.\n"), programName);
+< 		break;
+< 	default:
+< 		fprintf(stderr, _("%s: Unknown ioctl() error: %s\n"), programName, strerror(errno));
+< 		exit(1);
+< 	}
+< #else
+<     fprintf(stderr, _("%s: Drive status command not supported by this kernel\n"), programName);
+< #endif
+< }
+< 
+< 
+< /*
+951,960d911
+< 	/* handle -k option */
+< 	if (k_option) {
+< 		if (v_option)
+< 			printf(_("%s: checking drive status\n"), programName);
+< 		fd = OpenDevice(deviceName);
+< 		CheckStatus(fd);
+< 		HandleXOption(deviceName);
+< 		exit(0);
+< 	}
+< 

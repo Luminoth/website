@@ -1,0 +1,502 @@
+<div class="mat-titler">Simple, Portable, Socket Tutorial in C</div>
+<div>
+  <p>
+    <span class="es-warn">Disclaimer:</span> I am by no means an expert in C or Socket programming. I've been working in
+    C and C++ for a little over two years now and still have much to learn.
+  </p>
+  <p>
+    I offer this tutorial as-is and gladly accept ANY thoughts, ideas, changes, and corrections. No support will be
+    offered for the information contained here, if you don't understand it, go learn it the long way... :\
+  </p>
+  <mat-divider></mat-divider>
+  <p>
+    I'll be writing this tutorial from the point of view of a Windows user just for the sake of explaininglarge
+    chunks of code that the WinSock authors felt were needed... :rolleyes: I'll explain, throughout and at the end,
+    how to get things working in Linux. I'll also be focusing on the Microsoft Visual C++ 6.0 compiler. If you use
+    anything other than that (except gcc in Linux), you'll need to adjust accordingly.
+  </p>
+  <p>
+    First, create a new Win32 Console Application, add to it a file called main.cpp that will hold the code for this
+    project. I chose not to use any header files because as is, the program is too simple to need it. You'll also want
+    to ensure that it's linked against this library only:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+wsock32.lib
+</pre>
+  <p>
+    If you're unsure of how to link to a library in your compiler, find some documentation and read. It's under the
+    Project-&gt;Settings tab in the menu of MSVC++. Make sure that all build of your program link to this and not just
+    the Debug/Release versions.
+  </p>
+  <p>
+    The first thing to do is to create the basic template of our program:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int main(int argc, char* argv[])
+{{ '{' }}
+    return 0;
+}
+</pre>
+  <p>
+    Once we have that, we need to start setting things up for the portable nature of what we're doing. The easiest
+    first step here is to add this code before our main():
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+#if defined WIN32
+#include &lt;winsock.h&gt;
+#elif defined __linux__
+#include &lt;unistd.h&gt;
+#endif
+</pre>
+  <p>
+    This will include the headers we need, but only if we're using the right OS. The reason for doing it this way is
+    explained by the way preprocessor directives work. Going into detail with how these work is beyond the scope of
+    this tutorial, but the basics is that if WIN32 is not defined (and it generally is for the MSVC++ compiler), then
+    the two headers in its block will not be included, which is what we want since they don't exist in Linux and if
+    they did, this would help to keep the size of our executable down. This method of doing things will be used
+    throughout the tutorial, so if you have any problems or questions regarding preprocessor directives, I recommend
+    finding a good basic C tutorial and reading it.
+  </p>
+  <p>
+    Once that's done, we need to setup our program to function properly with Windows Sockets. For one reason or
+    another, the WinSock programmers felt the need to make programmers using the API work through wrapper functions
+    and startup/shutdown functions for most things other than basic socket read/write operations. So, accordingly, we
+    need ot add this inside our main() function, right before the return line:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    WSADATA wsa_data;
+    WSAStartup(MAKEWORD(1,1), &amp;wsa_data);
+    WSACleanup();
+</pre>
+  <p>
+    What this does is tell the Windows that you need access to the WinSock subsystem (Ws2_32.dll according to the
+    MSDN). You have to give it the version you wish to use (we'll be using 1.1 since it's the most compatable at this
+    point). The MSDN has a list of versions you can play around with. Please note that I'm not doing any kind of error
+    checking for the sake of readability. In a real-world application, you'll want to make sure every function
+    succeeds and take appropriate action if it doesn't. Lastly, WSACleanup() tells Windows that you no longer need
+    access to the subsystem and may unload it.
+  </p>
+  <p>
+    So, right now we've got a very basic program that should compile just fine under Windows, but what if we try and
+    compile it in Linux? Errors, errors, errors. What did we do wrong? Well, it's probably best to mention at this
+    point that any function beginning with WSA is a Windows only function. But what does that mean for our program?
+    Well, we need to let the compiler know that we only intend for these functions to be called if we're in Windows,
+    and you guessed it, preprocessor directives is what we'll use. So you'll want to enclose the code to look like
+    this:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+#if defined WIN32
+    WSADATA wsa_data;
+    WSAStartup(MAKEWORD(1,1), &amp;wsa_data);
+#endif
+
+#if defined WIN32
+    WSACleanup();
+#endif
+</pre>
+  <p>
+    This will prevent the code from being included in a compile in Linux. If we try to compile in Linux again, there
+    should be far less errors (in fact, there should be none). You have a program that does nothing other than start
+    and return, but it's okay, we're going somewhere with this... :)
+  </p>
+  <p>
+    The next block of code we'll throw in there will be a function that I'll write up for you. It's just a simple
+    little command line argument processor so that you don't have to bother with it. We want the user to be able to
+    pass a -s for a server or a -c for a client. Very simple, and not really worth wasting time on, so copy and paste
+    this little bit above your main() function (or use a prototype if you know what's going on):
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int proc_arguments(int n, char* args[])
+{{ '{' }}
+    if(2 == n) {{ '{' }}
+        if(0 == strcmp(args[1], "-s"))
+            return 1;
+        else if(0 == strcmp(args[1], "-c"))
+            return 2;
+    }
+
+    return 0;
+}
+</pre>
+  <p>
+    And add this after the WSAStartup() block:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    switch(proc_arguments(argc, argv))
+    {{ '{' }}
+    case 0:
+        printf("Usage: socket_tutorial [option]\n");
+        printf("Options:\n");
+        printf("-c - start a client\n");
+        printf("-s - start a server\n\n");
+        break;
+    case 1:
+        start_server();
+        break;
+    case 2:
+        start_client();
+        break;
+    }
+</pre>
+  <p>
+    Now, when you try to compile this, there should be lots of errors, so I'll try to pick them off one at a time.
+    First up, we need to include the headers for the printf() and strcmp() functions, so put this at the top of the
+    file:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+</pre>
+  <p>
+    Next, add these two function "templates" somewhere above your main() function and below all our header includes:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int start_server()
+{{ '{' }}
+    return 0;
+}
+
+
+int start_client()
+{{ '{' }}
+    return 0;
+}
+</pre>
+  <p>
+    These two functions are where all the action is going to take place. They're empty for now, but we'll start to
+    add to them as we go along.
+  </p>
+  <p> First up, we'll work on getting the server to listen for a connection. The first thing that any program working
+    with sockets will need to do before it can actual be connected (and I use the term connected liberaly, UDP is a
+    connectionless protocol, but for the purpose at hand, we'll assume that a connection happens when two PCs begin
+    talking via sockets), is to create the socket for communication. The thing to keep in mind is that a socket is
+    really just a handle to file a file descriptor. It represents a file in the Unix world, and that's mimicked in the
+    Windows OS. You can write to the socket, read from the socket, manipulate the socket, open/close the socket, etc.,
+    just like you can with a plain, low-level file descriptor. The only real difference is that a socket acts like a
+    pipe for communication with another socket, rather than being treated as an on-disk file descriptor. So, with that
+    in mind, this is the first bit of code in our start_server() function:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    SOCKET s, t;
+
+    s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if(INVALID_SOCKET == s) {{ '{' }}
+        perror("Could not create socket");
+        return -1;
+    }
+</pre>
+  <p>
+    Now, before you get compile happy, we need to look at a couple of things. The SOCKET type does not exist in
+    Linux, and neither does the INVALID_SOCKET constant, we will need to create these. So, right up after our include
+    statements, we need to add this:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+#if defined __linux__
+typedef int SOCKET;
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR   -1
+#endif
+</pre>
+  <p>
+    There's actually a problem with doing things this way, though very minute. Linux expects sockets to be of type
+    unsigned int (you can't really have a socket with a value of -1, that's an invalid file descripter), but we're
+    defining it as a regular int. The reason for this is because at times, variables of type SOCKET will end up as -1
+    (tiny quirk in the way things work), and to keep the compiler from complaining about signed/unsigned comparisons,
+    we need to do things this way. All in all, it works, so don't question it. ;)
+  </p>
+  <p>
+    So, let's talk a little about the code we added to the start_server() function. The basics of it break down like
+    this, the function socket() takes three parameters, the address family specificaiton, the socket type
+    specification, and the protocol. The address family specification is AF_INET for what we want because we're
+    communication over the inter/intranet. There are other families, but for this example, we don't care (and unless
+    you're programming for Novell, you probably never will). The socket type is either SOCK_STREAM or SOCK_DGRAM. The
+    only important difference between the two is that STREAM is for TCP and DGRAM is for UDP. Finally, the protocol is
+    IPPROTO_TCP, saying that we want the TCP protocol. This can also be IPPROTO_UDP for a UDP connection (as well as
+    others, but like I said, unless you're programming for Novell, you won't care much). The function returns a
+    socket, which we store in the variable s (our socket). After calling the function, we check to make sure we got a
+    valid socket, and if we didn't, we error out.
+  </p>
+  <p>
+    Now that we have a socket, what do we do with it? Well, first up, we need to setup our sockaddr and then name
+    the socket. This is used to specify an endpoint address (our client) that our socket should end up connected to.
+    So, add this to the top of our function:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    struct sockaddr_in addr, r_addr;
+    SOCKET    s, t;
+    int       r;
+    socklen_t len = sizeof(r_addr);
+</pre>
+  <p>
+    Before this will work, we need to fix up our redefine section to look like this:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+#if defined WIN32
+typedef int socklen_t;
+#elif defined __linux__
+typedef int SOCKET;
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR   -1
+#define closesocket(s) close(s);
+#endif
+</pre>
+  <p>
+    Now, add this after the creation of the socket, but before the return:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    memset((void*)&amp;addr, 0, sizeof(addr));
+    addr.sin_family      = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_port        = htons(6868);
+
+    r = bind(s, (struct sockaddr*)&amp;addr, sizeof(addr));
+    if(SOCKET_ERROR == r) {{ '{' }}
+        perror("Could not bind to local socket");
+        closesocket(s);
+        return -1;
+    }
+</pre>
+  <p>
+    Now, once again, we need to set things up for portability. See the call to closesocket()? For some reason, the
+    WinSock programmers decided to skip the use of the low-level close() call that Unix uses (since a socket is a file
+    descripter), and use their own closesocket() function. So, we need to add this after our #define SOCKET_ERROR
+    line:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+#define closesocket(s) close(s);
+</pre>
+  <p>
+    This will allow Linux to use close() instead of the non-existant closesocket() call.
+  </p>
+  <p>
+    With that out of the way, let's go over this part of the code. First, we need to clear out our structure. Any
+    and all structures should be cleared out this way, if I miss one, fix it and let me know. It's very important that
+    no structure be left with any junk values as this could throw off a lot of our hard work. Once the memory is
+    cleared, we set the address family (sin_family) to the first parameter of our socket() call (AF_INET in this
+    case), the valid address that the socket may connect to to INADDR_ANY (meaning, any address), and the address port
+    to 6868 (just a random port above 1024 that I picked).
+  </p>
+  <p>
+    Before we can move on, I need to explain something. In the world of the internet, there are many different PCs
+    with many different types of architectures. There are Intel x86s, Motorolas, Sparcs, Alphas, you name it. In
+    theory, this is good because it's a lot of variety for a lot of different people, but for us programmers, it means
+    we have to make a choice. Motorola PCs are what's known as Big Endian and x86 PCs are what's known as Little
+    Endian. Without going into to much detail, this basically dictates how the processor handles bytes and the
+    direction it reads them (left to right and vice versa). When it came time to work on a network model, the
+    originators decided to go with a Big Endian model (hey, this stuff was being written up before Intel was even an
+    idea), and we, as Little Endian users, have to deal with that. So we use some functions to cope with that. They
+    are the htonl() and htons() calls (there are others, but these are the ones we're using). They take the data
+    passed to them and flip them around in bit form into what we call network byte order, saving us lots of hassle in
+    the long run.
+  </p>
+  <p>
+    Once we setup the address variable, we need to name the socket. What that means is that we need to associate the
+    just created address with our socket, so the socket knows to whom it may connect. The call to bind() does this. It
+    gets passed the socket, the address (cast to type sockaddr*), and the size of the address. If the function returns
+    SOCKET_ERROR, it failed and we have to close the socket and bail.
+  </p>
+  <p>
+    Before any program using sockets end, it must call closesocket(), otherwise, the socket (remember, file
+    descripter) will stay open and a valuable resource is lost from the PC (Operating Systems only allow so many open
+    file descripters before they start disallowing access to them). So with that in mind, add this right before the
+    return statement of the function:</p>
+  <pre class="mat-elevation-z6 es-code">
+    closesocket(s);
+</pre>
+  <p>
+    That way just in case we actually get through this succesfully, we end up closing the socket.
+  </p>
+
+  <p> Our server is almost ready to "use". We just need to tell it to listen for a connection attempt from a client.
+    Add this code just before the final call to closesocket(): </p>
+
+  <pre class="mat-elevation-z6 es-code">
+    r = listen(s, SOMAXCONN);
+    if(SOCKET_ERROR == r) {{ '{' }}
+        perror("Could not listen to local socket");
+        closesocket(s);
+        return -1;
+    }
+
+    printf("Waiting for connection... ");
+    t = accept(s, (struct sockaddr*)&amp;r_addr, &amp;len);
+    if(INVALID_SOCKET == t) {{ '{' }}
+        perror("Could not accept new connection");
+        closesocket(s);
+        return -1;
+    }
+    printf("accepted.\n");
+
+    closesocket(t);
+</pre>
+  <p>
+    This sets the server up to list on s (and accept SOMAXCONN connections), and then tells it to accept() a
+    connection. The call to accept() will block (ie, not return) until a connection attempt is made. It gets passed
+    the socket to listen on, the address to fill when a connection is accepted, and the size of the address. All of
+    this is handled by accept(), so we don't need to worry about it.
+  </p>
+  <p>
+    With that done, we can begin working on the client. It will be very similar to the server, to an extent, so I'll
+    skip over certain details as they've already been covered. The first thing we need to do is to add this to our
+    start_client() function:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    struct sockaddr_in addr;
+    SOCKET   s;
+    int      r;
+    hostent* h;
+    const char local_host[] = "localhost";
+
+    memset((void*)&amp;addr, 0, sizeof(addr));
+    addr.sin_addr.s_addr = inet_addr(local_host);
+    if(INADDR_NONE == addr.sin_addr.s_addr) {{ '{' }}
+        h = gethostbyname(local_host);
+        if(NULL == h) {{ '{' }}
+            perror("Could not get host by name");
+            return -1;
+        }
+    } else {{ '{' }}
+        h = gethostbyaddr((const char*)&amp;addr.sin_addr, sizeof(struct sockaddr_in), AF_INET);
+        if(NULL == h) {{ '{' }}
+            perror("Could not get host by address");
+            return -1;
+        }
+    }
+</pre>
+  <p>
+    This fills the client's address variable with the address of the server, which in this case is "localhost"
+    (which resolves to the IP 127.0.0.1, the IP address reserved for the local machine). Once that's done, some logic
+    must be used to determine whether we can resolve the address. This should always resolve on any computer not
+    blocking local packets, but in a real world setting, where you'd normally ask the user for the IP or use a pre-set
+    static IP, this sends a request to the client's DNS server to try and resolve the server's IP.
+  </p>
+  <p>
+    The code first checks to see if the s_addr value of the address variable is an IP or not (INADDR_NONE is -1),
+    which is determined by the call to inet_addr() (which is passed the IP/hostname string), which translates a string
+    to either a host name/IP or -1. If the s_addr value is -1, then the client uses the DNS database via
+    gethostbyname(), which is passed the IP/hostname string, to resolve the address, otherwise it uses
+    gethostbyaddr(), which is passed the sin_addr value, the size of the sockaddr_in structure, and the type of
+    connection we're attempting, to get the hosts information. The value returned by both functions is a pointer to a
+    hostent structure. This structure contains all of the info about the host we're trying to connect to. Its values
+    should never be modified or freed by the program. It's values should always be copied rather than being modified.
+  </p>
+  <p>
+    So now that the address has been validated and can be resolved, we need to do this:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if(INVALID_SOCKET == s) {{ '{' }}
+        perror("Could not create socket");
+        return -1;
+    }
+
+    addr.sin_family = AF_INET;
+    addr.sin_addr   = *((in_addr*)*h-&gt;h_addr_list);
+    addr.sin_port   = htons(6868);
+
+    printf("Connecting... ");
+    r = connect(s, (sockaddr*)&amp;addr, sizeof(struct sockaddr));
+    if(SOCKET_ERROR == r) {{ '{' }}
+        perror("Cannot connect to server");
+        closesocket(s);
+        return -1;
+    }
+    printf("connected.\n");
+
+    closesocket(s);
+</pre>
+  <p>
+    As with the server, we must create the socket and then setup the address variable. Note that the sin_addr value
+    is set to the h_addr_list value of our host entry variable. h_addr_list is an array of IP values for our servers
+    (all the addresses that the host name resolves to). This lets our client know which IPs to try connecting to
+    through the address. The client also uses the same port as the server, this is very imperative for connecting the
+    two (they have to communicate on the same port at the server level).
+  </p>
+  <p>
+    Once all that is done, we finally connect the client to the server via the call to connect(). It gets passed the
+    client's socket, the client's address variable, and the size of the sockaddr structure on that particular machine.
+    If the connect() call fails, it returns SOCKET_ERROR.
+  </p>
+  <p>
+    You can now fire up to copies of the program, one as a server and one as a client (the server must start first).
+    The client should connect to the server. Not much else will happen because we haven't told it to, but it's a very
+    big step forward. Next up will add the transfer of two packets, one from the server to the client and one from the
+    client to the server.
+  </p>
+  <p>
+    In order to make the transfer from the server to the client, we need to add this to the end of our
+    start_server() function (right before the first closesocket() call):
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    char data[] = "Hello client!\0";
+    char recieved[256];
+    memset((void*)recieved, 0, sizeof(recieved));
+    send(t, data, strlen(data), 0);
+    recv(t, recieved, sizeof(recieved), 0);
+
+    printf("Client returned: %s\n", recieved);
+</pre>
+  <p>
+    This is the really simple part. We first create the variable data that will hold the string we'll send to the
+    client. We also create the variable to hold the data from the client. The call to send() sends the data variable
+    on the socket, t. It sends only the length specified in the third parameter, which we set to the strlen() of the
+    data in order to send the entire string.
+  </p>
+  <p>
+    After the data is sent, the server recieves data back from the client and puts it into the recieved variable
+    (which must be cleared to zero in order prevent some wierd output things). It only stores the amount of data
+    defined in the third parameter, which I've set to the sizeof() the recieved variable. This will help to prevent a
+    lot of bufferoverflow issues that may arise through network programs. After we get the data, it's printed to the
+    screen and the server is done.
+  </p>
+  <p>
+    The biggest things to keep in mind are that the OS is putting the packet together for you with the data you put
+    in the send() call so that you don't have to mess with it, the call to send() will block until all the data is
+    sent, and that make take more than one packet depending on how the user's OS is setup, so you have to be aware of
+    that, and that the call to recv() will block the process until something is recieved on the socket. So if you're
+    client is disconnected and doesn't send any data, your server will stay running forever, or until the socket is
+    invalidated. That's something I won't cover here, however, because it requires some multi-threaded work to
+    monitor.
+  </p>
+  <p>
+    So with a fully functional server, let's finish the client off:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    char data[] = "Hello server!\0";
+    char recieved[256];
+    memset((void*)recieved, 0, sizeof(recieved));
+    recv(s, recieved, sizeof(recieved), 0);
+    printf("Server sent: %s\n", recieved);
+    send(s, data, strlen(data), 0);
+</pre>
+  <p>
+    It's the same basic idea, just the send() and recv() calls are swapped to match what the server is going to
+    do/expect.
+  </p>
+
+  <p>
+    With that all done, you can now compile and run the program in either Windows or Linux. I've outlined how to
+    setup a very basic client/server system that runs over TCP/IP. It's by no means a full fledged program or anything
+    worth distributing. It is, however, an example of how to get started on creating a full fledged, distributable
+    program.
+  </p>
+  <p>
+    At this point, it is up to you, as the reader, to now research the type of server you want. There are select()
+    based servers, threaded servers, and many other types. The server demonstrated here works on a very basic, one
+    connection/two packet model while most big time servers/clients run with many clients and many packets, and that
+    must be dealt with. Unfortunately, it's beyond the scope of this document to go into that. Have fun with it,
+    that's what it's there for.
+  </p>
+  <p>
+    You can find the source code, MSVC++ 6.0 workspace, and a Linux Makefile for this tutorial <a class="text_link"
+      href="{{environment.staticUrl}}/programs/tutorials/socket/">here</a>. I've commented the source as much as I can
+    without distracting from what's going on just in case. Please send any suggestions or fixes my way (link is at the
+    bottom of the tutorial). Enjoy what I've put together and I hope you all learnt something from it.
+  </p>
+  <mat-divider></mat-divider>
+  <p>
+    You may find the original version of this tutorial at my <a href="http://www.energonsoftware.org/">homepage</a>.
+    I'd appreciate any distribution of this tutorial to have the source go with it. It was given to you as a learning
+    aid, so please pay it forward.
+  </p>
+</div>

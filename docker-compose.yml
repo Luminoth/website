@@ -1,0 +1,12 @@
+version: '3'
+services:
+    energonsoftware-api:
+        container_name: energonsoftware-api
+        image: 'energonsoftware-api'
+        ports:
+            - 8000:8000
+    #energonsoftware-ui:
+    #    container_name: energonsoftware-ui
+    #    image: 'energonsoftware-ui'
+    #    ports:
+    #        - 8080:8080

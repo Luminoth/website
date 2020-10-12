@@ -1,0 +1,882 @@
+<div class="mat-title">Notepad Clone Tutorial in C</div>
+<div>
+  <p>
+    <span class="es-warn">Disclaimer:</span> I am by no means an expert in C or Win32 programming. I've been working in
+    C and C++ for a little over two years now and still have much to learn.
+  </p>
+  <p>
+    I offer this tutorial as-is and gladly accept ANY thoughts, ideas, changes, and corrections. No support will be
+    offered for the information contained here, if you don't understand it, go learn it the long way... :\
+  </p>
+  <p>
+    <span class="es-warn">Note:</span> The images from this tutorial are gone, and after looking over the code, I'm not
+    sure I like thie one very much. When things settle down, I'll try to re-write it using the things I know now (which
+    should make it <b>far</b> better).
+  </p>
+  <mat-divider></mat-divider>
+  <p>
+    The purpose of this tutorial is to walk through creating a really simple Notepad (&copy; Microsoft Corp) clone. I
+    say simple because it will lack many of the features of the real deal, but those really do extend beyond the idea of
+    a simple clone. I'll explain at the end of the tutorial how you can go about adding additional features to your
+    clone. Throughout the tutorial, I'll assume you're using Microsoft Visual C++ 6.0, so if you have some other editor,
+    you'll have to make appropriate changes where necessary. I'll also make the assumption that you have knowledge of C
+    programming and how to work with the Win32 API just a little bit (not a lot, but enough to follow along in spots
+    where I leave little things out).
+  </p>
+  <p>
+    I've also added a couple of images of the menu and the about dialog box. This was to give a bit of help when trying
+    to create your own, but if you find that you're not quite getting it, please look at the source I've provided and
+    the many resources out on the net (and don't be afraid to <a href="mailto:ignignokterr@gmail.com">e-mail me</a>. The
+    "visual" part can get to be a bit confusing, but it's really the easiest part of the entire ordeal, it just takes
+    getting your feet wet first, so don't hesitate to try.
+  </p>
+  <p>
+    To begin the process, open up Microsoft Visual C++ and create a new, empty, Win32 Application. You can call it
+    whatever you want, I chose to call it enpad. Once the project is created, go to Project-&gt;Add To Project-&gt;New
+    and add a new Resource Script to the project. I chose to name the script the same as the application (enpad) just
+    for consistency. Adding the script will also create a file, resource.h in your application directory, I add this to
+    my project by opening it, right clicking in it, and selecting Add To Project. You should also go to
+    Project-&gt;Settings and for All Configurations, set the Object/library modules property (under the Link tab) to
+    user32.lib comdlg32.lib gdi32.lib. This will ensure our application is only linked to the libraries that it needs to
+    be and not the tons that MSVC++ links to by default.
+  </p>
+  <p>
+    Now that the foundation of the application is setup, add a new C++ Source File and call it
+    <strong>main.cpp</strong>. Inside of it, put this:
+  </p>
+
+  <pre class="mat-elevation-z6 es-code">
+#include &lt;stdio.h&gt;
+
+#if !defined WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+#endif
+
+#include &lt;windows.h&gt;
+#include &lt;commdlg.h&gt;
+#include "resource.h"
+
+/*
+ *  constants
+ *
+ */
+
+const int  WINDOW_WIDTH    = 500;
+const int  WINDOW_HEIGHT   = 400;
+const char PROGRAM_NAME[]  = "EnPad";
+const int  MAX_TEXT        = 2048;
+const int  MAX_FILE        = 256;
+
+/*
+ *  prototypes
+ *
+ */
+
+// window procedures
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+/*
+ *  globals
+ *
+ */
+
+
+int WINAPI WinMain(HINSTANCE hInstance,
+                    HINSTANCE hPrevInstance,
+                    LPSTR lpCmdLine,
+                    int nShowCmd)
+{{ '{' }}
+    return 0;
+}
+
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{{ '{' }}
+    switch(uMsg)
+    {{ '{' }}
+    case WM_CREATE:
+        break;
+    case WM_COMMAND:
+        break;
+    case WM_SETFOCUS:
+        break;
+    case WM_ACTIVATE:
+        if(WA_INACTIVE != wParam)
+            InvalidateRect(hWnd, NULL, false);
+        break;
+    case WM_SIZE:
+        break;
+    case WM_CLOSE:
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    }
+
+    return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+</pre>
+  <p>
+    Doing this creates a very basic shell for a Win32 application. It includes the <strong>stdlib.h</strong>,
+    <strong>windows.h</strong>, and <strong>commdlg.h</strong> headers (and makes sure to leave out any non-essential
+    Win32 header code via the <strong>WIN32_LEAN_AND_MEAN</strong> directive) and the resource header, as well as
+    setting up some useful constants (the starting width/height of the main window and the name of our program, the
+    maximum amount of text, and the maximum length of a filename to save/open). The shell for the app is then setup
+    through WinMain (the full purpose of this function can be found in the <a
+      href="http://msdn.microsoft.com/library/">MSDN</a>, but basically represents the main() call of a console
+    application). It also sets up the function we'll use to process messages sent to our main window (the WindowProc
+    function). If you don't understand how messages work or why we want to process them, I suggest checking out the <a
+      href="http://msdn.microsoft.com/library/">MSDN</a> and any Win32 related programming sites for information. It's a
+    very critical concept to understand for Win32 programming (especially when applications become more in-depth and
+    involved), so make sure you understand it!
+  </p>
+  <p>
+    Now that we have an application that will compile (though it won't do anything), we need to add our menu resource to
+    the application. You'll want to create a new menu resource in the <a href="images/resource.jpg">resource editor</a>
+    and add a new <a href="images/menu.jpg">popup window</a> (&amp;File - ID_FILE) and under that add a new option <a
+      href="images/exit.jpg">(&amp;Exit - ID_EXIT)</a>. Once that's setup, rename the menu to IDR_MAIN_MENU and save it.
+  </p>
+  <p>
+    With the menu resource setup, we need to create the main window class that will act as our main application window.
+    Add this code before the return statement in the WinMain() function:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    WNDCLASSEX window_class;
+    memset(&amp;window_class, 0, sizeof(WNDCLASSEX));
+
+    window_class.cbSize        = sizeof(WNDCLASSEX);
+    window_class.style         = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+    window_class.lpfnWndProc   = WindowProc;
+    window_class.cbClsExtra    = 0;
+    window_class.cbWndExtra    = 0;
+    window_class.hInstance     = hInstance;
+    window_class.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
+    window_class.hCursor       = LoadCursor(NULL, IDC_ARROW);
+    window_class.hbrBackground = (HBRUSH)COLOR_APPWORKSPACE;
+    window_class.lpszMenuName  = (char*)IDR_MAIN_MENU;
+    window_class.lpszClassName = PROGRAM_NAME;
+    window_class.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
+</pre>
+  <p>
+    The way this is setup, it makes the window redraw horizontally and vertically, respond to double clicks, and gives
+    it its own DC (Device Context). It passes a pointer to our message handling function (WindowProc), loads the default
+    application icon and the default arrow cursor, and sets the background color of the window to the default system
+    application workspace (COLOR_APPWORKSPACE) as defined by the user in their Display Properties. The last three lines
+    tell the window to use our menu, sets its class name (how Windows differentiates each seperate window class created
+    by a program), and sets the small window icon to the default application icon.
+  </p>
+  <p>
+    After creating the window class, we need to register it (so that Windows can use the class to create many different
+    windows based on it). Add this code after the window class setup:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    if(0 == RegisterClassEx(&amp;window_class)) {{ '{' }}
+        MessageBox(NULL, "Could not register main window class!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+        return 0;
+    }
+</pre>
+  <p>
+    With the window class setup and registered, we can create a new window based on it. Add the constants to the
+    constant block we setup, the HWND declaration to the top of the WinMain() function, and the call to CreateWindow()
+    after the call to RegisterClassEx():
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    HWND window_handle = NULL;
+
+    window_handle = CreateWindowEx(
+        WS_EX_CONTROLPARENT,
+        PROGRAM_NAME,
+        PROGRAM_NAME,
+        WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        WINDOW_WIDTH, WINDOW_HEIGHT,
+        NULL,
+        NULL,
+        hInstance,
+        NULL);
+    if(NULL == window_handle) {{ '{' }}
+        MessageBox(NULL, "Could not create window!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+        return 0;
+    }
+</pre>
+  <p>
+    This sets the default base width/height of our main window and then creates it. It creates it with the extended
+    style of WS_EX_CONTROLPARENT (which lets the window know it'll be a parent and will handle child messages), tells it
+    which window class to use ("EnPad"), what the title of the window should be "EnPad", and what type of window it will
+    be (an overlapped window that's visible). The last couple of things are the x, y, width, height, parent, menu, and
+    application instance of the window. The very last parameter should always be NULL.
+  </p>
+  <p>
+    Now we can set the default font of the window:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+if(set_font(edit_handle) &lt; 0)
+    MessageBox(NULL, "Could not set default edit font!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+
+</pre>
+  <p>
+    This requires this function:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int set_font(HWND edit_window)
+{{ '{' }}
+    HFONT t_font = CreateFont(12, 0, 0, 0, FW_NORMAL,
+                              false, false, false, ANSI_CHARSET,
+                              OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                              ANTIALIASED_QUALITY, 12, "Fixedsys");
+    if(NULL == t_font)
+        return -1;
+    SendMessage(edit_window, WM_SETFONT, (WPARAM)t_font, MAKELONG(true, 0));
+
+    return 0;
+}
+</pre>
+  <p>
+    This just creates the font (see CreateFont() in the MSDN) that Notepad uses by default and sets it in the edit box
+    by sending the handle to the font (HFONT) that is returned through the WM_SETFONT message.
+  </p>
+  <p>
+    Finally, we can show the window:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    ShowWindow(window_handle, nShowCmd);
+    SetForegroundWindow(window_handle);
+</pre>
+  <p>
+    Now we can add the code for our message loop. Put the message variable right after the HWND variable at the top of
+    WinMain() and the rest of the code right before the return statement of WinMain():
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    MSG message;
+
+    while(GetMessage(&amp;message, NULL, 0, 0)) {{ '{' }}
+        TranslateMessage(&amp;message);
+        DispatchMessage(&amp;message);
+    }
+</pre>
+  <p>
+    Now that we have a message loop, we want to change our return statement to reflect that we now have the loop. The
+    reason for this is that if a program exits before entering the message loop, Windows wants it to return 0, but if it
+    exits after the message loop, it needs to return the wParam of the message variable, and that's what we're going to
+    do. Change the return statement at the bottom of WinMain() to:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    return message.wParam;
+</pre>
+  <p>
+    At this point, you're safe to test the window. Try resizing it, maximizing it, minimizing it, and if you feel
+    really adventurous, try changing the different styles you set in CreateWindowEx() (see the MSDN for a list of
+    values).
+  </p>
+  <p>
+    So now that we have a very boring main window created, we'll setup the code for the WM_CREATE message to create
+    the edit box that will be the real meat of the program. Add the edit_handle variable to the top of the WindowProc()
+    function (the window handle is static so that it doesn't go away every time we exit the message handler):
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    static HWND edit_handle = NULL;
+
+    case WM_CREATE:
+        edit_handle = CreateWindowEx(
+            WS_EX_CLIENTEDGE,
+            "EDIT",
+            NULL,
+            WS_CHILD | WS_VSCROLL | WS_HSCROLL | ES_AUTOHSCROLL |
+            ES_AUTOVSCROLL | ES_LEFT | ES_MULTILINE | ES_WANTRETURN,
+            0, 0,
+            WINDOW_WIDTH, WINDOW_HEIGHT,
+            hWnd,
+            NULL,
+            (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+            NULL);
+        if(NULL == edit_handle)
+            MessageBox(NULL, "Could not create edit control!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+
+        ShowWindow(edit_handle, SW_SHOW);
+        SetFocus(edit_handle);
+        break;
+</pre>
+  <p>
+    The really key points to note about this are that it's extended style is WS_EX_CLIENTEDGE (which gives the window
+    a sunken border so that it really looks like a child window would), it's class name is "EDIT" (which is a
+    pre-defined class that Windows has to handle very common edit controls. There are other types of common windows that
+    you check out in the MSDN under the CreateWindowEx() function), and that the style of the window includes styles
+    that are specific to edit boxes (start with ES_). All of this creates a window that is a child of the parent passed
+    to the function (hWnd) with the border we want that is a very basic edit box that is multi-line and will handle all
+    the scrollbar work for us (it could get to be very tiresome if you were to do it yourself). You've just been
+    introduced to one of the really nice features of Win32 programming, and that is the idea of common, pre-defined
+    classes (controls) such as "EDIT" and "BUTTON". These allow you to pull from the constant source of resources that
+    Windows has to create very common utilities. It's time to become very familiar with this, as it will be a very
+    common approach to creating windows if you get heavy into Win32 API programming. We can also fix our WM_SETFOCUS to
+    return focus to the edit control:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    case WM_SETFOCUS:
+        SetFocus(edit_handle);
+        break;
+</pre>
+  <p>
+    One thing you may notice if you test the window at this point, is that resizing it does absolutely nothing to the
+    edit control we just added. This must be rectified, and we'll do so in the WM_SIZE message of the main window:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    case WM_SIZE:
+        if(0 == MoveWindow(edit_handle, 0, 0, LOWORD(lParam), HIWORD(lParam), false))
+            MessageBox(hWnd, "An error occured resizing the edit control!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+        break;
+</pre>
+  <p>
+    The call to MoveWindow() just takes a window and moves it to a new position. Since our edit control is the size of
+    our main window, it's a simple matter of passing the new width/height to it (the 4/5th parameters) and letting the
+    edit control message handler deal with it for us.
+  </p>
+  <p>
+    Now that the edit control is behaving more like it should at this point, we can add the code to deal with clicking
+    Exit from the menu. This code goes inside the WM_COMMAND message (messages from menus and child windows come in
+    through WM_COMMAND):
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    case WM_COMMAND:
+        switch(LOWORD(wParam))
+        {{ '{' }}
+        case ID_EXIT:
+            PostQuitMessage(0);
+            break;
+        }
+        break;
+</pre>
+  <p>
+    At this point, you can fire up both Notepad and EnPad and see how similar they are so far. There's a long way to
+    go, but as far as the basic look and feel goes, we are pretty much right on target.
+  </p>
+  <p>
+    The one thing we're missing from the L&amp;F (look and feel) that is simple and really needs to be there is the
+    Help menu. So open up your menu in the resource editor and add a new section called &amp;Help. Check the <a
+      href="images/help.jpg">option box that says "Help"</a> (this will move the option to the far right of the menu
+    where it should be). Underneath that, add an option called &amp;About (ID_ABOUT). This will give a way for the user
+    to display our About dialog box.
+  </p>
+  <p>
+    Now use the resource editor to create a Dialog box (IDD_ABOUT) with these styles:
+  </p>
+  <ul>
+    <li>Set Caption</li>
+    <li>Popup Style</li>
+    <li>Dialog Frame Border</li>
+    <li>Title Bar</li>
+    <li>System Menu</li>
+    <li>Set Foreground</li>
+    <li>3D Look</li>
+    <li>Center</li>
+  </ul>
+  <p>
+    The Dialog should have one button called IDOK that is labeled Ok.
+  </p>
+  <p>
+    We'll use this box as our <a href="images/about.jpg">About box</a>.
+  </p>
+  <p>
+    With the box template created, we need to add the handler for it:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+BOOL CALLBACK AboutDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+BOOL CALLBACK AboutDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{{ '{' }}
+    switch(uMsg)
+    {{ '{' }}
+    case WM_COMMAND:
+        switch(LOWORD(wParam))
+        {{ '{' }}
+        case IDOK:
+            EndDialog(hwndDlg, 0);
+            break;
+        }
+        return TRUE;
+    case WM_CLOSE:
+    case WM_DESTROY:
+        EndDialog(hwndDlg, 0);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+</pre>
+  <p>
+    Put the prototype for the function in our prototype section, and the actual function after the main window
+    procedure. This function will act exactly the same as the message procedure of our main window, except that it's for
+    the message box (and therefore has to behave as a dialog procedure rather than a window procedure, which means it
+    returns FALSE instead of DefWindowProc() if the message wasn't handled).
+  </p>
+  <p>
+    The last thing we need to do is add the hanlder for the message that creates the about box (which comes in through
+    WM_COMMAND because it's a menu message):
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_ABOUT:
+            DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), (char*)IDD_ABOUT, hWnd, AboutDialogProc);
+            break;
+</pre>
+  <p>
+    That tells Windows to create and show our About box and tells it where to get the template (IDD_ABOUT) and what
+    function will handle messages for that dialog (AboutDialogProc).
+  </p>
+  <p>
+    You can stop here, if you'd like, as this is a very basic shell for how Notepad has been built. If you feel daring
+    enough, you can continue and I'll walk through creating some parts of the File menu and the Edit menu.
+  </p>
+  <p>
+    The first in order to work on the file menu, is to add the options we'll be working on. They are, &amp;New,
+    &amp;Open..., &amp;Save, and Save &amp;As...(the elipses are part of the option names). Those correspond to ID_NEW,
+    ID_OPEN, ID_SAVE, and ID_SAVE_AS respectively.
+  </p>
+
+  <p>
+    Before we can start, we need to add some global variables to the program:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+char g_long_filename[MAX_FILE*2];
+char g_short_filename[MAX_FILE];
+char g_title[MAX_FILE*2];
+</pre>
+  <p>
+    This will allow us to keep track of the long (full path) and short (just the file name) filenames that we're
+    working with, and the title of the window (which changes based on what file is open). With these new global
+    variables comes a little bit of upkeep for us. We need to add some initialization to the top of our WinMain():
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    memset(g_long_filename, 0, sizeof(g_long_filename));
+    memset(g_short_filename, 0, sizeof(g_short_filename));
+    strncpy(g_short_filename, "Untitled", sizeof(g_short_filename));
+
+    memset(g_title, 0, sizeof(g_title));
+    _snprintf(g_title, sizeof(g_title), "%s - %s", g_short_filename, PROGRAM_NAME);
+</pre>
+  <p>
+    Because we've set the title to be the short filename and the PROGRAM_NAME (in the snprintf() call), we can use
+    that as the title of our window when we create it. In order to do that, you'll need to change the window title
+    parameter in CreateWindowEx() from PROGRAM_NAME to g_title.
+  </p>
+  <p>
+    We'll also need a static variable to let us know if a file has been saved or not, and a return value holder, in
+    our window procedure, so add this to the top of it:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+    static bool saved = true;
+    int r=0;
+</pre>
+  <p>
+    The first addition we'll make is for the ID_SAVE handler in WM_COMMAND:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_SAVE:
+            r = save(hWnd, edit_handle);
+            if(0 == r)  // file was saved
+                saved = true;
+            else if(r &gt; 0)  // user changed their mind
+                break;
+            else  // failed to save file
+                MessageBox(hWnd, "There was an error saving the file!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+            break;
+</pre>
+  <p>
+    Now, before that'll compile, we need to add the save() function to our program, but in order to do that, we'll
+    need to add the ID_SAVE_AS handler in WM_COMMAND:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_SAVE_AS:
+            r = save_as(hWnd, edit_handle);
+            if(0 == r)  // file was saved
+                saved = true;
+            else if(r &gt; 0)  // user changed their mind
+                break;
+            else  // failed to save file
+                MessageBox(hWnd, "There was an error saving the file!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+            break;
+</pre>
+  <p>
+    With both of those handlers there we can add the functions (put the constants at the top with our other constants):
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+const char FILTER[]        = "Text Documents\0*.enp;*.txt\0All Files (*.*)\0*.*";
+const char DEF_EXTENSION[] = "enp";
+
+int save(HWND main_window, HWND edit_window)
+{{ '{' }}
+    char t_text[MAX_TEXT];
+    memset(&amp;t_text, 0, sizeof(t_text));
+
+    if(0 == strcmp(g_long_filename, "")) {{ '{' }}
+        // let the save_as procedure deal with it
+        return save_as(main_window, edit_window);
+    } else {{ '{' }}
+        // file was saved once already, so just reuse it
+        memset(t_text, 0, sizeof(t_text));
+        GetWindowText(edit_window, t_text, sizeof(t_text));
+
+        if(save_text(g_long_filename, t_text, sizeof(t_text)) &lt; 0)
+            return -1;
+
+        memset(g_title, 0, sizeof(g_title));
+        _snprintf(g_title, sizeof(g_title), "%s - %s", g_short_filename, PROGRAM_NAME);
+        SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
+    }
+
+    return 0;
+}
+
+
+int save_as(HWND main_window, HWND edit_window)
+{{ '{' }}
+    char t_text[MAX_TEXT];
+    OPENFILENAME t_save_file;
+
+    memset(&amp;t_text, 0, sizeof(t_text));
+    memset(&amp;t_save_file, 0, sizeof(OPENFILENAME));
+    t_save_file.lStructSize    = sizeof(OPENFILENAME);
+    t_save_file.hwndOwner      = main_window;
+    t_save_file.lpstrFilter    = FILTER;
+    t_save_file.lpstrFile      = g_long_filename;
+    t_save_file.nMaxFile       = sizeof(g_long_filename);
+    t_save_file.lpstrFileTitle = g_short_filename;
+    t_save_file.nMaxFileTitle  = sizeof(g_short_filename);
+    t_save_file.Flags          = OFN_CREATEPROMPT | OFN_NOREADONLYRETURN |
+                                    OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
+    t_save_file.lpstrDefExt    = DEF_EXTENSION;
+    if(0 == GetSaveFileName(&amp;t_save_file)) {{ '{' }}
+        if(0 != CommDlgExtendedError())
+            return -1;
+        else
+            return 1;
+    }
+
+    memset(t_text, 0, sizeof(t_text));
+    GetWindowText(edit_window, t_text, sizeof(t_text));
+
+    if(save_text(g_long_filename, t_text, sizeof(t_text)) &lt; 0)
+        return -2;
+
+    memset(g_title, 0, sizeof(g_title));
+    _snprintf(g_title, sizeof(g_title), "%s - %s", g_short_filename, PROGRAM_NAME);
+    SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
+
+    return 0;
+}
+</pre>
+  <p>
+    Add them after the window procedures, and make sure to add the prototypes for them at the top of the program with
+    our other prototypes. The basics of what's going on in save() is that if the global long filename is blank, it gives
+    control to save_as, otherwise it gets the text from the edit window and calls save_text() to save the text (which
+    we'll get to in a minute). It also sends a message to the main window to change the title to reflect the filename
+    that we saved (though that could be left out seeing as how the file would have to have been saved once already, and
+    therefore the title would be correct to begin with, it's up to you). The save_as() function is where the real fun
+    is. It sets up an OPENFILENAME structure with the filter we want, and some options (which you can read about in the
+    MSDN). We then call GetSaveFileName() to create the common dialog for Save As. Common dialogs are a very important
+    feature in Windows. They allow you to write your program while maintaining a common interface that all Windows
+    programs should use (basically avoiding reinventing the wheel and confusing the user with a million different
+    dialogs). If the dialog returns 0, we check to see if the user clicked Cancel/Close or if there really was an error
+    (this is done through the call to CommDlgExtendedError(), which you can read more about in the MSDN). Once the user
+    selects a filename for saving as, we get the text, save it, and update the window title, just as we did in the
+    save() call.
+  </p>
+  <p>Before any of that will work, however, we need the save_text() function, which we'll use to save the text of the
+    edit box to a file:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int save_text(char* file, char* text, unsigned int len)
+{{ '{' }}
+    FILE* f = NULL;
+    f = fopen(file, "w");
+    if(NULL == f)
+        return -1;
+
+    if(fwrite(text, sizeof(char), len, f) &lt; len) {{ '{' }}
+        fclose(f);
+        return -2;
+    }
+    fclose(f);
+
+    return 0;
+}
+</pre>
+  <p>
+    This just opens the file for writing and writes the text passed to the function. If it doesn't write all the
+    characters (ie, an error) than it returns a negative value. We must also make sure to close the file at the end of
+    this, or we'll never see any of the changes we made.
+  </p>
+  <p>
+    With those two things, we can create the handler for ID_NEW in WM_COMMAND:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_NEW:
+            if(0 == new_file(hWnd, edit_handle, saved))  // file was saved (only thing we care about)
+                saved = true;
+            break;
+</pre>
+  <p>
+    If you haven't noticed, the main patern is to just use a function to handle the commands instead of putting the
+    handler code in the actual switch statement. This is always a good habit to get into as it makes the code much
+    easier to read and maintain. This is the code for new_file() that we'll use:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int new_file(HWND main_window, HWND edit_window, bool saved)
+{{ '{' }}
+    int r =0;
+
+    if(!saved) {{ '{' }}
+        r = MessageBox(main_window, "The text in the Untitled file has changed.\r\n\r\n"
+                        "Do you want to save the changes?",
+                        PROGRAM_NAME, MB_YESNOCANCEL | MB_ICONEXCLAMATION);
+        if(IDCANCEL == r)
+            return 1;
+        else if(IDYES == r)
+            save(main_window, edit_window);
+    }
+
+    // make it all new and pretty
+    memset(g_long_filename, 0, sizeof(g_long_filename));
+    memset(g_short_filename, 0, sizeof(g_short_filename));
+    strncpy(g_short_filename, "Untitled", sizeof(g_short_filename));
+    memset(g_title, 0, sizeof(g_title));
+    _snprintf(g_title, sizeof(g_title), "%s - %s", g_short_filename, PROGRAM_NAME);
+    SendMessage(edit_window, WM_SETTEXT, NULL, (LPARAM)"");
+    SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
+
+    return 0;
+}
+</pre>
+  <p>
+    This just handles whether the file was changed or not and whether it should be saved (using the save() call). It
+    then resets the window title and the edit text to what it was when we first created the window.
+  </p>
+  <p>
+    Something that we really do need at this point, before the ID_NEW code will function properly, is this:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        // look at the hi word value
+        switch(HIWORD(wParam))
+        {{ '{' }}
+        case EN_UPDATE:
+            if(lParam == (LPARAM)edit_handle)
+                saved = false;
+            break;
+        }
+</pre>
+  <p>
+    Put that after the switch(LOWORD(wParam)) of our WM_COMMAND (but before the break statement). This will parse out
+    the EN_UPDATE message from the edit box. This lets us know whenever the edit box text is changed so that we can
+    notify the code that we haven't saved the text, and need to do so. We also need to change the code we use anytime
+    the program exits:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_EXIT:
+            if(0 == new_file(hWnd, edit_handle, saved))  // file was saved (only thing we care about)
+                saved = true;
+            PostQuitMessage(0);
+            break;
+
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+        if(0 == new_file(hWnd, edit_handle, saved))  // file was saved (only thing we care about)
+                saved = true;
+        PostQuitMessage(0);
+        break;
+</pre>
+  <p>
+    All that'll do is create a new file when we exit, so that we check to see if the text needs to be saved. It's not
+    very efficient, but it gets the job done for this simple tutorial. You can always expand on it later.
+  </p>
+  <p>
+    The last bit of the File menu I'll focus on is the ID_OPEN code:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_OPEN:
+            r = open_file(hWnd, edit_handle);
+            if(0 == r)  // file was opened
+                saved = true;
+            else if(r &gt; 0)  // user changed mind
+                break;
+            else  // failed to open file
+                MessageBox(hWnd, "There was an error opening the file!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+            break;
+</pre>
+  <p>
+    This is very similar to ID_SAVE in that it calls a function:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int open_file(HWND main_window, HWND edit_window)
+{{ '{' }}
+    char t_text[MAX_TEXT];
+    OPENFILENAME t_open_file;
+
+    memset(&amp;t_text, 0, sizeof(t_text));
+    memset(&amp;t_open_file, 0, sizeof(OPENFILENAME));
+    t_open_file.lStructSize    = sizeof(OPENFILENAME);
+    t_open_file.hwndOwner      = main_window;
+    t_open_file.lpstrFilter    = FILTER;
+    t_open_file.lpstrFile      = g_long_filename;
+    t_open_file.nMaxFile       = sizeof(g_long_filename);
+    t_open_file.lpstrFileTitle = g_short_filename;
+    t_open_file.nMaxFileTitle  = sizeof(g_short_filename);
+    t_open_file.Flags          = OFN_CREATEPROMPT | OFN_NOREADONLYRETURN | OFN_PATHMUSTEXIST;
+    t_open_file.lpstrDefExt    = DEF_EXTENSION;
+    if(0 == GetOpenFileName(&amp;t_open_file)) {{ '{' }}
+        if(0 != CommDlgExtendedError())
+            return -1;
+        else
+            return 1;
+    }
+
+    memset(t_text, 0, sizeof(t_text));
+    if(open_text(g_long_filename, t_text, sizeof(t_text)) &lt; 0)
+        return -2;
+    SendMessage(edit_window, WM_SETTEXT, NULL, (LPARAM)t_text);
+
+    memset(g_title, 0, sizeof(g_title));
+    _snprintf(g_title, sizeof(g_title), "%s - %s", g_short_filename, PROGRAM_NAME);
+    SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
+
+    return 0;
+}
+</pre>
+  <p>
+    Just like save_as(), this creates a common dialog box. The only difference is that we use GetOpenFileName() to
+    create an Open dialog box. Once the filename is gotten, it calls open_text() to get the text of the file, sets the
+    text of the edit box to that text, and updates the title of the main window. The code for open_text() is as follows:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int open_text(char* file, char* text, unsigned int len)
+{{ '{' }}
+    FILE* f = NULL;
+
+    memset(text, 0, len);
+    f = fopen(file, "r");
+    if(NULL == f)
+        return -1;
+
+    if(fread(text, sizeof(char), len, f) &lt; len) {{ '{' }}
+        if(!feof(f)) {{ '{' }}
+            return -2;
+            fclose(f);
+        }
+    }
+    fclose(f);
+
+    return 0;
+}
+</pre>
+  <p>
+    This opens the file for reading, reads the text into the text parameter that was passed, and then closes the file.
+    It's very similar to save_text(), except that it reads from the file instead of writing to it.
+  </p>
+  <p>
+    With the File menu done (at least, as far as this tutorial is concerned), we can focus on the Edit menu. Add the
+    options for &amp;Undo, Cu&amp;t, &amp;Copy, &amp;Paste, and De&amp;lete, and Set &amp;Font... These correspond to
+    ID_UNDO, ID_CUT, ID_COPY, ID_PASTE, ID_DELETE, and ID_SET_FONT.
+  </p>
+  <p>
+    For the ID_UNDO, ID_CUT, ID_COPY, ID_PASTE, and ID_DELETE message, just add this (in WM_COMMAND):
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_UNDO:
+            if(SendMessage(edit_handle, EM_CANUNDO, NULL, NULL))
+                SendMessage(edit_handle, WM_UNDO, NULL, NULL);
+            break;
+        case ID_CUT:
+            SendMessage(edit_handle, WM_CUT, NULL, NULL);
+            break;
+        case ID_COPY:
+            SendMessage(edit_handle, WM_COPY, NULL, NULL);
+            break;
+        case ID_PASTE:
+            SendMessage(edit_handle, WM_PASTE, NULL, NULL);
+            break;
+        case ID_DELETE:
+            SendMessage(edit_handle, WM_CLEAR, NULL, NULL);
+            break;
+</pre>
+  <p>
+    This takes advantage of a lot of the built in code for the edit box. We just pass the messages on to it and let it
+    deal with it. The only real "out there" bit is for ID_UNDO. You have to make sure that something can be undone
+    before it can be undone.So we use EM_CANUDNO to check and make sure something can be undone before undoing anything.
+    Pretty simple.
+  </p>
+  <p>
+    The very last bit of this tutorial is dealing with setting the font of the edit box. So add this to the WM_COMMAND
+    section of the main window procedure:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+        case ID_SET_FONT:
+            if(set_font(hWnd, edit_handle) &lt; 0)
+                MessageBox(hWnd, "There was an error setting the font!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
+            break;
+</pre>
+  <p>
+    This just lets the set_font() function deal with setting the font of the edit box:
+  </p>
+  <pre class="mat-elevation-z6 es-code">
+int set_font(HWND main_window, HWND edit_window)
+{{ '{' }}
+    CHOOSEFONT choose_font;
+    LOGFONT    l_font;
+    HFONT      t_font = NULL;
+
+    memset(&amp;choose_font, 0, sizeof(CHOOSEFONT));
+    memset(&amp;l_font, 0, sizeof(LOGFONT));
+    choose_font.lStructSize = sizeof(CHOOSEFONT);
+    choose_font.hwndOwner   = main_window;
+    choose_font.lpLogFont   = &amp;l_font;
+    choose_font.Flags       = CF_SCREENFONTS | CF_FORCEFONTEXIST | CF_INITTOLOGFONTSTRUCT;
+    if(0 == ChooseFont(&amp;choose_font)) {{ '{' }}
+        if(0 != CommDlgExtendedError())
+            return -1;
+        else
+            return 1;
+    }
+    t_font = CreateFontIndirect(&amp;l_font);
+    if(NULL == t_font)
+        return -2;
+    SendMessage(edit_window, WM_SETFONT, (WPARAM)t_font, MAKELONG(true, 0));
+
+    return 0;
+}
+</pre>
+  <p>
+    Note that this is a seperate function from the other set_font() we wrote, and doesn't replace it (the function
+    signatures are different, so it's okay). This function uses a LOGFONT structure to setup the defaults we want for
+    our font and then calls ChooseFont() to create the common dialog for choosing a font. As with save_as() and open(),
+    this keeps the L&amp;F of our program on a common level that won't get the user in a hussle trying to figure out
+    what we've done. Once the ChooseFont() call has filled the rest of our LOGFONT structure, use CreateFontIndirect()
+    to create an HFONT handle that we can send to the edit window through WM_SETFONT. Try changing the font in your
+    program to see how fun it is to change the font!
+  </p>
+  <p>
+    That's all for now folks. Obviously there's a LOT you can do to perfect this. In fact, I've only really skimmed
+    the surface of how much has actually gone into making Notepad. Here are some ideas you can use to try and finish off
+    what you've made through this tutorial:
+  </p>
+  <ul>
+    <li>File-&gt;Page Setup... (see PageSetupDlg())</li>
+    <li>File-&gt;Print (see PrintDlg())</li>
+    <li>Edit-&gt;Select All</li>
+    <li>Edit-&gt;Time/Date</li>
+    <li>Edit-&gt;Word Wrap</li>
+    <li>The entire Search menu (see FindText() and ReplaceText() if you like)</li>
+    <li>Setup the Keyboard Accelerators that Notepad uses (and any others you like)</li>
+    <li>Recreate the configuration file that Notepad uses (if you can find it)</li>
+    <li>Other hidden features that I may not have caught</li>
+    <li>Error check, error check, error check</li>
+  </ul>
+  <p>
+    You can find the source code and MSVC++ 6.0 workspace for this tutorial <a
+      href="{{environment.staticUrl}}/home/programs/tutorials/notepad/">here</a>. I've commented the source as much as I
+    can without
+    distracting from what's going on just in case. Please send any suggestions or fixes my way (link is at the bottom of
+    the tutorial). Enjoy what I've put together and I hope you all learnt something from it.
+  </p>
+  <mat-divider></mat-divider>
+  <p>
+    You may find the original version of this tutorial at my <a href="http://www.energonsoftware.org/">homepage</a>.
+    I'd appreciate any distribution of this tutorial to have the source go with it. It was given to you as a learning
+    aid, so please pay it forward.
+  </p>
+</div>

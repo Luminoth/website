@@ -1,0 +1,26 @@
+<div fxLayout="column">
+  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="!hasDownloads">
+    No Downloads!
+  </div>
+  <mat-accordion *ngIf="hasDownloads" multi>
+    <!-- TODO: these should be sorted in some way -->
+    <mat-expansion-panel *ngFor="let downloadCategory of downloads | keyvalue" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <div fxLayout="row" fxFlex>
+            <div fxFlex>{{getDownloadCategory(downloadCategory.key).title.toUpperCase()}}</div>
+            <!--<div fxFlex>{{getDownloadCategory(downloadCategory.key).description}}</div>-->
+            <div fxFlex></div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <!-- TODO: make this a table -->
+      <ul>
+        <li *ngFor="let download of downloadCategory.value">
+          <a href="{{download.url}}">{{download.name}}</a>
+        </li>
+      </ul>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

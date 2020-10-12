@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "core",
+    "api",
+]
+
+[profile.release.build-override]
+opt-level = 0

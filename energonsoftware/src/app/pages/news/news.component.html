@@ -1,0 +1,25 @@
+<div fxLayout="column">
+  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="!hasNews">
+    No News!
+  </div>
+  <mat-accordion *ngIf="hasNews" multi>
+    <mat-expansion-panel *ngFor="let news of news" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <div fxLayout="row" fxFlex>
+            <div fxLayout="column" fxFlex>
+              <div class="es-news-date">{{formatTimestamp(news.timestamp)}}</div>
+              <div class="es-news-author">
+                <a href="mailto:{{getNewsAuthor(news.author).email_address}}">{{getNewsAuthorName(news.author)}}</a>
+              </div>
+            </div>
+            <div class="es-news-title" fxFlex>{{news.title}}</div>
+            <div fxFlex></div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div [innerHtml]="news.news | safeHtml"></div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

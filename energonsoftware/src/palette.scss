@@ -1,0 +1,8 @@
+@import '~@angular/material/theming';
+
+// define palettes ($palette-name, main color, light variant, dark variant)
+// https://material.io/design/color/#color-usage-palettes
+
+$es-app-primary: mat-palette($mat-cyan, 800);
+$es-app-accent:  mat-palette($mat-blue-grey, 100);
+$es-app-warn:    mat-palette($mat-red);

@@ -1,0 +1,213 @@
+{
+    "wowVersion": "6.0.2",
+    "addons": [
+        {
+            "name": "Ackis Recipe List",
+            "version": "3.0.8",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowace.com/addons/arl/",
+            "description": "Tracks and displays missing recipes"
+        },
+        {
+            "name": "AuctioneerSuite",
+            "version": "5.21c.5521",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.auctioneeraddon.com/dl/",
+            "description": "In-game auction data<br />Disable Enchantrix and SlideBar"
+        },
+        {
+            "name": "Bagnon",
+            "version": "6.0.16",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/bagnon/",
+            "description": "Merges bags into one searchable interface<br />Disable Bagnon Guild Bank and Bagnon Void Storage"
+        },
+        {
+            "name": "Battleground Targets",
+            "version": "50400-1",
+            "latestVersion": false,
+            "enabled": true,
+            "url": "http://www.wowace.com/addons/battlegroundtargets/",
+            "description": "Shows enemy battleground players"
+        },
+        {
+            "name": "Blood Shield Tracker",
+            "version": "0.34",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowace.com/addons/blood-shield-tracker/",
+            "description": "Tracks Death Knight blood shield"
+        },
+        {
+            "name": "CurrencyTracker",
+            "version": "1.4",
+            "latestVersion": false,
+            "enabled": true,
+            "url": "http://www.wowinterface.com/downloads/info13001-CurrencyTracker.html",
+            "description": "Adds currency tracking to Bagnon and Titan Panel"
+        },
+        {
+            "name": "Deadly Boss Mods Core",
+            "version": "6.0.8",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/deadly-boss-mods/",
+            "description": "Boss warning interface"
+        },
+        {
+            "name": "Deadly Boss Mods PvP",
+            "version": "r39",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/dbm-pvp/",
+            "description": "PvP DBM addon"
+        },
+        {
+            "name": "Gatherer",
+            "version": "5.0.0",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.gathereraddon.com/dl/",
+            "description": "Tracks gathered node locations"
+        },
+        {
+            "name": "GladiatorlosSA",
+            "version": "2.1.1",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/gladiatorlossa/",
+            "description": "PvP sound alerts"
+        },
+        {
+            "name": "Healers Have to Die",
+            "version": "2.3.4",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowace.com/addons/healers-have-to-die/",
+            "description": "Displays an icon above friendly and enemy healers"
+        },
+        {
+            "name": "I Interrupted That",
+            "version": "3.5.0",
+            "latestVersion": false,
+            "enabled": true,
+            "url": "http://www.wowinterface.com/downloads/info14979-IInterruptedThat.html",
+            "description": "Emotes who interrupted a spell.<br />\"/iit toggle\" to turn on/off"
+        },
+        {
+            "name": "Juked",
+            "version": "1.4.5",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/juked/",
+            "description": "Tracks interrupts used against you"
+        },
+        {
+            "name": "LoggerHead",
+            "version": "5.4.0",
+            "latestVersion": false,
+            "enabled": false,
+            "url": "http://www.wowace.com/addons/loggerhead/",
+            "description": "Automated combat log enabler"
+        },
+        {
+            "name": "Pet Battle Teams",
+            "version": "3.2.8",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/pet-battle-teams/",
+            "description": "Tracks pet battle teams"
+        },
+        {
+            "name": "Prat",
+            "version": "3.5.10",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowace.com/addons/prat-3-0/",
+            "description": "Chat interface replacement"
+        },
+        {
+            "name": "Quest Completist",
+            "version": "1.02",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/quest_completist/",
+            "description": "Shows which quests have been completed in each zone"
+        },
+        {
+            "name": "REFlex Arena/BG Historian",
+            "version": "0.9.8.7",
+            "latestVersion": false,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/reflex-battleground-historian/",
+            "description": "Tracks arena and BG matches"
+        },
+        {
+            "name": "sArena",
+            "version": "1.1.1",
+            "latestVersion": false,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/sarena/",
+            "description": "Shows trinkets on arena frames"
+        },
+        {
+            "name": "SaySapped",
+            "version": "141015",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/saysapped/",
+            "description": "Says \"sapped\" when sapped"
+        },
+        {
+            "name": "Skada",
+            "version": "1.4-23",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowace.com/addons/skada/",
+            "description": "Damage meter"
+        },
+        {
+            "name": "SmartTargeting",
+            "version": "1.14",
+            "latestVersion": false,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/smarttargeting/",
+            "description": "Swaps targeting keybinds based on PvE/PvP"
+        },
+        {
+            "name": "TidyPlates",
+            "version": "6.15.3",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowinterface.com/downloads/info13674-TidyPlates.html",
+            "description": "Nameplate replacement. Neon theme only"
+        },
+        {
+            "name": "Titan Panel",
+            "version": "5.4.1.60000",
+            "latestVersion": false,
+            "enabled": true,
+            "url": "http://wow.curseforge.com/addons/titan-panel/",
+            "description": "Adds info bar to the top of the screen"
+        },
+        {
+            "name": "tullaRange",
+            "version": "6.0.4",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowinterface.com/downloads/info15636-tullaRange.html",
+            "description": "Spell OOR and OOM indicator"
+        },
+        {
+            "name": "Vanas KoS",
+            "version": "4.46",
+            "latestVersion": true,
+            "enabled": true,
+            "url": "http://www.wowace.com/addons/vanas-kos/",
+            "description": "KoS and nearby enemy tracker"
+        }
+    ]
+}

@@ -1,0 +1,74 @@
+<div fxLayout="column" fxFlexFill>
+  <mat-toolbar class="fixed mat-elevation-z6" color="primary">
+    <mat-toolbar-row fxLayout="row">
+      <button type="button" mat-icon-button (click)="sidenav.toggle()" fxShow fxHide.gt-sm>
+        <mat-icon>menu</mat-icon>
+      </button>
+      <a mat-button routerLink="/">Energon Software</a>
+      <div fxShow fxHide.lt-md fxLayoutAlign="start stretch">
+        <a mat-button routerLink="/news" routerLinkActive="active-link">News</a>
+        <a mat-button routerLink="/about" routerLinkActive="active-link">About</a>
+        <a mat-button routerLink="/downloads" routerLinkActive="active-link">Downloads</a>
+        <a mat-button routerLink="/links" routerLinkActive="active-link">Links</a>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/news" routerLinkActive="active-link">News</a>
+        <a mat-list-item routerLink="/about" routerLinkActive="active-link">About</a>
+        <a mat-list-item routerLink="/downloads" routerLinkActive="active-link">Downloads</a>
+        <a mat-list-item routerLink="/links" routerLinkActive="active-link">Links</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content fxFlexFill>
+      <div class="container-15">
+        <router-outlet></router-outlet>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- Main Ad -->
+        <ins class="adsbygoogle" style="display: block" ad-client="ca-pub-7081307647202932" ad-slot="2514313204"
+          ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <div class="es-footer fixed mat-elevation-z6" fxLayout="row">
+    <div class="es-copyright" fxLayout="row">
+      &copy; 2002-2020 Energon Software
+    </div>
+    <div fxFlex></div>
+    <div class="es-social-icons" fxLayout="row">
+      <a href="mailto:ignignokterr@gmail.com">
+        <mat-icon class="es-mail-icon">email</mat-icon>
+      </a>
+      <a href="https://www.linkedin.com/in/slillie"><img src="assets/img/linkedin-4-32.png" width="16" height="16"></a>
+      <div fxFlex="10px"></div>
+      <a href="https://github.com/luminoth"><img src="assets/img/GitHub-Mark-Light-32px.png" width="16" height="16"></a>
+      <div fxFlex="10px"></div>
+      <a href="https://www.twitter.com/Luminoth82"><img src="assets/img/Twitter_Social_Icon_Circle_White.png" width="16"
+          height="16"></a>
+      <div fxFlex="10px"></div>
+      <a href="https://www.facebook.com/shanelillie"><img src="assets/img/f_logo_RGB-White_58.png" width="16"
+          height="16"></a>
+    </div>
+  </div>
+</div>
+
+<!-- Google Analytics //-->
+<script type="text/javascript">
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments);
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+  ga("create", "UA-33728006-1", "auto");
+  ga("send", "pageview");
+</script>

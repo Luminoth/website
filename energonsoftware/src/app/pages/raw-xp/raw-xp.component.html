@@ -1,0 +1,59 @@
+<div class="mat-title">Thoughts on Raw Sockets in WindowsXP</div>
+<div>
+  <p>
+    <span class="es-warn">Disclaimer:</span> The following is a collection of thoughts I jotted down in response to
+    Steve Gibson's writings about <a href="http://grc.com/dos/winxp.htm">Raw Sockets in WindowsXP</a>, the next consumer
+    OS from our friends at <a href="http://www.microsoft.com/">Microsoft</a>. I by no means disagree with him or his
+    points, I just feel that I have some thoughts of my own to share, along with different bits of detail that he
+    doesn't.
+  </p>
+  <p>
+    I'm very happy to get links, information, articles, your own thoughts, whatever, on this. I'll add whatever I get
+    that I can find facts on. This isn't here to say WindowsXP isn't worth using or that Steve Gibson is wrong, he knows
+    much more than I do and WindowsXP has far worse faults than its new raw sockets implementation.
+  </p>
+  <mat-divider></mat-divider>
+  <p>
+    The basics of what's going on are boiled down in the article, BSD Sockets let you configure an entire packet from
+    the ground up (what we know of as the IP protocol) and any OS using BSD Sockets has this capability (which is pretty
+    much all Unix varients).
+  </p>
+  <p>
+    When Windows Sockets were released, they didn't include that feature. They, in a commendable move, prevented
+    programmers from messing around with the actual IP layer. You could use raw sockets to create your own protocol on
+    top of IP (ICMP packets, ping, traceroute, etc., are sent via raw sockets), but you couldn't mess with the IP
+    protocol itself, and hence, there was no way to spoof IP addresses.
+  </p>
+  <p>
+    Once that limitation was discovered, 3rd party libraries/drivers were released (<a
+      href="https://www.winpcap.org/">winpcap</a> and others) that circumvented the *defect* in Windows
+    Sockets. Obviously, people wanted to mess with the IP protocol, and rightfully so, Microsoft doesn't tell you how to
+    wire your network, why should they tell you what standard it has to follow? So, starting with Windows 2000,
+    Microsoft took a more BSD type stance and allowed raw sockets to modify the IP layer (but you have to have
+    Administrator rights to do so). As it stands, all the people running Windows2000 as Administrator, or with
+    Administrator rights, are on the same level as anyone running WindowsXP.
+  </p>
+  <p>
+    With WindowsXP, I'm not sure if you have to have Administrator rights, but the main point is that it's a consumer
+    Operating System and not a *business* Operating System like Windows 2000, and, to an extent, yes, this creates a
+    threat, but honestly, anyone with enough power behind them to be used in the kind of DoS attack being discussed by
+    Steve Gibson, will probably have a firewall with the capability to block spoofed IPs, and to an extent, anyone worth
+    taking down should either have a firewall that blocks spoofed IPs, or they deserve to be taken down.
+  </p>
+  <p>
+    And for those wondering how you can block spoofed IPs, the basic way that it works is that whenever a SYN packet is
+    recieved by the server (client requesting connection), a packet is sent back to the client asking for the connection
+    attempt again. Obviously if the IP is spoofed, the connection won't be attempted again (it wasn't attempted by that
+    client to begin with), and the connection is dropped altogether.
+  </p>
+  <p>
+    What it basically boils down to is that it's not new, it's in Windows 2000, it's in everything before Windows 2000
+    via 3rd party libraries, and it's in Unix. Microsoft is making it easier for script kiddies, but at the same time,
+    it puts control back where it belongs, in the hands of programmers. Unfortunately, with that comes security issues
+    that really, people need to be aware of and prepared for regardless.
+  </p>
+  <p>
+    If you have anything you'd like me to add or correct (or anything else), send it off to <a
+      href="mailto:ignignokterr@gmail.com">me</a>. Thanks for taking the time to read my thoughts.
+  </p>
+</div>
