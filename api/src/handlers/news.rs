@@ -36,7 +36,7 @@ pub async fn get_news_authors_handler() -> Result<Box<dyn warp::Reply>, warp::Re
     };
 
     let mut news_authors = Vec::new();
-    match dynamodb::query(&client, "items", expression, |_, deserialize| {
+    match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
         let mut news_author = news::NewsAuthor::default();
         deserialize(&mut news_author)?;
 
@@ -89,7 +89,7 @@ pub async fn get_news_handler() -> Result<Box<dyn warp::Reply>, warp::Rejection>
     };
 
     let mut news = Vec::new();
-    match dynamodb::query(&client, "items", expression, |_, deserialize| {
+    match dynamodb::query_descending(&client, "items", expression, Some(10), |_, deserialize| {
         let mut news_ = news::News::default();
         deserialize(&mut news_)?;
 

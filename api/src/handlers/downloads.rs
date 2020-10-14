@@ -36,7 +36,7 @@ pub async fn get_download_categories_handler() -> Result<Box<dyn warp::Reply>, w
     };
 
     let mut download_categories = Vec::new();
-    match dynamodb::query(&client, "items", expression, |_, deserialize| {
+    match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
         let mut download_category = downloads::DownloadCategory::default();
         deserialize(&mut download_category)?;
 
@@ -91,7 +91,7 @@ pub async fn get_downloads_handler() -> Result<Box<dyn warp::Reply>, warp::Rejec
     };
 
     let mut downloads = Vec::new();
-    match dynamodb::query(&client, "items", expression, |_, deserialize| {
+    match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
         let mut download = downloads::Download::default();
         deserialize(&mut download)?;
 
