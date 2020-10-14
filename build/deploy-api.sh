@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -e
+
 AWS=aws
 
 REGION=us-west-2

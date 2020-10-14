@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -e
+
 NG=ng
 AWS=aws
 
@@ -12,8 +14,10 @@ if [ -z ${UI_DISTRIBUTION} ]; then
     exit 1
 fi
 
-echo "Building UI..."
 cd ../$UIDIR
+rm -rf dist/
+
+echo "Building UI..."
 $NG build --prod
 
 echo "Removing old deployment..."

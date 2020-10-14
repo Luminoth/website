@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -e
+
 AWS=aws
 
 BUCKET=energonsoftware-static
