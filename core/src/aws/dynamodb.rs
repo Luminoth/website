@@ -5,9 +5,6 @@ use dynamodb_expression::Expression;
 use rusoto_core::*;
 use rusoto_dynamodb::*;
 
-const MAX_QUERY_ITEMS: i64 = 1000;
-const MAX_SCAN_ITEMS: i64 = 1000;
-
 pub async fn connect(region: impl AsRef<str>) -> anyhow::Result<DynamoDbClient> {
     Ok(DynamoDbClient::new(Region::from_str(region.as_ref())?))
 }
@@ -121,6 +118,7 @@ async fn do_query<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     index_name: Option<String>,
     forward: bool,
     mut item_cb: impl FnMut(
@@ -133,6 +131,7 @@ where
 {
     let table_name = table_name.into();
 
+    let mut item_count = 0;
     let mut exclusive_start_key = None;
     loop {
         let output = client
@@ -144,15 +143,16 @@ where
                 filter_expression: expression.filter().cloned(),
                 projection_expression: expression.projection().cloned(),
                 index_name: index_name.clone(),
-                limit: Some(MAX_QUERY_ITEMS),
+                limit,
                 scan_index_forward: Some(forward),
                 exclusive_start_key,
                 ..Default::default()
             })
             .await?;
 
+        let mut stop_query = false;
         let items = output.items.unwrap_or_else(Vec::new);
-        for i in items {
+        for i in &items {
             let (_, stop) = item_cb(
                 &i,
                 Box::new({
@@ -165,6 +165,18 @@ where
             )?;
 
             if stop {
+                stop_query = true;
+                break;
+            }
+        }
+
+        if stop_query {
+            break;
+        }
+
+        item_count += items.len() as i64;
+        if let Some(limit) = limit {
+            if item_count >= limit {
                 break;
             }
         }
@@ -182,6 +194,7 @@ pub async fn query<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
         Box<dyn FnOnce(&mut I) -> anyhow::Result<()>>,
@@ -190,13 +203,14 @@ pub async fn query<I>(
 where
     I: dynomite::Item,
 {
-    do_query(client, table_name, expression, None, true, item_cb).await
+    do_query(client, table_name, expression, limit, None, true, item_cb).await
 }
 
 pub async fn query_index<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     index_name: impl Into<String>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
@@ -210,6 +224,7 @@ where
         client,
         table_name,
         expression,
+        limit,
         Some(index_name.into()),
         true,
         item_cb,
@@ -217,10 +232,11 @@ where
     .await
 }
 
-pub async fn query_reverse<I>(
+pub async fn query_descending<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
         Box<dyn FnOnce(&mut I) -> anyhow::Result<()>>,
@@ -229,13 +245,14 @@ pub async fn query_reverse<I>(
 where
     I: dynomite::Item,
 {
-    do_query(client, table_name, expression, None, false, item_cb).await
+    do_query(client, table_name, expression, limit, None, false, item_cb).await
 }
 
-pub async fn query_index_reverse<I>(
+pub async fn query_index_descending<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     index_name: impl Into<String>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
@@ -249,6 +266,7 @@ where
         client,
         table_name,
         expression,
+        limit,
         Some(index_name.into()),
         false,
         item_cb,
@@ -260,6 +278,7 @@ async fn do_scan<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     index_name: Option<String>,
     mut item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
@@ -271,6 +290,7 @@ where
 {
     let table_name = table_name.into();
 
+    let mut item_count = 0;
     let mut exclusive_start_key = None;
     loop {
         let output = client
@@ -281,14 +301,15 @@ where
                 filter_expression: expression.filter().cloned(),
                 projection_expression: expression.projection().cloned(),
                 index_name: index_name.clone(),
-                limit: Some(MAX_SCAN_ITEMS),
+                limit,
                 exclusive_start_key,
                 ..Default::default()
             })
             .await?;
 
+        let mut stop_scan = false;
         let items = output.items.unwrap_or_else(Vec::new);
-        for i in items {
+        for i in &items {
             let (_, stop) = item_cb(
                 &i,
                 Box::new({
@@ -301,6 +322,18 @@ where
             )?;
 
             if stop {
+                stop_scan = true;
+                break;
+            }
+        }
+
+        if stop_scan {
+            break;
+        }
+
+        item_count += items.len() as i64;
+        if let Some(limit) = limit {
+            if item_count >= limit {
                 break;
             }
         }
@@ -318,6 +351,7 @@ pub async fn scan<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
         Box<dyn FnOnce(&mut I) -> anyhow::Result<()>>,
@@ -326,13 +360,14 @@ pub async fn scan<I>(
 where
     I: dynomite::Item,
 {
-    do_scan(client, table_name, expression, None, item_cb).await
+    do_scan(client, table_name, expression, limit, None, item_cb).await
 }
 
 pub async fn scan_index<I>(
     client: &DynamoDbClient,
     table_name: impl Into<String>,
     expression: Expression,
+    limit: Option<i64>,
     index_name: impl Into<String>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
@@ -346,6 +381,7 @@ where
         client,
         table_name,
         expression,
+        limit,
         Some(index_name.into()),
         item_cb,
     )

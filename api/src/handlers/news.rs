@@ -89,14 +89,21 @@ pub async fn get_news_handler() -> Result<Box<dyn warp::Reply>, warp::Rejection>
     };
 
     let mut news = Vec::new();
-    match dynamodb::query_descending(&client, "items", expression, Some(10), |_, deserialize| {
-        let mut news_ = news::News::default();
-        deserialize(&mut news_)?;
+    match dynamodb::query_index_descending(
+        &client,
+        "items",
+        expression,
+        Some(10),
+        "type-timestamp-index",
+        |_, deserialize| {
+            let mut news_ = news::News::default();
+            deserialize(&mut news_)?;
 
-        news.push(news_.clone());
+            news.push(news_.clone());
 
-        Ok((news_, false))
-    })
+            Ok((news_, false))
+        },
+    )
     .await
     {
         Ok(_) => (),
