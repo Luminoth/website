@@ -31,14 +31,13 @@ fn init_logging() {
 async fn main() -> anyhow::Result<()> {
     init_logging();
 
-    let routes = routes::init_routes().with(routes::init_cors());
-
     let addr = OPTIONS
         .read()
         .address()
         .parse::<SocketAddr>()
         .expect("Invalid address");
 
+    let routes = routes::init_routes().with(routes::init_cors());
     let filter = routes.with(warp::log::custom(|info| {
         // ignore AWS health check requests
         if let Some(user_agent) = info.user_agent() {
