@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { httpInterceptorProviders } from './http-interceptors';
 
@@ -51,9 +52,10 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    NgbModule,
     HttpClientModule,
     AppRoutingModule,
-    AppMaterialModule
+    AppMaterialModule,
   ],
   providers: [
     httpInterceptorProviders,

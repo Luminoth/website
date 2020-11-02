@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/theming';
 
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
 @mixin theme-color-grabber($theme) {
   $primary: map-get($theme, primary);
   $accent:  map-get($theme, accent);
