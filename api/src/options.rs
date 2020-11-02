@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use parking_lot::Mutex;
 use structopt::StructOpt;
 
@@ -12,6 +14,9 @@ pub struct Options {
 
     #[structopt(skip)]
     address: Mutex<Option<String>>,
+
+    #[structopt(long, default_value = ".")]
+    prefix: PathBuf,
 }
 
 impl Options {
@@ -25,5 +30,15 @@ impl Options {
                 addr
             }
         }
+    }
+
+    #[allow(dead_code)]
+    pub fn conf_dir(&self) -> PathBuf {
+        self.prefix.join("etc")
+    }
+
+    #[allow(dead_code)]
+    pub fn share_dir(&self) -> PathBuf {
+        self.prefix.join("share")
     }
 }

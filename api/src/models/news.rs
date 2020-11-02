@@ -1,6 +1,6 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Default, Clone, Serialize, dynomite::Item)]
+#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
 pub struct NewsAuthor {
     #[serde(skip)]
     #[dynomite(partition_key)]
@@ -16,7 +16,7 @@ pub struct NewsAuthor {
     last_name: String,
 }
 
-#[derive(Default, Clone, Serialize, dynomite::Item)]
+#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
 pub struct News {
     #[serde(skip)]
     #[dynomite(partition_key)]

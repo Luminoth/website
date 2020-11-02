@@ -1,6 +1,6 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Default, Clone, Serialize, dynomite::Item)]
+#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
 pub struct DownloadCategory {
     #[serde(skip)]
     #[dynomite(partition_key)]
@@ -14,7 +14,7 @@ pub struct DownloadCategory {
     description: String,
 }
 
-#[derive(Default, Clone, Serialize, dynomite::Item)]
+#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
 pub struct Download {
     #[serde(skip)]
     #[dynomite(partition_key)]

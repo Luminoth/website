@@ -10,6 +10,7 @@ import { RawXPComponent } from './pages/raw-xp/raw-xp.component';
 import { NotepadComponent } from './pages/notepad/notepad.component';
 import { SocketComponent } from './pages/socket/socket.component';
 import { KennelComponent } from './pages/kennel/kennel.component';
+import { Oct2005CabinComponent } from './pages/oct2005cabin/oct2005cabin.component';
 import { UnicodeComponent } from './pages/unicode/unicode.component';
 
 // TODO: this is super dumb, most of this is static content
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'tutorials/notepad', component: NotepadComponent },
   { path: 'tutorials/socket', component: SocketComponent },
   { path: 'kennel', component: KennelComponent },
+  { path: 'vacation/oct2005cabin', component: Oct2005CabinComponent },
   { path: 'unicode', component: UnicodeComponent },
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: '*', redirectTo: '/' },

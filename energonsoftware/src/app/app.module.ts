@@ -23,6 +23,7 @@ import { RawXPComponent } from './pages/raw-xp/raw-xp.component';
 import { NotepadComponent } from './pages/notepad/notepad.component';
 import { SocketComponent } from './pages/socket/socket.component';
 import { KennelComponent } from './pages/kennel/kennel.component';
+import { Oct2005CabinComponent } from './pages/oct2005cabin/oct2005cabin.component';
 import { UnicodeComponent } from './pages/unicode/unicode.component';
 
 // pipes
@@ -42,6 +43,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     RawXPComponent,
     NotepadComponent,
     SocketComponent,
+    Oct2005CabinComponent,
     KennelComponent,
     UnicodeComponent,
 
