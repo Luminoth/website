@@ -1,1 +1,21 @@
-<p>oct2005cabin works!</p>
+<div fxLayout="column">
+  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
+  <div>
+    I spent the days of October 13th through October 17th, 2005 at my grandparent's cabin. While there, I took some
+    sweet pictures. Sadly, I forgot to get pictures of the entire day of the 14th. My cousin-in-law and I took my dog,
+    Yuki, on a hike and went with my uncle on their trip to hunt deer. They had put in for doe tags and both ended up
+    getting it. No one got any big kills, but we saw lots of elk poop and grouse. I didn't get any pictures of any of
+    that though. Here's what I did manage to get instead:
+  </div>
+  <div fxFlex="15px"></div>
+  <ngb-carousel *ngIf="pictures">
+    <ng-template ngbSlide *ngFor="let picture of pictures">
+      <div class="picsum-img-wrapper" *ngFor="let image of picture.images">
+        <img [src]="getImageUrl(image)">
+      </div>
+      <div class="carousel-caption">
+        {{picture.text}}
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>

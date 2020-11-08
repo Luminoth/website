@@ -31,6 +31,16 @@ export class PicturesService {
     return this.getPictures(id).toPromise();
   }
 
+  getVacationPictures(id: string) {
+    return this.http.get<IGetPicturesResponse>(
+      `${environment.apiHost}/v1/pictures/vacation/${id}`
+    );
+  }
+
+  async getVacationPicturesAsync(id: string) {
+    return this.getVacationPictures(id).toPromise();
+  }
+
   //#endregion
 
 }
