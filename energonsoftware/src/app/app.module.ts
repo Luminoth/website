@@ -25,6 +25,7 @@ import { SocketComponent } from './pages/socket/socket.component';
 import { KennelComponent } from './pages/kennel/kennel.component';
 import { Oct2005CabinComponent } from './pages/oct2005cabin/oct2005cabin.component';
 import { UnicodeComponent } from './pages/unicode/unicode.component';
+import { WoWComponent } from './pages/wow/wow.component';
 
 // pipes
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
@@ -46,6 +47,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     Oct2005CabinComponent,
     KennelComponent,
     UnicodeComponent,
+    WoWComponent,
 
     // pipes
     SafeHtmlPipe,

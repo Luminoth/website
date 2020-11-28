@@ -12,6 +12,7 @@ import { SocketComponent } from './pages/socket/socket.component';
 import { KennelComponent } from './pages/kennel/kennel.component';
 import { Oct2005CabinComponent } from './pages/oct2005cabin/oct2005cabin.component';
 import { UnicodeComponent } from './pages/unicode/unicode.component';
+import { WoWComponent } from './pages/wow/wow.component';
 
 // TODO: this is super dumb, most of this is static content
 // so is there a way we can just use a single generic component
@@ -28,8 +29,17 @@ const routes: Routes = [
   { path: 'kennel', component: KennelComponent },
   { path: 'vacation/oct2005cabin', component: Oct2005CabinComponent },
   { path: 'unicode', component: UnicodeComponent },
+  {
+    path: 'wow', component: WoWComponent,
+    children: [
+      /*{ path: 'health', component: ServiceHealthComponent },
+      { path: 'servicediscovery', component: ServiceDiscoveryComponent },
+      { path: 'activesessions', component: ActiveSessionsComponent },
+      { path: '', redirectTo: 'health', pathMatch: 'full' },*/
+    ]
+  },
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: '*', redirectTo: '/' },
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({
