@@ -13,5 +13,4 @@ export interface IGetPicturesResponse {
   pictures: IPictures[];
 }
 
-
 //#endregion

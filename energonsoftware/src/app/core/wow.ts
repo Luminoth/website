@@ -3,7 +3,7 @@
 export interface IAddon {
   name: string;
   version: string;
-  latest_version: string;
+  latest_version: boolean;
   enabled: boolean;
   url: string;
   description: string;
@@ -19,6 +19,11 @@ export interface IMacroClass {
   macros: IMacro[];
 }
 
+export interface IScreenshots {
+  images: string[];
+  text: string;
+}
+
 //#endregion
 
 //#region Messages
@@ -29,11 +34,11 @@ export interface IGetAddonsResponse {
 }
 
 export interface IGetMacrosResponse {
-  macros: IMacroClass[];
+  macro_classes: IMacroClass[];
 }
 
 export interface IGetScreenshotsResponse {
-  images: string[];
+  images: IScreenshots[];
 }
 
 //#endregion

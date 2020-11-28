@@ -10,7 +10,7 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class WowService {
+export class WoWService {
 
   //#region Lifecycle
 

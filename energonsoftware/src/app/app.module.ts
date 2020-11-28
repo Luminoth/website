@@ -26,6 +26,9 @@ import { KennelComponent } from './pages/kennel/kennel.component';
 import { Oct2005CabinComponent } from './pages/oct2005cabin/oct2005cabin.component';
 import { UnicodeComponent } from './pages/unicode/unicode.component';
 import { WoWComponent } from './pages/wow/wow.component';
+import { WoWAddonsComponent } from './pages/wow-addons/wow-addons.component';
+import { WoWMacrosComponent } from './pages/wow-macros/wow-macros.component';
+import { WoWScreenshotsComponent } from './pages/wow-screenshots/wow-screenshots.component';
 
 // pipes
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
@@ -48,6 +51,9 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     KennelComponent,
     UnicodeComponent,
     WoWComponent,
+    WoWAddonsComponent,
+    WoWMacrosComponent,
+    WoWScreenshotsComponent,
 
     // pipes
     SafeHtmlPipe,

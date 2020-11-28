@@ -1,6 +1,6 @@
 [
     {
-        "characterClass": "General",
+        "character_class": "General",
         "macros": [
             {
                 "name": "Battle Standard",
@@ -41,7 +41,7 @@
         ]
     },
     {
-        "characterClass": "Death Knight",
+        "character_class": "Death Knight",
         "macros": [
             {
                 "name": "Parry (Swordshatter)",
@@ -122,7 +122,7 @@
         ]
     },
     {
-        "characterClass": "Druid",
+        "character_class": "Druid",
         "macros": [
             {
                 "name": "Barkskin (Resto)",
@@ -195,7 +195,7 @@
         ]
     },
     {
-        "characterClass": "Hunter",
+        "character_class": "Hunter",
         "macros": [
             {
                 "name": "Focus Counter Shot",
@@ -228,7 +228,7 @@
         ]
     },
     {
-        "characterClass": "Mage",
+        "character_class": "Mage",
         "macros": [
             {
                 "name": "Focus Counterspell",
@@ -253,7 +253,7 @@
         ]
     },
     {
-        "characterClass": "Monk",
+        "character_class": "Monk",
         "macros": [
             {
                 "name": "Focus Disable",
@@ -310,7 +310,7 @@
         ]
     },
     {
-        "characterClass": "Paladin",
+        "character_class": "Paladin",
         "macros": [
             {
                 "name": "Avenging Wrath",
@@ -331,7 +331,7 @@
         ]
     },
     {
-        "characterClass": "Priest",
+        "character_class": "Priest",
         "macros": [
             {
                 "name": "Dispersion",
@@ -348,7 +348,7 @@
         ]
     },
     {
-        "characterClass": "Rogue",
+        "character_class": "Rogue",
         "macros": [
             {
                 "name": "Adrenaline Rush",
@@ -397,7 +397,7 @@
         ]
     },
     {
-        "characterClass": "Shaman",
+        "character_class": "Shaman",
         "macros": [
             {
                 "name": "Ancestral Swiftness",
@@ -442,11 +442,11 @@
         ]
     },
     {
-        "characterClass": "Warlock",
+        "character_class": "Warlock",
         "macros": []
     },
     {
-        "characterClass": "Warrior",
+        "character_class": "Warrior",
         "macros": [
             {
                 "name": "Bladestorm",

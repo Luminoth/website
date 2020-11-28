@@ -5,10 +5,11 @@
 * Check RSS links
 * Finish converting WoW data from .ini to .json
 * Rebuild resume page using a JSON backend
-* Pull download info from the database
 * Rebuild links page with a JSON backend
 * Downloads should be a table
 * Carousels should be centered and fit to the viewport
+* Download links are all broken
+  * Probably lots of other links broken as well
 
 # Conversion
 

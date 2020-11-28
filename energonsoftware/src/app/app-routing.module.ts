@@ -13,6 +13,9 @@ import { KennelComponent } from './pages/kennel/kennel.component';
 import { Oct2005CabinComponent } from './pages/oct2005cabin/oct2005cabin.component';
 import { UnicodeComponent } from './pages/unicode/unicode.component';
 import { WoWComponent } from './pages/wow/wow.component';
+import { WoWAddonsComponent } from './pages/wow-addons/wow-addons.component';
+import { WoWMacrosComponent } from './pages/wow-macros/wow-macros.component';
+import { WoWScreenshotsComponent } from './pages/wow-screenshots/wow-screenshots.component';
 
 // TODO: this is super dumb, most of this is static content
 // so is there a way we can just use a single generic component
@@ -29,15 +32,11 @@ const routes: Routes = [
   { path: 'kennel', component: KennelComponent },
   { path: 'vacation/oct2005cabin', component: Oct2005CabinComponent },
   { path: 'unicode', component: UnicodeComponent },
-  {
-    path: 'wow', component: WoWComponent,
-    children: [
-      /*{ path: 'health', component: ServiceHealthComponent },
-      { path: 'servicediscovery', component: ServiceDiscoveryComponent },
-      { path: 'activesessions', component: ActiveSessionsComponent },
-      { path: '', redirectTo: 'health', pathMatch: 'full' },*/
-    ]
-  },
+  { path: 'wow', component: WoWComponent },
+  { path: 'wow/addons', component: WoWAddonsComponent },
+  { path: 'wow/macros', component: WoWMacrosComponent },
+  { path: 'wow/screenshots', component: WoWScreenshotsComponent },
+  // TODO: ragnaros screenshots
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '/' },
 ];
