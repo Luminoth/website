@@ -8,7 +8,7 @@
     that though. Here's what I did manage to get instead:
   </div>
   <div fxFlex="15px"></div>
-  <ngb-carousel *ngIf="pictures">
+  <ngb-carousel *ngIf="hasPictures">
     <ng-template ngbSlide *ngFor="let picture of pictures">
       <div class="picsum-img-wrapper" *ngFor="let image of picture.images">
         <img [src]="getImageUrl(image)">

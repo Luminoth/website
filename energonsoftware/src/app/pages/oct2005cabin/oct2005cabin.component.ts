@@ -63,6 +63,10 @@ export class Oct2005CabinComponent implements OnInit, AfterViewInit {
     this.cd.detectChanges();
   }
 
+  get hasPictures() {
+    return this.pictures.length > 0;
+  }
+
   // TODO: thumbnails can go away
   /*getImageThumbnailUrl(imageId: string) {
     return `${this.staticUrl}/thumbnails/${imageId}.jpg`;
