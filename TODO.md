@@ -1,4 +1,5 @@
 # TODO
+
 1. Get rid of tables wherever they exist!
   * Replace with Material Design grids
   1. WoW addons
@@ -15,3 +16,13 @@
 
 Keep an eye on this bug: https://github.com/angular-ui/bootstrap/issues/3811 it appears to be the reason that the carousel's have stopped working
 (Angular UI supports Angular 1.3, but not Angular 1.4)
+
+# Conversion
+
+* Slide interval should be 5000
+* Wow pages
+  * Addons
+  * Macros
+  * Screenshots
+  * Ragnaros screenshots
+* Need a better way to re-populate the item database
