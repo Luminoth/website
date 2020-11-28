@@ -15,12 +15,14 @@ import { environment } from '../../../environments/environment';
 })
 export class KennelComponent implements OnInit {
   readonly lodash = lodash;
-  readonly staticUrl = environment.staticUrl;
+
+  staticUrl: string;
 
   //#region Lifecycle
 
   constructor(private title: Title,
     private meta: Meta) {
+    this.staticUrl = `${environment.staticUrl}/images/kennel`;
   }
 
   ngOnInit() {
@@ -32,5 +34,9 @@ export class KennelComponent implements OnInit {
   }
 
   //#endregion
+
+  getImageUrl(imageId: string) {
+    return `${this.staticUrl}/IMG_00${imageId}.JPG`;
+  }
 
 }

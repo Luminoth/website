@@ -2,7 +2,7 @@
   <ngb-carousel>
     <ng-template ngbSlide *ngFor="let x of lodash.range(81, 99)">
       <div class="picsum-img-wrapper">
-        <img src="{{staticUrl}}/images/kennel/IMG_00{{x}}.JPG">
+        <img [src]="getImageUrl(x)">
       </div>
     </ng-template>
   </ngb-carousel>
