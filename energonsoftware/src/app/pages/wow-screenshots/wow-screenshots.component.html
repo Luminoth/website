@@ -1,1 +1,18 @@
-<p>wow-screenshots works!</p>
+<div fxLayout="column">
+  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
+  <div fxLayout="column">
+    <div><a routerLink="/wow/screenshots/ragnaros">Absolute Dragons vs Ragnaros</a></div>
+    <div>These are some screenshots I've taken:</div>
+  </div>
+  <div fxFlex="15px"></div>
+  <ngb-carousel *ngIf="hasScreenshots">
+    <ng-template ngbSlide *ngFor="let screenshot of screenshots">
+      <div class="picsum-img-wrapper" *ngFor="let image of screenshot.images">
+        <img [src]="getImageUrl(image)">
+      </div>
+      <div class="carousel-caption">
+        {{screenshot.text}}
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>

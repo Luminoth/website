@@ -97,7 +97,7 @@ pub async fn get_macros_handler() -> Result<impl warp::Reply, warp::Rejection> {
 
 #[derive(Serialize)]
 struct GetScreenshotsResponse {
-    screenshots: Vec<String>,
+    screenshots: Vec<wow::Screenshots>,
 }
 
 pub async fn get_screenshots_handler(
@@ -108,7 +108,7 @@ pub async fn get_screenshots_handler(
     let screenshots_file_path = OPTIONS
         .read()
         .share_dir()
-        .join("vacation")
+        .join("wow")
         .join(format!("{}.json", id));
 
     let file = match File::open(&screenshots_file_path) {

@@ -38,7 +38,7 @@ export interface IGetMacrosResponse {
 }
 
 export interface IGetScreenshotsResponse {
-  images: IScreenshots[];
+  screenshots: IScreenshots[];
 }
 
 //#endregion

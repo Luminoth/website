@@ -15,7 +15,6 @@
 
 * Slide interval should be 5000
 * Wow pages
-  * Screenshots
   * Ragnaros screenshots
 * Need a better way to re-populate the item database
 * Add a new changelog entry and news entry about the conversion
