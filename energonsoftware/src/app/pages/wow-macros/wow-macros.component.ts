@@ -32,7 +32,7 @@ export class WoWMacrosComponent implements OnInit, AfterViewInit {
     private meta: Meta,
     private cd: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private wow: WoWService) {
+    private wowService: WoWService) {
   }
 
   ngOnInit() {
@@ -68,7 +68,7 @@ export class WoWMacrosComponent implements OnInit, AfterViewInit {
 
     this.state = State.Loading;
     try {
-      const response = await this.wow.getMacrosAsync();
+      const response = await this.wowService.getMacrosAsync();
 
       this.macroClasses = response.macro_classes;
     } catch (error) {

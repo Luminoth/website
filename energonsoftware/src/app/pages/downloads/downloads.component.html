@@ -5,23 +5,37 @@
   </div>
   <mat-accordion *ngIf="hasDownloads" multi>
     <!-- TODO: these should be sorted in some way -->
-    <mat-expansion-panel *ngFor="let downloadCategory of downloads | keyvalue" expanded="true">
+    <mat-expansion-panel *ngFor="let dataSource of dataSources | keyvalue" expanded="true">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <div fxLayout="row" fxFlex>
-            <div fxFlex>{{getDownloadCategory(downloadCategory.key).title.toUpperCase()}}</div>
-            <!--<div fxFlex>{{getDownloadCategory(downloadCategory.key).description}}</div>-->
+            <div fxFlex>{{getDownloadCategory(dataSource.key).title.toUpperCase()}}</div>
+            <!--<div fxFlex>{{getDownloadCategory(dataSource.key).description}}</div>-->
             <div fxFlex></div>
           </div>
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <!-- TODO: make this a table -->
-      <ul>
-        <li *ngFor="let download of downloadCategory.value">
-          <a href="{{download.url}}">{{download.name}}</a>
-          <!--{{download.description}} {{download.version}}-->
-        </li>
-      </ul>
+      <table mat-table [dataSource]="dataSource.value">
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let row">
+            <a [href]="row.url">{{row.name}}</a>
+          </td>
+        </ng-container>
+        <!-- Description -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let row">{{row.description}}</td>
+        </ng-container>
+        <!-- Version -->
+        <ng-container matColumnDef="version">
+          <th mat-header-cell *matHeaderCellDef>Version</th>
+          <td mat-cell *matCellDef="let row">{{row.version}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
     </mat-expansion-panel>
   </mat-accordion>
 </div>

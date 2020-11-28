@@ -1,6 +1,6 @@
 <div fxLayout="column">
   <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
-  <div *ngIf="state !== State.Loading" fxLayout="column">
+  <div *ngIf="hasAddons" fxLayout="column">
     <div>Latest WoW version is <strong>{{ wowVersion }}</strong></div>
     <div fxFlex="15px"></div>
     <div class="mat-elevation-z8">

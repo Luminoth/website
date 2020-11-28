@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { DownloadsService } from '../../services/downloads.service';
 
@@ -28,8 +29,14 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
   private _loadingDownloadCategories = false;
   private _loadingDownloads = false;
 
+  //#region Table
+
+  displayedColumns = ['name', 'description', 'version'];
+  dataSources: IDictionary<MatTableDataSource<IDownload>> = {};
+
+  //#endregion
+
   downloadCategories: IDictionary<IDownloadCategory> = {};
-  downloads: IDictionary<IDownload[]> = {};
 
   //#region Lifecycle
 
@@ -72,7 +79,7 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
   }
 
   get hasDownloads() {
-    return Object.keys(this.downloads).length > 0;
+    return Object.keys(this.dataSources).length > 0;
   }
 
   getDownloadCategory(downloadCategoryId: string) {
@@ -111,17 +118,18 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
   }
 
   private async getDownloadsAsync() {
+    this.dataSources = {};
+
     this.state = State.Loading;
     this._loadingDownloads = true;
     try {
       const response = await this.downloadsService.getDownloadsAsync();
 
-      this.downloads = {};
       for (const download of response.downloads) {
-        if (!Object.keys(this.downloads).includes(download.category)) {
-          this.downloads[download.category] = [];
+        if (!Object.keys(this.dataSources).includes(download.category)) {
+          this.dataSources[download.category] = new MatTableDataSource<IDownload>();
         }
-        this.downloads[download.category].push(download);
+        this.dataSources[download.category].data.push(download);
       }
     } catch (error) {
       this.snackBar.open(`Downloads Load Error: ${error}`, 'OK', {

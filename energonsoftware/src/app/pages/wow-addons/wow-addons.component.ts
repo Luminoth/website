@@ -40,7 +40,7 @@ export class WoWAddonsComponent implements OnInit, AfterViewInit {
     private meta: Meta,
     private cd: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private wow: WoWService) {
+    private wowService: WoWService) {
   }
 
   ngOnInit() {
@@ -67,6 +67,10 @@ export class WoWAddonsComponent implements OnInit, AfterViewInit {
     this.cd.detectChanges();
   }
 
+  get hasAddons() {
+    return Object.keys(this.dataSource.data).length > 0;
+  }
+
   private async getDataAsync() {
     await this.getAddonsAsync();
   }
@@ -77,7 +81,7 @@ export class WoWAddonsComponent implements OnInit, AfterViewInit {
 
     this.state = State.Loading;
     try {
-      const response = await this.wow.getAddonsAsync();
+      const response = await this.wowService.getAddonsAsync();
 
       this.wowVersion = response.wow_version;
       this.dataSource.data = response.addons;
