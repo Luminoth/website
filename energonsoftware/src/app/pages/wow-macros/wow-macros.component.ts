@@ -73,7 +73,7 @@ export class WoWMacrosComponent implements OnInit, AfterViewInit {
       this.macroClasses = response.macro_classes;
     } catch (error) {
       this.snackBar.open(`WoW Macros Load Error: ${error}`, 'OK', {
-        panelClass: 'warn',
+        panelClass: 'es-warn',
       });
     } finally {
       this.state = State.Idle;

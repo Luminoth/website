@@ -87,7 +87,7 @@ export class WoWAddonsComponent implements OnInit, AfterViewInit {
       this.dataSource.data = response.addons;
     } catch (error) {
       this.snackBar.open(`WoW Addons Load Error: ${error}`, 'OK', {
-        panelClass: 'warn',
+        panelClass: 'es-warn',
       });
     } finally {
       this.state = State.Idle;

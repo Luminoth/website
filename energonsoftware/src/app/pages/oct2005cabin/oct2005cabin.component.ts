@@ -94,7 +94,7 @@ export class Oct2005CabinComponent implements OnInit, AfterViewInit {
       }
     } catch (error) {
       this.snackBar.open(`Pictures Load Error: ${error}`, 'OK', {
-        panelClass: 'warn',
+        panelClass: 'es-warn',
       });
     } finally {
       this.state = State.Idle;

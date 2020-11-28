@@ -109,7 +109,7 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
       }
     } catch (error) {
       this.snackBar.open(`Download Categories Load Error: ${error}`, 'OK', {
-        panelClass: 'warn',
+        panelClass: 'es-warn',
       });
     } finally {
       this._loadingDownloadCategories = false;
@@ -133,7 +133,7 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
       }
     } catch (error) {
       this.snackBar.open(`Downloads Load Error: ${error}`, 'OK', {
-        panelClass: 'warn',
+        panelClass: 'es-warn',
       });
     } finally {
       this._loadingDownloads = false;

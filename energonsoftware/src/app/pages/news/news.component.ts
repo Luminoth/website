@@ -111,7 +111,7 @@ export class NewsComponent implements OnInit, AfterViewInit {
       }
     } catch (error) {
       this.snackBar.open(`News Authors Load Error: ${error}`, 'OK', {
-        panelClass: 'warn',
+        panelClass: 'es-warn',
       });
     } finally {
       this._loadingNewsAuthors = false;
@@ -128,7 +128,7 @@ export class NewsComponent implements OnInit, AfterViewInit {
       this.news = response.news.sort((x, y) => y.timestamp - x.timestamp);
     } catch (error) {
       this.snackBar.open(`News Load Error: ${error}`, 'OK', {
-        panelClass: 'warn',
+        panelClass: 'es-warn',
       });
     } finally {
       this._loadingNews = false;
