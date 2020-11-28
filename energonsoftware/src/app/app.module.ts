@@ -29,6 +29,7 @@ import { WoWComponent } from './pages/wow/wow.component';
 import { WoWAddonsComponent } from './pages/wow-addons/wow-addons.component';
 import { WoWMacrosComponent } from './pages/wow-macros/wow-macros.component';
 import { WoWScreenshotsComponent } from './pages/wow-screenshots/wow-screenshots.component';
+import { WoWScreenshotsRagnarosComponent } from './pages/wow-screenshots-ragnaros/wow-screenshots-ragnaros.component';
 
 // pipes
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
@@ -54,6 +55,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
     WoWAddonsComponent,
     WoWMacrosComponent,
     WoWScreenshotsComponent,
+    WoWScreenshotsRagnarosComponent,
 
     // pipes
     SafeHtmlPipe,

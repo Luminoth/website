@@ -16,10 +16,15 @@ import { WoWComponent } from './pages/wow/wow.component';
 import { WoWAddonsComponent } from './pages/wow-addons/wow-addons.component';
 import { WoWMacrosComponent } from './pages/wow-macros/wow-macros.component';
 import { WoWScreenshotsComponent } from './pages/wow-screenshots/wow-screenshots.component';
+import { WoWScreenshotsRagnarosComponent } from './pages/wow-screenshots-ragnaros/wow-screenshots-ragnaros.component';
 
 // TODO: this is super dumb, most of this is static content
 // so is there a way we can just use a single generic component
 // but switch out the title and the template?
+
+// TODO: the wow ragnaros screenshots setup is really dumb,
+// what we actually want is a more generic screenshot page
+// that can load the general screenshots or a "type" of screenshots
 
 const routes: Routes = [
   { path: 'news', component: NewsComponent },
@@ -36,7 +41,7 @@ const routes: Routes = [
   { path: 'wow/addons', component: WoWAddonsComponent },
   { path: 'wow/macros', component: WoWMacrosComponent },
   { path: 'wow/screenshots', component: WoWScreenshotsComponent },
-  // TODO: ragnaros screenshots
+  { path: 'wow/screenshots/ragnaros', component: WoWScreenshotsRagnarosComponent },
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '/' },
 ];
