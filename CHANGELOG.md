@@ -1,3 +1,6 @@
+# 11/28/2020 Shane
+1. Finally finished converting to Angular 2!
+
 # 7/30/2015 Shane
 1. Swapped Bootstrap nav for Material Design toolbar/sidenav
 2. Now forcing 0.10.0 Material Design version (NuGet is behind)
