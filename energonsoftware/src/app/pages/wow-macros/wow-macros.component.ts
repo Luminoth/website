@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WoWService } from '../../services/wow.service';
 
 import { IMacroClass } from '../../core/wow';
+import { stringCompare } from '../../core/utils';
 
 enum State {
   Idle,
@@ -59,6 +60,10 @@ export class WoWMacrosComponent implements OnInit, AfterViewInit {
     this.cd.detectChanges();
   }
 
+  get hasMacros() {
+    return this.macroClasses.length > 0;
+  }
+
   private async getDataAsync() {
     await this.getMacrosAsync();
   }
@@ -70,7 +75,16 @@ export class WoWMacrosComponent implements OnInit, AfterViewInit {
     try {
       const response = await this.wowService.getMacrosAsync();
 
-      this.macroClasses = response.macro_classes;
+      this.macroClasses = response.macro_classes.sort((x, y) => {
+        // some special casing to push General to the top
+        if (x.character_class === 'General') {
+          return -1;
+        }
+        if (y.character_class === 'General') {
+          return 1;
+        }
+        return stringCompare(x.character_class, y.character_class);
+      });
     } catch (error) {
       this.snackBar.open(`WoW Macros Load Error: ${error}`, 'OK', {
         panelClass: 'es-warn',
