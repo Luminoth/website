@@ -3,6 +3,9 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import * as lodash from 'lodash';
+
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-kennel',
@@ -11,6 +14,8 @@ import { Title, Meta } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KennelComponent implements OnInit {
+  readonly lodash = lodash;
+  readonly staticUrl = environment.staticUrl;
 
   //#region Lifecycle
 

@@ -1,1 +1,9 @@
-<p>Kennel!</p>
+<div fxLayout="column">
+  <ngb-carousel>
+    <ng-template ngbSlide *ngFor="let x of lodash.range(81, 99)">
+      <div class="picsum-img-wrapper">
+        <img src="{{staticUrl}}/images/kennel/IMG_00{{x}}.JPG">
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
