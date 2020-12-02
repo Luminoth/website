@@ -11,6 +11,7 @@ use std::net::SocketAddr;
 use once_cell::sync::Lazy;
 use parking_lot::RwLock;
 use structopt::StructOpt;
+use tokio_compat_02::FutureExt;
 use warp::Filter;
 
 use crate::options::Options;
@@ -68,7 +69,7 @@ async fn main() -> anyhow::Result<()> {
             info.elapsed(),
         );
     }));
-    warp::serve(filter).run(addr).await;
+    warp::serve(filter).run(addr).compat().await;
 
     Ok(())
 }
