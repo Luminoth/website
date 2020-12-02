@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RawXPComponent } from './raw-xp.component';
 
@@ -6,7 +6,7 @@ describe('RawXPComponent', () => {
   let component: RawXPComponent;
   let fixture: ComponentFixture<RawXPComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RawXPComponent ]
     })

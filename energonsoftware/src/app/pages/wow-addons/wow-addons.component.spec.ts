@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WowAddonsComponent } from './wow-addons.component';
 
@@ -6,7 +6,7 @@ describe('WowAddonsComponent', () => {
   let component: WowAddonsComponent;
   let fixture: ComponentFixture<WowAddonsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WowAddonsComponent ]
     })
