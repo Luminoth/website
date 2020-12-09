@@ -1,9 +1,6 @@
 # stage 1: build
 FROM rust AS builder
 
-# update image
-RUN apt update && apt -y upgrade
-
 WORKDIR /app
 
 # copy source
@@ -16,11 +13,10 @@ RUN cargo install --path api/ --root .
 # stage 2: create image
 FROM ubuntu
 
-# update image
-RUN apt update && apt -y upgrade
-
 # install dependencies
-RUN apt install -y ca-certificates
+RUN apt update && \
+    apt install -y --no-install-recommends \
+    ca-certificates
 
 RUN useradd --create-home appuser
 
