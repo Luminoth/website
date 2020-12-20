@@ -4,9 +4,6 @@ FROM node:alpine AS builder
 # build args
 ARG configuration=prod
 
-# update image
-RUN apk update && apk upgrade
-
 WORKDIR /app
 
 # setup npm
@@ -17,13 +14,13 @@ RUN npm install
 COPY energonsoftware/ ./
 
 # build
-RUN npm run build --configuration=$env
+RUN npm run build --configuration=$configuration
 
 # stage 2: create image
 FROM nginx:alpine
 
-# update image
-RUN apk update && apk upgrade
+# install dependencies
+RUN apk update
 
 RUN rm -rf /usr/share/nginx/html/*
 
