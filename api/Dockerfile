@@ -1,5 +1,6 @@
 # stage 1: build
-FROM rust AS builder
+# TODO: make this use the local cargo cache
+FROM rust:latest AS builder
 
 WORKDIR /app
 
@@ -11,12 +12,14 @@ COPY api/ api/
 RUN cargo install --path api/ --root .
 
 # stage 2: create image
-FROM ubuntu
+# TODO: find a way to move this to alpine
+FROM ubuntu:latest
 
 # install dependencies
-RUN apt update && \
-    apt install -y --no-install-recommends \
-    ca-certificates
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN useradd --create-home appuser
 
