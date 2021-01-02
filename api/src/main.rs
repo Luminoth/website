@@ -12,6 +12,8 @@ use once_cell::sync::Lazy;
 use parking_lot::RwLock;
 use structopt::StructOpt;
 use tokio_compat_02::FutureExt;
+use tracing::{info, Level};
+use tracing_subscriber::FmtSubscriber;
 use warp::Filter;
 
 use crate::options::Options;
@@ -22,15 +24,19 @@ pub const REGION: &str = "us-west-2";
 
 pub static OPTIONS: Lazy<RwLock<Options>> = Lazy::new(|| RwLock::new(Options::from_args()));
 
-fn init_logging() {
-    pretty_env_logger::formatted_builder()
-        .filter(None, log::LevelFilter::Info)
-        .init();
+fn init_logging() -> anyhow::Result<()> {
+    let subscriber = FmtSubscriber::builder()
+        .with_max_level(Level::INFO)
+        .finish();
+
+    tracing::subscriber::set_global_default(subscriber)?;
+
+    Ok(())
 }
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    init_logging();
+    init_logging()?;
 
     let addr = OPTIONS
         .read()
@@ -55,7 +61,7 @@ async fn main() -> anyhow::Result<()> {
             forwarded = false;
         }
 
-        log::info!(
+        info!(
             target: "energonsoftware::api",
             "{}{} \"{} {} {:?}\" {} \"{}\" \"{}\" {:?}",
             OptFmt(remote_addr),

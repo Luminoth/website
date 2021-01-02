@@ -3,8 +3,8 @@ pub mod news;
 pub mod pictures;
 pub mod wow;
 
-use log::error;
 use serde::Serialize;
+use tracing::error;
 
 #[derive(Debug, Serialize)]
 struct ErrorResponse {

@@ -3,7 +3,7 @@ mod news;
 mod pictures;
 mod wow;
 
-use log::info;
+use tracing::info;
 use warp::filters::BoxedFilter;
 use warp::http::Method;
 use warp::{Filter, Reply};
