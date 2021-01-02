@@ -35,6 +35,6 @@ fn get_screenshots() -> BoxedFilter<(impl Reply,)> {
 fn get_screenshots_type() -> BoxedFilter<(impl Reply,)> {
     warp::get()
         .and(warp::path!("v1" / "wow" / "screenshots" / String))
-        .and_then(|id| wow::get_screenshots_handler(id))
+        .and_then(wow::get_screenshots_handler)
         .boxed()
 }

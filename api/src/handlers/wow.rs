@@ -20,11 +20,7 @@ struct GetAddonsResponse {
 }
 
 pub async fn get_addons_handler() -> Result<impl warp::Reply, warp::Rejection> {
-    let addons_file_path = OPTIONS
-        .read()
-        .share_dir()
-        .join("wow")
-        .join(format!("addons.json"));
+    let addons_file_path = OPTIONS.read().share_dir().join("wow").join("addons.json");
 
     let file = match File::open(&addons_file_path) {
         Ok(file) => file,
@@ -61,11 +57,7 @@ struct GetMacrosResponse {
 }
 
 pub async fn get_macros_handler() -> Result<impl warp::Reply, warp::Rejection> {
-    let macros_file_path = OPTIONS
-        .read()
-        .share_dir()
-        .join("wow")
-        .join(format!("macros.json"));
+    let macros_file_path = OPTIONS.read().share_dir().join("wow").join("macros.json");
 
     let file = match File::open(&macros_file_path) {
         Ok(file) => file,
