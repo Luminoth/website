@@ -1,35 +1,26 @@
 use std::path::PathBuf;
 
-use parking_lot::Mutex;
-use structopt::StructOpt;
+use argh::FromArgs;
 
-#[derive(StructOpt, Debug)]
-#[structopt(name = "energonsoftware")]
+/// Website API
+#[derive(FromArgs, Debug)]
 pub struct Options {
-    #[structopt(short, long, default_value = "0.0.0.0")]
+    /// address to bind to
+    #[argh(option, short = 'h', default = "String::from(\"0.0.0.0\")")]
     pub host: String,
 
-    #[structopt(short, long, default_value = "8000")]
+    /// port to liten on
+    #[argh(option, short = 'p', default = "8000")]
     pub port: u16,
 
-    #[structopt(skip)]
-    address: Mutex<Option<String>>,
-
-    #[structopt(long, default_value = ".")]
+    /// data prefix
+    #[argh(option, default = "PathBuf::from(\".\")")]
     prefix: PathBuf,
 }
 
 impl Options {
     pub fn address(&self) -> String {
-        let mut address = self.address.lock();
-        match &*address {
-            Some(address) => address.clone(),
-            None => {
-                let addr = format!("{}:{}", self.host, self.port);
-                *address = Some(addr.clone());
-                addr
-            }
-        }
+        format!("{}:{}", self.host, self.port)
     }
 
     #[allow(dead_code)]
