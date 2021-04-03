@@ -5,14 +5,15 @@ use energonsoftware::aws::dynamodb;
 
 use super::internal_error;
 use crate::models::news;
-use crate::REGION;
 
 #[derive(Serialize)]
 struct GetNewsAuthorsResponse {
     news_authors: Vec<news::NewsAuthor>,
 }
 
-pub async fn get_news_authors_handler() -> Result<Box<dyn warp::Reply>, warp::Rejection> {
+pub async fn get_news_authors_handler(
+    region: impl AsRef<str>,
+) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("news_author")));
 
     let expression = match builder.build() {
@@ -25,7 +26,7 @@ pub async fn get_news_authors_handler() -> Result<Box<dyn warp::Reply>, warp::Re
         }
     };
 
-    let client = match dynamodb::connect(REGION).await {
+    let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
             return Ok(internal_error(format!(
@@ -65,7 +66,9 @@ struct GetNewsResponse {
     news: Vec<news::News>,
 }
 
-pub async fn get_news_handler() -> Result<Box<dyn warp::Reply>, warp::Rejection> {
+pub async fn get_news_handler(
+    region: impl AsRef<str>,
+) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("news")));
 
     let expression = match builder.build() {
@@ -78,7 +81,7 @@ pub async fn get_news_handler() -> Result<Box<dyn warp::Reply>, warp::Rejection>
         }
     };
 
-    let client = match dynamodb::connect(REGION).await {
+    let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
             return Ok(internal_error(format!(

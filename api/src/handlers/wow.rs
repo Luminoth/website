@@ -1,11 +1,11 @@
 use std::fs::File;
 use std::io::BufReader;
+use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
 use super::internal_error;
 use crate::models::wow;
-use crate::OPTIONS;
 
 #[derive(Deserialize)]
 struct AddonsFile {
@@ -19,8 +19,10 @@ struct GetAddonsResponse {
     addons: Vec<wow::Addon>,
 }
 
-pub async fn get_addons_handler() -> Result<impl warp::Reply, warp::Rejection> {
-    let addons_file_path = OPTIONS.read().share_dir().join("wow").join("addons.json");
+pub async fn get_addons_handler(
+    share_dir: impl AsRef<Path>,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    let addons_file_path = share_dir.as_ref().join("wow").join("addons.json");
 
     let file = match File::open(&addons_file_path) {
         Ok(file) => file,
@@ -56,8 +58,10 @@ struct GetMacrosResponse {
     macro_classes: Vec<wow::MacroClass>,
 }
 
-pub async fn get_macros_handler() -> Result<impl warp::Reply, warp::Rejection> {
-    let macros_file_path = OPTIONS.read().share_dir().join("wow").join("macros.json");
+pub async fn get_macros_handler(
+    share_dir: impl AsRef<Path>,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    let macros_file_path = share_dir.as_ref().join("wow").join("macros.json");
 
     let file = match File::open(&macros_file_path) {
         Ok(file) => file,
@@ -93,15 +97,13 @@ struct GetScreenshotsResponse {
 }
 
 pub async fn get_screenshots_handler(
-    id: impl Into<String>,
+    id: impl AsRef<str>,
+    share_dir: impl AsRef<Path>,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    let id = id.into();
-
-    let screenshots_file_path = OPTIONS
-        .read()
-        .share_dir()
+    let screenshots_file_path = share_dir
+        .as_ref()
         .join("wow")
-        .join(format!("{}.json", id));
+        .join(format!("{}.json", id.as_ref()));
 
     let file = match File::open(&screenshots_file_path) {
         Ok(file) => file,

@@ -7,6 +7,7 @@ mod routes;
 mod util;
 
 use std::net::SocketAddr;
+use std::sync::Arc;
 
 use once_cell::sync::Lazy;
 use parking_lot::RwLock;
@@ -14,13 +15,10 @@ use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 use warp::Filter;
 
-use crate::options::Options;
+use crate::options::SharedOptions;
 use crate::util::OptFmt;
 
-// TODO: make this configurable
-pub const REGION: &str = "us-west-2";
-
-pub static OPTIONS: Lazy<RwLock<Options>> = Lazy::new(|| RwLock::new(argh::from_env()));
+static OPTIONS: Lazy<SharedOptions> = Lazy::new(|| Arc::new(RwLock::new(argh::from_env())));
 
 fn init_logging() -> anyhow::Result<()> {
     let subscriber = FmtSubscriber::builder()
@@ -36,13 +34,16 @@ fn init_logging() -> anyhow::Result<()> {
 async fn main() -> anyhow::Result<()> {
     init_logging()?;
 
+    // TODO: make this configurable
+    let region = String::from("us-west-2");
+
     let addr = OPTIONS
         .read()
         .address()
         .parse::<SocketAddr>()
         .expect("Invalid address");
 
-    let routes = routes::init_routes().with(routes::init_cors());
+    let routes = routes::init_routes(region, OPTIONS.clone()).with(routes::init_cors());
     let filter = routes.with(warp::log::custom(|info| {
         // ignore AWS health check requests
         if let Some(user_agent) = info.user_agent() {

@@ -1,11 +1,11 @@
 use std::fs::File;
 use std::io::BufReader;
+use std::path::Path;
 
 use serde::Serialize;
 
 use super::internal_error;
 use crate::models::pictures;
-use crate::OPTIONS;
 
 #[derive(Serialize)]
 struct GetPicturesResponse {
@@ -14,10 +14,10 @@ struct GetPicturesResponse {
 
 pub async fn get_pictures_vacation_handler(
     id: String,
+    share_dir: impl AsRef<Path>,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    let pics_file_path = OPTIONS
-        .read()
-        .share_dir()
+    let pics_file_path = share_dir
+        .as_ref()
         .join("vacation")
         .join(format!("{}.json", id));
 

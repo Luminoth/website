@@ -5,14 +5,15 @@ use energonsoftware::aws::dynamodb;
 
 use super::internal_error;
 use crate::models::downloads;
-use crate::REGION;
 
 #[derive(Serialize)]
 struct GetDownloadCategoriesResponse {
     download_categories: Vec<downloads::DownloadCategory>,
 }
 
-pub async fn get_download_categories_handler() -> Result<Box<dyn warp::Reply>, warp::Rejection> {
+pub async fn get_download_categories_handler(
+    region: impl AsRef<str>,
+) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("download_category")));
 
     let expression = match builder.build() {
@@ -25,7 +26,7 @@ pub async fn get_download_categories_handler() -> Result<Box<dyn warp::Reply>, w
         }
     };
 
-    let client = match dynamodb::connect(REGION).await {
+    let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
             return Ok(internal_error(format!(
@@ -67,7 +68,9 @@ struct GetDownloadsResponse {
     downloads: Vec<downloads::Download>,
 }
 
-pub async fn get_downloads_handler() -> Result<Box<dyn warp::Reply>, warp::Rejection> {
+pub async fn get_downloads_handler(
+    region: impl AsRef<str>,
+) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("download")));
 
     let expression = match builder.build() {
@@ -80,7 +83,7 @@ pub async fn get_downloads_handler() -> Result<Box<dyn warp::Reply>, warp::Rejec
         }
     };
 
-    let client = match dynamodb::connect(REGION).await {
+    let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
             return Ok(internal_error(format!(
