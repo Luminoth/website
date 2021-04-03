@@ -56,5 +56,5 @@ fn with_region(
 fn with_share_dir(
     options: SharedOptions,
 ) -> impl Filter<Extract = (PathBuf,), Error = std::convert::Infallible> + Clone {
-    warp::any().map(move || options.read().share_dir().clone())
+    warp::any().map(move || options.read().share_dir())
 }
