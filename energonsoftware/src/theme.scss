@@ -1,13 +1,13 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 @import 'palette.scss';
 @import 'styles.scss';
 
 // include non-theme styles for core
-@include mat-core();
+@include mat.core();
 
 // define the theme
-$es-app-theme: mat-dark-theme($es-app-primary, $es-app-accent, $es-app-warn);
+$es-app-theme: mat.define-dark-theme($es-app-primary, $es-app-accent, $es-app-warn);
 
 // include all theme styles for the components
-@include angular-material-theme($es-app-theme);
+@include mat.all-component-themes($es-app-theme);
 @include theme-color-grabber($es-app-theme);
