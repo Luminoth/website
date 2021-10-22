@@ -154,7 +154,7 @@ where
         let items = output.items.unwrap_or_else(Vec::new);
         for i in &items {
             let (_, stop) = item_cb(
-                &i,
+                i,
                 Box::new({
                     let i = i.clone();
                     |item: &mut I| {
@@ -311,7 +311,7 @@ where
         let items = output.items.unwrap_or_else(Vec::new);
         for i in &items {
             let (_, stop) = item_cb(
-                &i,
+                i,
                 Box::new({
                     let i = i.clone();
                     |item: &mut I| {
