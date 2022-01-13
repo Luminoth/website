@@ -26,8 +26,7 @@ pub async fn get_pictures_vacation_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to read picture file {:?}: {}",
-                pics_file_path,
-                e.to_string()
+                pics_file_path, e
             )));
         }
     };
@@ -39,7 +38,7 @@ pub async fn get_pictures_vacation_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to parse picture file: {}",
-                e.to_string()
+                e
             )));
         }
     };

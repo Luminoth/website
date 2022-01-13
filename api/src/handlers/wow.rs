@@ -29,8 +29,7 @@ pub async fn get_addons_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to read wow addons file {:?}: {}",
-                addons_file_path,
-                e.to_string()
+                addons_file_path, e
             )));
         }
     };
@@ -42,7 +41,7 @@ pub async fn get_addons_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to parse wow addons file: {}",
-                e.to_string()
+                e
             )));
         }
     };
@@ -68,8 +67,7 @@ pub async fn get_macros_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to read wow macros file {:?}: {}",
-                macros_file_path,
-                e.to_string()
+                macros_file_path, e
             )));
         }
     };
@@ -81,7 +79,7 @@ pub async fn get_macros_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to parse wow macros file: {}",
-                e.to_string()
+                e
             )));
         }
     };
@@ -110,8 +108,7 @@ pub async fn get_screenshots_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to read wow screenshots file {:?}: {}",
-                screenshots_file_path,
-                e.to_string()
+                screenshots_file_path, e
             )));
         }
     };
@@ -123,7 +120,7 @@ pub async fn get_screenshots_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Failed to parse wow screenshots file: {}",
-                e.to_string()
+                e
             )));
         }
     };

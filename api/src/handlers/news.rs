@@ -19,20 +19,14 @@ pub async fn get_news_authors_handler(
     let expression = match builder.build() {
         Ok(expression) => expression,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to build expression: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to build expression: {}", e)));
         }
     };
 
     let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to connect dynamodb: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
         }
     };
 
@@ -49,10 +43,7 @@ pub async fn get_news_authors_handler(
     {
         Ok(_) => (),
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Error reading news authors: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Error reading news authors: {}", e)));
         }
     }
 
@@ -74,20 +65,14 @@ pub async fn get_news_handler(
     let expression = match builder.build() {
         Ok(expression) => expression,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to build expression: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to build expression: {}", e)));
         }
     };
 
     let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to connect dynamodb: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
         }
     };
 
@@ -111,10 +96,7 @@ pub async fn get_news_handler(
     {
         Ok(_) => (),
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Error reading news: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Error reading news: {}", e)));
         }
     }
 

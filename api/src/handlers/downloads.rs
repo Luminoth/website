@@ -19,20 +19,14 @@ pub async fn get_download_categories_handler(
     let expression = match builder.build() {
         Ok(expression) => expression,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to build expression: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to build expression: {}", e)));
         }
     };
 
     let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to connect dynamodb: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
         }
     };
 
@@ -51,7 +45,7 @@ pub async fn get_download_categories_handler(
         Err(e) => {
             return Ok(internal_error(format!(
                 "Error reading download categories: {}",
-                e.to_string()
+                e
             )));
         }
     }
@@ -76,20 +70,14 @@ pub async fn get_downloads_handler(
     let expression = match builder.build() {
         Ok(expression) => expression,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to build expression: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to build expression: {}", e)));
         }
     };
 
     let client = match dynamodb::connect(region).await {
         Ok(client) => client,
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Failed to connect dynamodb: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
         }
     };
 
@@ -106,10 +94,7 @@ pub async fn get_downloads_handler(
     {
         Ok(_) => (),
         Err(e) => {
-            return Ok(internal_error(format!(
-                "Error reading downloads: {}",
-                e.to_string()
-            )));
+            return Ok(internal_error(format!("Error reading downloads: {}", e)));
         }
     }
 
