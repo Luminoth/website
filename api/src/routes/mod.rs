@@ -25,7 +25,7 @@ pub fn init_cors(local: bool) -> warp::cors::Builder {
             Method::OPTIONS,
         ])
         // TODO: make this configurable
-        .allow_origin("https://www.energonsoftware.org/")
+        .allow_origin("https://www.energonsoftware.org")
         .allow_credentials(true);
 
     if local {
