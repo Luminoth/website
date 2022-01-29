@@ -12,7 +12,7 @@ struct GetNewsAuthorsResponse {
 }
 
 pub async fn get_news_authors_handler(
-    region: impl AsRef<str>,
+    region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("news_author")));
 
@@ -23,12 +23,7 @@ pub async fn get_news_authors_handler(
         }
     };
 
-    let client = match dynamodb::connect(region).await {
-        Ok(client) => client,
-        Err(e) => {
-            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
-        }
-    };
+    let client = dynamodb::connect(region).await;
 
     let mut news_authors = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
@@ -58,7 +53,7 @@ struct GetNewsResponse {
 }
 
 pub async fn get_news_handler(
-    region: impl AsRef<str>,
+    region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("news")));
 
@@ -69,12 +64,7 @@ pub async fn get_news_handler(
         }
     };
 
-    let client = match dynamodb::connect(region).await {
-        Ok(client) => client,
-        Err(e) => {
-            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
-        }
-    };
+    let client = dynamodb::connect(region).await;
 
     let mut news = Vec::new();
     match dynamodb::query_index_descending(

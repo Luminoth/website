@@ -12,7 +12,7 @@ struct GetDownloadCategoriesResponse {
 }
 
 pub async fn get_download_categories_handler(
-    region: impl AsRef<str>,
+    region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("download_category")));
 
@@ -23,12 +23,7 @@ pub async fn get_download_categories_handler(
         }
     };
 
-    let client = match dynamodb::connect(region).await {
-        Ok(client) => client,
-        Err(e) => {
-            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
-        }
-    };
+    let client = dynamodb::connect(region).await;
 
     let mut download_categories = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
@@ -63,7 +58,7 @@ struct GetDownloadsResponse {
 }
 
 pub async fn get_downloads_handler(
-    region: impl AsRef<str>,
+    region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = Builder::new().with_key_condition(key("type").equal(value("download")));
 
@@ -74,12 +69,7 @@ pub async fn get_downloads_handler(
         }
     };
 
-    let client = match dynamodb::connect(region).await {
-        Ok(client) => client,
-        Err(e) => {
-            return Ok(internal_error(format!("Failed to connect dynamodb: {}", e)));
-        }
-    };
+    let client = dynamodb::connect(region).await;
 
     let mut downloads = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {

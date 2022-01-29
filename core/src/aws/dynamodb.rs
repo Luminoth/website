@@ -1,16 +1,123 @@
 use std::collections::HashMap;
-use std::str::FromStr;
 
+use aws_sdk_dynamodb::{
+    config,
+    model::{AttributeValue, KeysAndAttributes},
+    Blob, Client, Region,
+};
 use dynamodb_expression::Expression;
-use rusoto_core::*;
-use rusoto_dynamodb::*;
 
-pub async fn connect(region: impl AsRef<str>) -> anyhow::Result<DynamoDbClient> {
-    Ok(DynamoDbClient::new(Region::from_str(region.as_ref())?))
+// helper trait for converting dynomite types to AWS SDK types
+pub trait ToSdk<T> {
+    fn to_sdk(self) -> T;
+}
+
+impl ToSdk<AttributeValue> for dynomite::AttributeValue {
+    fn to_sdk(self) -> AttributeValue {
+        if let Some(v) = self.b {
+            AttributeValue::B(Blob::new(v.as_ref()))
+        } else if let Some(v) = self.bool {
+            AttributeValue::Bool(v)
+        } else if let Some(mut v) = self.bs {
+            AttributeValue::Bs(v.drain(..).map(|v| Blob::new(v.as_ref())).collect())
+        } else if let Some(mut v) = self.l {
+            AttributeValue::L(v.drain(..).map(|v| v.to_sdk()).collect())
+        } else if let Some(mut v) = self.m {
+            AttributeValue::M(v.drain().map(|(k, v)| (k, v.to_sdk())).collect())
+        } else if let Some(v) = self.n {
+            AttributeValue::N(v)
+        } else if let Some(v) = self.ns {
+            AttributeValue::Ns(v)
+        } else if let Some(v) = self.null {
+            AttributeValue::Null(v)
+        } else if let Some(v) = self.s {
+            AttributeValue::S(v)
+        } else if let Some(v) = self.ss {
+            AttributeValue::Ss(v)
+        } else {
+            unreachable!();
+        }
+    }
+}
+
+impl ToSdk<HashMap<String, AttributeValue>> for dynomite::Attributes {
+    fn to_sdk(mut self) -> HashMap<String, AttributeValue> {
+        self.drain().map(|(k, v)| (k, v.to_sdk())).collect()
+    }
+}
+
+// helper trait for converting from AWS SDK types to dynomite types
+pub trait ToRusoto<T> {
+    fn to_rusoto(self) -> T;
+}
+
+impl ToRusoto<dynomite::AttributeValue> for AttributeValue {
+    fn to_rusoto(self) -> dynomite::AttributeValue {
+        match self {
+            AttributeValue::B(v) => dynomite::dynamodb::AttributeValue {
+                b: Some(v.into_inner().into()),
+                ..Default::default()
+            },
+            AttributeValue::Bool(v) => dynomite::dynamodb::AttributeValue {
+                bool: Some(v),
+                ..Default::default()
+            },
+            AttributeValue::Bs(mut v) => dynomite::dynamodb::AttributeValue {
+                bs: Some(v.drain(..).map(|v| v.into_inner().into()).collect()),
+                ..Default::default()
+            },
+            AttributeValue::L(mut v) => dynomite::dynamodb::AttributeValue {
+                l: Some(v.drain(..).map(|v| v.to_rusoto()).collect()),
+                ..Default::default()
+            },
+            AttributeValue::M(mut v) => dynomite::dynamodb::AttributeValue {
+                m: Some(v.drain().map(|(k, v)| (k, v.to_rusoto())).collect()),
+                ..Default::default()
+            },
+            AttributeValue::N(v) => dynomite::dynamodb::AttributeValue {
+                n: Some(v),
+                ..Default::default()
+            },
+            AttributeValue::Ns(v) => dynomite::dynamodb::AttributeValue {
+                ns: Some(v),
+                ..Default::default()
+            },
+            AttributeValue::Null(v) => dynomite::dynamodb::AttributeValue {
+                null: Some(v),
+                ..Default::default()
+            },
+            AttributeValue::S(v) => dynomite::dynamodb::AttributeValue {
+                s: Some(v),
+                ..Default::default()
+            },
+            AttributeValue::Ss(v) => dynomite::dynamodb::AttributeValue {
+                ss: Some(v),
+                ..Default::default()
+            },
+            //AttributeValue::Unknown => unreachable!(),
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl ToRusoto<dynomite::Attributes> for HashMap<String, AttributeValue> {
+    fn to_rusoto(mut self) -> dynomite::Attributes {
+        self.drain().map(|(k, v)| (k, v.to_rusoto())).collect()
+    }
+}
+
+pub async fn connect(region: impl Into<String>) -> Client {
+    let shared_config = aws_config::load_from_env().await;
+
+    let config = config::Builder::from(&shared_config)
+        .region(Region::new(region.into()))
+        .build();
+
+    Client::from_conf(config)
 }
 
 pub async fn get_item<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     key: impl dynomite::Item,
     expression: Expression,
@@ -19,21 +126,18 @@ pub async fn get_item<I>(
 where
     I: dynomite::Item,
 {
-    let table_name = table_name.into();
-
     let output = client
-        .get_item(GetItemInput {
-            table_name,
-            key: key.key(),
-            expression_attribute_names: expression.names().clone(),
-            projection_expression: expression.projection().cloned(),
-            ..Default::default()
-        })
+        .get_item()
+        .table_name(table_name)
+        .set_key(Some(key.key().to_sdk()))
+        .set_expression_attribute_names(expression.names().clone())
+        .set_projection_expression(expression.projection().cloned())
+        .send()
         .await?;
 
     match output.item {
         Some(i) => {
-            *item = I::from_attrs(i)?;
+            *item = I::from_attrs(i.to_rusoto())?;
             Ok(true)
         }
         None => Ok(false),
@@ -41,7 +145,7 @@ where
 }
 
 pub async fn get_items<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     mut request_items: HashMap<String, (Vec<impl dynomite::Item>, Expression)>,
     mut item_cb: impl FnMut(
         &str,
@@ -54,29 +158,23 @@ where
 {
     let mut req_items = HashMap::new();
     for (table_name, keys_attrs) in request_items.drain() {
-        let mut keys = Vec::new();
+        let mut builder = KeysAndAttributes::builder()
+            .set_expression_attribute_names(keys_attrs.1.names().clone())
+            .set_projection_expression(keys_attrs.1.projection().cloned());
+
         for key in keys_attrs.0 {
-            keys.push(key.key());
+            builder = builder.keys(key.key().to_sdk());
         }
 
-        req_items.insert(
-            table_name,
-            KeysAndAttributes {
-                keys,
-                expression_attribute_names: keys_attrs.1.names().clone(),
-                projection_expression: keys_attrs.1.projection().cloned(),
-                ..Default::default()
-            },
-        );
+        req_items.insert(table_name, builder.build());
     }
 
     let mut request_items = req_items;
     loop {
         let output = client
-            .batch_get_item(BatchGetItemInput {
-                request_items,
-                ..Default::default()
-            })
+            .batch_get_item()
+            .set_request_items(Some(request_items))
+            .send()
             .await?;
 
         let mut responses = output.responses.unwrap_or_else(HashMap::new);
@@ -88,7 +186,7 @@ where
                     Box::new({
                         let i = i.clone();
                         |item: &mut I| {
-                            *item = I::from_attrs(i)?;
+                            *item = I::from_attrs(i.to_rusoto())?;
                             Ok(())
                         }
                     }),
@@ -115,10 +213,10 @@ where
 }
 
 async fn do_query<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     index_name: Option<String>,
     forward: bool,
     mut item_cb: impl FnMut(
@@ -135,19 +233,18 @@ where
     let mut exclusive_start_key = None;
     loop {
         let output = client
-            .query(QueryInput {
-                table_name: table_name.clone(),
-                expression_attribute_names: expression.names().clone(),
-                expression_attribute_values: expression.values().clone(),
-                key_condition_expression: expression.key_condition().cloned(),
-                filter_expression: expression.filter().cloned(),
-                projection_expression: expression.projection().cloned(),
-                index_name: index_name.clone(),
-                limit,
-                scan_index_forward: Some(forward),
-                exclusive_start_key,
-                ..Default::default()
-            })
+            .query()
+            .table_name(table_name.clone())
+            .set_index_name(index_name.clone())
+            .set_expression_attribute_names(expression.names().clone())
+            .set_expression_attribute_values(expression.values().clone())
+            .set_key_condition_expression(expression.key_condition().cloned())
+            .set_filter_expression(expression.filter().cloned())
+            .set_projection_expression(expression.projection().cloned())
+            .set_limit(limit)
+            .scan_index_forward(forward)
+            .set_exclusive_start_key(exclusive_start_key)
+            .send()
             .await?;
 
         let mut stop_query = false;
@@ -158,7 +255,7 @@ where
                 Box::new({
                     let i = i.clone();
                     |item: &mut I| {
-                        *item = I::from_attrs(i)?;
+                        *item = I::from_attrs(i.to_rusoto())?;
                         Ok(())
                     }
                 }),
@@ -174,7 +271,7 @@ where
             break;
         }
 
-        item_count += items.len() as i64;
+        item_count += items.len() as i32;
         if let Some(limit) = limit {
             if item_count >= limit {
                 break;
@@ -191,10 +288,10 @@ where
 }
 
 pub async fn query<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
         Box<dyn FnOnce(&mut I) -> anyhow::Result<()>>,
@@ -207,10 +304,10 @@ where
 }
 
 pub async fn query_index<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     index_name: impl Into<String>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
@@ -233,10 +330,10 @@ where
 }
 
 pub async fn query_descending<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
         Box<dyn FnOnce(&mut I) -> anyhow::Result<()>>,
@@ -249,10 +346,10 @@ where
 }
 
 pub async fn query_index_descending<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     index_name: impl Into<String>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
@@ -275,10 +372,10 @@ where
 }
 
 async fn do_scan<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     index_name: Option<String>,
     mut item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
@@ -294,17 +391,16 @@ where
     let mut exclusive_start_key = None;
     loop {
         let output = client
-            .scan(ScanInput {
-                table_name: table_name.clone(),
-                expression_attribute_names: expression.names().clone(),
-                expression_attribute_values: expression.values().clone(),
-                filter_expression: expression.filter().cloned(),
-                projection_expression: expression.projection().cloned(),
-                index_name: index_name.clone(),
-                limit,
-                exclusive_start_key,
-                ..Default::default()
-            })
+            .scan()
+            .table_name(table_name.clone())
+            .set_index_name(index_name.clone())
+            .set_expression_attribute_names(expression.names().clone())
+            .set_expression_attribute_values(expression.values().clone())
+            .set_filter_expression(expression.filter().cloned())
+            .set_projection_expression(expression.projection().cloned())
+            .set_limit(limit)
+            .set_exclusive_start_key(exclusive_start_key)
+            .send()
             .await?;
 
         let mut stop_scan = false;
@@ -315,7 +411,7 @@ where
                 Box::new({
                     let i = i.clone();
                     |item: &mut I| {
-                        *item = I::from_attrs(i)?;
+                        *item = I::from_attrs(i.to_rusoto())?;
                         Ok(())
                     }
                 }),
@@ -331,7 +427,7 @@ where
             break;
         }
 
-        item_count += items.len() as i64;
+        item_count += items.len() as i32;
         if let Some(limit) = limit {
             if item_count >= limit {
                 break;
@@ -348,10 +444,10 @@ where
 }
 
 pub async fn scan<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,
         Box<dyn FnOnce(&mut I) -> anyhow::Result<()>>,
@@ -364,10 +460,10 @@ where
 }
 
 pub async fn scan_index<I>(
-    client: &DynamoDbClient,
+    client: &Client,
     table_name: impl Into<String>,
     expression: Expression,
-    limit: Option<i64>,
+    limit: Option<i32>,
     index_name: impl Into<String>,
     item_cb: impl FnMut(
         &HashMap<String, AttributeValue>,

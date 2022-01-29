@@ -8,8 +8,8 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0"
-dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression", default-features = false, features = ["rustls"] }
+aws-config = "0.6"
+aws-sdk-dynamodb = "0.6"
+dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
 dynomite = { version = "0.10", default-features = false, features = ["rustls"] }
-rusoto_core = { version = "0.45", default-features = false, features = ["rustls"] }
-rusoto_dynamodb = { version = "0.45", default-features = false, features = ["rustls"] }
 tracing = "0.1"
