@@ -13,6 +13,7 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1.0"
 argh = "0.1"
+console-subscriber = "0.1"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
 dynomite = { version = "0.10", default-features = false, features = ["rustls"] }
 once_cell = "1.9"

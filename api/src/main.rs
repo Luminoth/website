@@ -32,7 +32,12 @@ fn init_logging() -> anyhow::Result<()> {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    init_logging()?;
+    // TODO: make this not mutually exclusive
+    if OPTIONS.read().tracing {
+        console_subscriber::init();
+    } else {
+        init_logging()?
+    };
 
     // TODO: make this configurable
     let region = String::from("us-west-2");

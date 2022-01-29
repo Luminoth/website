@@ -22,6 +22,10 @@ pub struct Options {
     /// set this when running in production
     #[argh(switch)]
     pub prod: bool,
+
+    /// enable tokio tracing
+    #[argh(switch)]
+    pub tracing: bool,
 }
 
 impl Options {
