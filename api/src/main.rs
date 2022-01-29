@@ -43,7 +43,8 @@ async fn main() -> anyhow::Result<()> {
         .parse::<SocketAddr>()
         .expect("Invalid address");
 
-    let routes = routes::init_routes(region, OPTIONS.clone()).with(routes::init_cors());
+    let routes =
+        routes::init_routes(region, OPTIONS.clone()).with(routes::init_cors(!OPTIONS.read().prod));
     let filter = routes.with(warp::log::custom(|info| {
         // ignore AWS health check requests
         if let Some(user_agent) = info.user_agent() {

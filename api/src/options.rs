@@ -18,6 +18,10 @@ pub struct Options {
     /// data prefix
     #[argh(option, default = "PathBuf::from(\".\")")]
     prefix: PathBuf,
+
+    /// set this when running in production
+    #[argh(switch)]
+    pub prod: bool,
 }
 
 impl Options {

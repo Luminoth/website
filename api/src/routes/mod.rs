@@ -12,8 +12,10 @@ use warp::{Filter, Reply};
 
 use crate::options::SharedOptions;
 
-pub fn init_cors() -> warp::cors::Builder {
-    warp::cors()
+pub fn init_cors(local: bool) -> warp::cors::Builder {
+    info!("Initializing CORS...");
+
+    let mut builder = warp::cors()
         .allow_methods(&[
             Method::HEAD,
             Method::GET,
@@ -22,8 +24,16 @@ pub fn init_cors() -> warp::cors::Builder {
             Method::DELETE,
             Method::OPTIONS,
         ])
-        .allow_any_origin()
-        .allow_credentials(true)
+        // TODO: make this configurable
+        .allow_origin("https://www.energonsoftware.org/")
+        .allow_credentials(true);
+
+    if local {
+        info!("Allowing localhost...");
+        builder = builder.allow_origin("http://localhost:4200");
+    }
+
+    builder
 }
 
 fn get_root() -> BoxedFilter<(impl Reply,)> {

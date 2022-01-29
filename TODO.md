@@ -1,5 +1,6 @@
 # TODO
 
+* Convert to aws-sdk
 * Need to mobile-friendly test all the pages
 * Need to screen reader test all the pages
 * Check RSS links
