@@ -24,14 +24,14 @@
     "@angular/platform-browser-dynamic": "13.3.0",
     "@angular/router": "13.3.0",
     "@ng-bootstrap/ng-bootstrap": "^12.0.1",
-    "@types/lodash": "^4.14.168",
-    "bootstrap": "^4.6.0",
-    "core-js": "^3.10.1",
+    "@types/lodash": "^4.14.180",
+    "bootstrap": "^5.1.3",
+    "core-js": "^3.21.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "rxjs": "^6.6.7",
+    "rxjs": "^7.5.5",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.5"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.3.0",
