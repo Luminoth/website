@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
@@ -28,7 +29,7 @@ export class WoWService {
   }
 
   async getAddonsAsync() {
-    return this.getAddons().toPromise();
+    return lastValueFrom(this.getAddons());
   }
 
   getMacros() {
@@ -38,7 +39,7 @@ export class WoWService {
   }
 
   async getMacrosAsync() {
-    return this.getMacros().toPromise();
+    return lastValueFrom(this.getMacros());
   }
 
   getScreenshots(id?: string) {
@@ -54,7 +55,7 @@ export class WoWService {
   }
 
   async getScreenshotsAsync(id?: string) {
-    return this.getScreenshots(id).toPromise();
+    return lastValueFrom(this.getScreenshots(id));
   }
 
   //#endregion

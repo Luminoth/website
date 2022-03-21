@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
@@ -28,7 +29,7 @@ export class DownloadsService {
   }
 
   async getDownloadCategoriesAsync() {
-    return this.getDownloadCategories().toPromise();
+    return lastValueFrom(this.getDownloadCategories());
   }
 
   getDownloads() {
@@ -38,7 +39,7 @@ export class DownloadsService {
   }
 
   async getDownloadsAsync() {
-    return this.getDownloads().toPromise();
+    return lastValueFrom(this.getDownloads());
   }
 
   //#endregion

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
@@ -28,7 +29,7 @@ export class NewsService {
   }
 
   async getNewsAuthorsAsync() {
-    return this.getNewsAuthors().toPromise();
+    return lastValueFrom(this.getNewsAuthors());
   }
 
   getNews() {
@@ -38,7 +39,7 @@ export class NewsService {
   }
 
   async getNewsAsync() {
-    return this.getNews().toPromise();
+    return lastValueFrom(this.getNews());
   }
 
   //#endregion

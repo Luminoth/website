@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
@@ -28,7 +29,7 @@ export class PicturesService {
   }
 
   async getPicturesAsync(id: string) {
-    return this.getPictures(id).toPromise();
+    return lastValueFrom(this.getPictures(id));
   }
 
   getVacationPictures(id: string) {
@@ -38,7 +39,7 @@ export class PicturesService {
   }
 
   async getVacationPicturesAsync(id: string) {
-    return this.getVacationPictures(id).toPromise();
+    return lastValueFrom(this.getVacationPictures(id));
   }
 
   //#endregion
