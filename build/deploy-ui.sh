@@ -33,7 +33,7 @@ cd ../$UIDIR
 rm -rf dist/
 
 echo "Building UI..."
-$NG build --prod
+$NG build
 
 echo "Removing old deployment..."
 $AWS s3 rm s3://$BUCKET --recursive
