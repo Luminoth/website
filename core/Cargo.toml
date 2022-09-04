@@ -8,8 +8,8 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0"
-aws-config = "0.6"
-aws-sdk-dynamodb = "0.6"
+aws-config = "0.48"
+aws-sdk-dynamodb = "0.18"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
 dynomite = { version = "0.10", default-features = false, features = ["rustls"] }
 tracing = "0.1"

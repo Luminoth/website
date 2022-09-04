@@ -3,7 +3,8 @@ use std::collections::HashMap;
 use aws_sdk_dynamodb::{
     config,
     model::{AttributeValue, KeysAndAttributes},
-    Blob, Client, Region,
+    types::Blob,
+    Client, Region,
 };
 use dynamodb_expression::Expression;
 
@@ -177,7 +178,7 @@ where
             .send()
             .await?;
 
-        let mut responses = output.responses.unwrap_or_else(HashMap::new);
+        let mut responses = output.responses.unwrap_or_default();
         for (table_name, items) in responses.drain() {
             for i in items {
                 let (_, stop) = item_cb(
@@ -248,7 +249,7 @@ where
             .await?;
 
         let mut stop_query = false;
-        let items = output.items.unwrap_or_else(Vec::new);
+        let items = output.items.unwrap_or_default();
         for i in &items {
             let (_, stop) = item_cb(
                 i,
@@ -404,7 +405,7 @@ where
             .await?;
 
         let mut stop_scan = false;
-        let items = output.items.unwrap_or_else(Vec::new);
+        let items = output.items.unwrap_or_default();
         for i in &items {
             let (_, stop) = item_cb(
                 i,
