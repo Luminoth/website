@@ -5,7 +5,7 @@ mod wow;
 
 use std::path::PathBuf;
 
-use tracing::info;
+use tracing::{info, warn};
 use warp::filters::BoxedFilter;
 use warp::http::Method;
 use warp::{Filter, Reply};
@@ -19,9 +19,9 @@ pub fn init_cors(local: bool) -> warp::cors::Builder {
         .allow_methods(&[
             Method::HEAD,
             Method::GET,
-            Method::PUT,
-            Method::POST,
-            Method::DELETE,
+            //Method::PUT,
+            //Method::POST,
+            //Method::DELETE,
             Method::OPTIONS,
         ])
         // TODO: make this configurable
@@ -29,7 +29,7 @@ pub fn init_cors(local: bool) -> warp::cors::Builder {
         .allow_credentials(true);
 
     if local {
-        info!("Allowing localhost...");
+        warn!("Allowing localhost...");
         builder = builder.allow_origin("http://localhost:4200");
     }
 

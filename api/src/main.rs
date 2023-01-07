@@ -9,16 +9,14 @@ mod util;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
-use once_cell::sync::Lazy;
+use clap::Parser;
 use parking_lot::RwLock;
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 use warp::Filter;
 
-use crate::options::SharedOptions;
+use crate::options::Options;
 use crate::util::OptFmt;
-
-static OPTIONS: Lazy<SharedOptions> = Lazy::new(|| Arc::new(RwLock::new(argh::from_env())));
 
 fn init_logging() -> anyhow::Result<()> {
     let subscriber = FmtSubscriber::builder()
@@ -32,8 +30,10 @@ fn init_logging() -> anyhow::Result<()> {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let options = Options::parse();
+
     // TODO: make this not mutually exclusive
-    if OPTIONS.read().tracing {
+    if options.tracing {
         console_subscriber::init();
     } else {
         init_logging()?
@@ -42,14 +42,15 @@ async fn main() -> anyhow::Result<()> {
     // TODO: make this configurable
     let region = String::from("us-west-2");
 
-    let addr = OPTIONS
-        .read()
+    let addr = options
         .address()
         .parse::<SocketAddr>()
-        .expect("Invalid address");
+        .expect(&format!("Invalid address: {}", options.address()));
+
+    let options = Arc::new(RwLock::new(options));
 
     let routes =
-        routes::init_routes(region, OPTIONS.clone()).with(routes::init_cors(!OPTIONS.read().prod));
+        routes::init_routes(region, options.clone()).with(routes::init_cors(!options.read().prod));
     let filter = routes.with(warp::log::custom(|info| {
         // ignore AWS health check requests
         if let Some(user_agent) = info.user_agent() {

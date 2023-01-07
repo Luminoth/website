@@ -1,4 +1,3 @@
-use dynamodb_expression::*;
 use serde::Serialize;
 
 use energonsoftware::aws::dynamodb;
@@ -14,7 +13,9 @@ struct GetNewsAuthorsResponse {
 pub async fn get_news_authors_handler(
     region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
-    let builder = Builder::new().with_key_condition(key("type").equal(value("news_author")));
+    let builder = dynamodb_expression::Builder::new().with_key_condition(
+        dynamodb_expression::key("type").equal(dynamodb_expression::value("news_author")),
+    );
 
     let expression = match builder.build() {
         Ok(expression) => expression,
@@ -55,7 +56,9 @@ struct GetNewsResponse {
 pub async fn get_news_handler(
     region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
-    let builder = Builder::new().with_key_condition(key("type").equal(value("news")));
+    let builder = dynamodb_expression::Builder::new().with_key_condition(
+        dynamodb_expression::key("type").equal(dynamodb_expression::value("news")),
+    );
 
     let expression = match builder.build() {
         Ok(expression) => expression,

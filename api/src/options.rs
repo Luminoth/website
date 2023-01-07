@@ -1,30 +1,30 @@
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use argh::FromArgs;
+use clap::Parser;
 use parking_lot::RwLock;
 
 /// Website API
-#[derive(FromArgs, Debug)]
+#[derive(Parser, Debug)]
 pub struct Options {
     /// address to bind to
-    #[argh(option, short = 'h', default = "String::from(\"0.0.0.0\")")]
+    #[arg(long, default_value = "0.0.0.0")]
     pub host: String,
 
     /// port to liten on
-    #[argh(option, short = 'p', default = "8000")]
+    #[arg(short, long, default_value_t = 8000)]
     pub port: u16,
 
     /// data prefix
-    #[argh(option, default = "PathBuf::from(\".\")")]
+    #[arg(default_value = ".")]
     prefix: PathBuf,
 
     /// set this when running in production
-    #[argh(switch)]
+    #[arg(long, default_value_t = false)]
     pub prod: bool,
 
     /// enable tokio tracing
-    #[argh(switch)]
+    #[arg(long, default_value_t = false)]
     pub tracing: bool,
 }
 

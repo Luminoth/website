@@ -1,4 +1,3 @@
-use dynamodb_expression::*;
 use serde::Serialize;
 
 use energonsoftware::aws::dynamodb;
@@ -14,7 +13,9 @@ struct GetDownloadCategoriesResponse {
 pub async fn get_download_categories_handler(
     region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
-    let builder = Builder::new().with_key_condition(key("type").equal(value("download_category")));
+    let builder = dynamodb_expression::Builder::new().with_key_condition(
+        dynamodb_expression::key("type").equal(dynamodb_expression::value("download_category")),
+    );
 
     let expression = match builder.build() {
         Ok(expression) => expression,
@@ -60,7 +61,9 @@ struct GetDownloadsResponse {
 pub async fn get_downloads_handler(
     region: impl Into<String>,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
-    let builder = Builder::new().with_key_condition(key("type").equal(value("download")));
+    let builder = dynamodb_expression::Builder::new().with_key_condition(
+        dynamodb_expression::key("type").equal(dynamodb_expression::value("download")),
+    );
 
     let expression = match builder.build() {
         Ok(expression) => expression,

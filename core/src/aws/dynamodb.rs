@@ -8,7 +8,7 @@ use aws_sdk_dynamodb::{
 };
 use dynamodb_expression::Expression;
 
-// helper trait for converting dynomite types to AWS SDK types
+/// Helper trait for converting dynomite types to AWS SDK types
 pub trait ToSdk<T> {
     fn to_sdk(self) -> T;
 }
@@ -47,7 +47,7 @@ impl ToSdk<HashMap<String, AttributeValue>> for dynomite::Attributes {
     }
 }
 
-// helper trait for converting from AWS SDK types to dynomite types
+/// Helper trait for converting from AWS SDK types to dynomite types
 pub trait ToRusoto<T> {
     fn to_rusoto(self) -> T;
 }
