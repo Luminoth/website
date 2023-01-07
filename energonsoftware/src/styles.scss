@@ -6,13 +6,14 @@
 
 @mixin theme-color-grabber($theme) {
   $primary: map-get($theme, primary);
-  $accent:  map-get($theme, accent);
-  $warn:    map-get($theme, warn);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
 
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  html, body {
+  html,
+  body {
     height: 100%;
     min-height: 100%;
   }
@@ -29,7 +30,8 @@
   a {
     color: mat.get-color-from-palette($accent);
 
-    &:focus, &:hover {
+    &:focus,
+    &:hover {
       color: mat.get-color-from-palette($accent);
     }
   }
