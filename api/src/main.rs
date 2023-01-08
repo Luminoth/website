@@ -45,7 +45,7 @@ async fn main() -> anyhow::Result<()> {
     let addr = options
         .address()
         .parse::<SocketAddr>()
-        .expect(&format!("Invalid address: {}", options.address()));
+        .unwrap_or_else(|_| panic!("Invalid address: {}", options.address()));
 
     let options = Arc::new(RwLock::new(options));
 
