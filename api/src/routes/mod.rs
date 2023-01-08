@@ -1,6 +1,7 @@
 mod downloads;
 mod news;
 mod pictures;
+mod static_files;
 mod wow;
 
 use std::path::PathBuf;
@@ -50,11 +51,10 @@ pub fn init_routes(
 
     get_root()
         .or(downloads::init_routes(region.clone()))
-        .or(news::init_routes(region))
+        .or(news::init_routes(region.clone()))
         .or(pictures::init_routes(options.clone()))
-        .or(wow::init_routes(options))
-        // TODO: we should only be doing this if we're not in prod
-        //.or(get_static_files())
+        .or(wow::init_routes(options.clone()))
+        .or(static_files::init_routes(region, options))
         .boxed()
 }
 
@@ -65,16 +65,14 @@ fn with_region(
     warp::any().map(move || region.clone())
 }
 
+fn with_is_local(
+    options: SharedOptions,
+) -> impl Filter<Extract = (bool,), Error = std::convert::Infallible> + Clone {
+    warp::any().map(move || !options.read().prod)
+}
+
 fn with_share_dir(
     options: SharedOptions,
 ) -> impl Filter<Extract = (PathBuf,), Error = std::convert::Infallible> + Clone {
     warp::any().map(move || options.read().share_dir())
-}
-
-#[allow(dead_code)]
-fn get_static_files() -> BoxedFilter<(impl Reply,)> {
-    warp::get()
-        .and(warp::path("static"))
-        .and(warp::fs::dir("static"))
-        .boxed()
 }

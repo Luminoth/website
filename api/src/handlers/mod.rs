@@ -1,6 +1,7 @@
 pub mod downloads;
 pub mod news;
 pub mod pictures;
+pub mod static_files;
 pub mod wow;
 
 use serde::Serialize;
