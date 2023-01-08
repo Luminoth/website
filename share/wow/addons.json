@@ -6,7 +6,7 @@
             "version": "3.0.8",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowace.com/addons/arl/",
+            "url": "https://www.wowace.com/addons/arl/",
             "description": "Tracks and displays missing recipes"
         },
         {
@@ -14,7 +14,7 @@
             "version": "5.21c.5521",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.auctioneeraddon.com/dl/",
+            "url": "https://www.auctioneeraddon.com/dl/",
             "description": "In-game auction data<br />Disable Enchantrix and SlideBar"
         },
         {
@@ -22,7 +22,7 @@
             "version": "6.0.16",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/bagnon/",
+            "url": "https://wow.curseforge.com/addons/bagnon/",
             "description": "Merges bags into one searchable interface<br />Disable Bagnon Guild Bank and Bagnon Void Storage"
         },
         {
@@ -30,7 +30,7 @@
             "version": "50400-1",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowace.com/addons/battlegroundtargets/",
+            "url": "https://www.wowace.com/addons/battlegroundtargets/",
             "description": "Shows enemy battleground players"
         },
         {
@@ -38,7 +38,7 @@
             "version": "0.34",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowace.com/addons/blood-shield-tracker/",
+            "url": "https://www.wowace.com/addons/blood-shield-tracker/",
             "description": "Tracks Death Knight blood shield"
         },
         {
@@ -46,7 +46,7 @@
             "version": "1.4",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowinterface.com/downloads/info13001-CurrencyTracker.html",
+            "url": "https://www.wowinterface.com/downloads/info13001-CurrencyTracker.html",
             "description": "Adds currency tracking to Bagnon and Titan Panel"
         },
         {
@@ -54,7 +54,7 @@
             "version": "6.0.8",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/deadly-boss-mods/",
+            "url": "https://wow.curseforge.com/addons/deadly-boss-mods/",
             "description": "Boss warning interface"
         },
         {
@@ -62,7 +62,7 @@
             "version": "r39",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/dbm-pvp/",
+            "url": "https://wow.curseforge.com/addons/dbm-pvp/",
             "description": "PvP DBM addon"
         },
         {
@@ -70,7 +70,7 @@
             "version": "5.0.0",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.gathereraddon.com/dl/",
+            "url": "https://www.gathereraddon.com/dl/",
             "description": "Tracks gathered node locations"
         },
         {
@@ -78,7 +78,7 @@
             "version": "2.1.1",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/gladiatorlossa/",
+            "url": "https://wow.curseforge.com/addons/gladiatorlossa/",
             "description": "PvP sound alerts"
         },
         {
@@ -86,7 +86,7 @@
             "version": "2.3.4",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowace.com/addons/healers-have-to-die/",
+            "url": "https://www.wowace.com/addons/healers-have-to-die/",
             "description": "Displays an icon above friendly and enemy healers"
         },
         {
@@ -94,7 +94,7 @@
             "version": "3.5.0",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowinterface.com/downloads/info14979-IInterruptedThat.html",
+            "url": "https://www.wowinterface.com/downloads/info14979-IInterruptedThat.html",
             "description": "Emotes who interrupted a spell.<br />\"/iit toggle\" to turn on/off"
         },
         {
@@ -102,7 +102,7 @@
             "version": "1.4.5",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/juked/",
+            "url": "https://wow.curseforge.com/addons/juked/",
             "description": "Tracks interrupts used against you"
         },
         {
@@ -110,7 +110,7 @@
             "version": "5.4.0",
             "latest_version": false,
             "enabled": false,
-            "url": "http://www.wowace.com/addons/loggerhead/",
+            "url": "https://www.wowace.com/addons/loggerhead/",
             "description": "Automated combat log enabler"
         },
         {
@@ -118,7 +118,7 @@
             "version": "3.2.8",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/pet-battle-teams/",
+            "url": "https://wow.curseforge.com/addons/pet-battle-teams/",
             "description": "Tracks pet battle teams"
         },
         {
@@ -126,7 +126,7 @@
             "version": "3.5.10",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowace.com/addons/prat-3-0/",
+            "url": "https://www.wowace.com/addons/prat-3-0/",
             "description": "Chat interface replacement"
         },
         {
@@ -134,7 +134,7 @@
             "version": "1.02",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/quest_completist/",
+            "url": "https://wow.curseforge.com/addons/quest_completist/",
             "description": "Shows which quests have been completed in each zone"
         },
         {
@@ -142,7 +142,7 @@
             "version": "0.9.8.7",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/reflex-battleground-historian/",
+            "url": "https://wow.curseforge.com/addons/reflex-battleground-historian/",
             "description": "Tracks arena and BG matches"
         },
         {
@@ -150,7 +150,7 @@
             "version": "1.1.1",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/sarena/",
+            "url": "https://wow.curseforge.com/addons/sarena/",
             "description": "Shows trinkets on arena frames"
         },
         {
@@ -158,7 +158,7 @@
             "version": "141015",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/saysapped/",
+            "url": "https://wow.curseforge.com/addons/saysapped/",
             "description": "Says \"sapped\" when sapped"
         },
         {
@@ -166,7 +166,7 @@
             "version": "1.4-23",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowace.com/addons/skada/",
+            "url": "https://www.wowace.com/addons/skada/",
             "description": "Damage meter"
         },
         {
@@ -174,7 +174,7 @@
             "version": "1.14",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/smarttargeting/",
+            "url": "https://wow.curseforge.com/addons/smarttargeting/",
             "description": "Swaps targeting keybinds based on PvE/PvP"
         },
         {
@@ -182,7 +182,7 @@
             "version": "6.15.3",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowinterface.com/downloads/info13674-TidyPlates.html",
+            "url": "https://www.wowinterface.com/downloads/info13674-TidyPlates.html",
             "description": "Nameplate replacement. Neon theme only"
         },
         {
@@ -190,7 +190,7 @@
             "version": "5.4.1.60000",
             "latest_version": false,
             "enabled": true,
-            "url": "http://wow.curseforge.com/addons/titan-panel/",
+            "url": "https://wow.curseforge.com/addons/titan-panel/",
             "description": "Adds info bar to the top of the screen"
         },
         {
@@ -198,7 +198,7 @@
             "version": "6.0.4",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowinterface.com/downloads/info15636-tullaRange.html",
+            "url": "https://www.wowinterface.com/downloads/info15636-tullaRange.html",
             "description": "Spell OOR and OOM indicator"
         },
         {
@@ -206,7 +206,7 @@
             "version": "4.46",
             "latest_version": false,
             "enabled": true,
-            "url": "http://www.wowace.com/addons/vanas-kos/",
+            "url": "https://www.wowace.com/addons/vanas-kos/",
             "description": "KoS and nearby enemy tracker"
         }
     ]
