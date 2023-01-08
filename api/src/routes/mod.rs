@@ -53,6 +53,8 @@ pub fn init_routes(
         .or(news::init_routes(region))
         .or(pictures::init_routes(options.clone()))
         .or(wow::init_routes(options))
+        // TODO: we should only be doing this if we're not in prod
+        //.or(get_static_files())
         .boxed()
 }
 
@@ -67,4 +69,12 @@ fn with_share_dir(
     options: SharedOptions,
 ) -> impl Filter<Extract = (PathBuf,), Error = std::convert::Infallible> + Clone {
     warp::any().map(move || options.read().share_dir())
+}
+
+#[allow(dead_code)]
+fn get_static_files() -> BoxedFilter<(impl Reply,)> {
+    warp::get()
+        .and(warp::path("static"))
+        .and(warp::fs::dir("static"))
+        .boxed()
 }

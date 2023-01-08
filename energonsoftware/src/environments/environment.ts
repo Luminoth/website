@@ -5,9 +5,7 @@
 export const environment = {
   production: false,
   apiHost: 'http://localhost:8000',
-
-  // TODO: can this point to something browsable locally?
-  staticUrl: 'https://energonsoftware-static.s3.amazonaws.com',
+  staticUrl: 'http://localhost:8000/static',
 };
 
 /*

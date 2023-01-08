@@ -42,6 +42,10 @@ const routes: Routes = [
   { path: 'wow/macros', component: WoWMacrosComponent },
   { path: 'wow/screenshots', component: WoWScreenshotsComponent },
   { path: 'wow/screenshots/ragnaros', component: WoWScreenshotsRagnarosComponent },
+  // TODO: this needs to route to static CDN ...
+  // when that's working, the download items in the CDN can change back to the website URL
+  // (instead of the S3 url), but then I guess we also need a directory browser, ugh
+  //{ path: 'static/*', ??? },
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '/' },
 ];
