@@ -16,7 +16,6 @@ aws-config = "0.52"
 clap = { version = "4.0", features = ["derive"] }
 console-subscriber = "0.1"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
-dynomite = { version = "0.10", default-features = false, features = ["rustls"] }
 parking_lot = "0.12"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

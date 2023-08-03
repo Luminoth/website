@@ -1,27 +1,30 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
+#[derive(Debug, Default, Clone, Deserialize, Serialize)]
 pub struct DownloadCategory {
-    #[serde(skip)]
-    #[dynomite(partition_key)]
-    #[dynomite(rename = "type")]
-    r#type: String,
-
-    #[dynomite(sort_key)]
     id: String,
 
     title: String,
     description: String,
 }
 
-#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
-pub struct Download {
-    #[serde(skip)]
-    #[dynomite(partition_key)]
-    #[dynomite(rename = "type")]
+impl From<DbDownloadCategory> for DownloadCategory {
+    fn from(db: DbDownloadCategory) -> Self {
+        db.download_category
+    }
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct DbDownloadCategory {
+    #[serde(rename = "type")]
     r#type: String,
 
-    #[dynomite(sort_key)]
+    #[serde(flatten)]
+    download_category: DownloadCategory,
+}
+
+#[derive(Debug, Default, Clone, Deserialize, Serialize)]
+pub struct Download {
     id: String,
 
     name: String,
@@ -29,6 +32,21 @@ pub struct Download {
     url: String,
     description: String,
 
-    #[dynomite(default)]
+    #[serde(default)]
     version: Option<String>,
+}
+
+impl From<DbDownload> for Download {
+    fn from(db: DbDownload) -> Self {
+        db.download
+    }
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct DbDownload {
+    #[serde(rename = "type")]
+    r#type: String,
+
+    #[serde(flatten)]
+    download: Download,
 }

@@ -11,5 +11,6 @@ anyhow = "1.0"
 aws-config = "0.52"
 aws-sdk-dynamodb = "0.22"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
-dynomite = { version = "0.10", default-features = false, features = ["rustls"] }
+serde = "1.0"
+serde_dynamo = { version = "4.2", features = ["aws-sdk-dynamodb+0_22"] }
 tracing = "0.1"

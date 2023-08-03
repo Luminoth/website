@@ -1,13 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
+#[derive(Debug, Default, Clone, Deserialize, Serialize)]
 pub struct NewsAuthor {
-    #[serde(skip)]
-    #[dynomite(partition_key)]
-    #[dynomite(rename = "type")]
-    r#type: String,
-
-    #[dynomite(sort_key)]
     id: String,
 
     username: String,
@@ -16,14 +10,23 @@ pub struct NewsAuthor {
     last_name: String,
 }
 
-#[derive(Default, Clone, Deserialize, Serialize, dynomite::Item)]
-pub struct News {
-    #[serde(skip)]
-    #[dynomite(partition_key)]
-    #[dynomite(rename = "type")]
+impl From<DbNewsAuthor> for NewsAuthor {
+    fn from(db: DbNewsAuthor) -> Self {
+        db.news_author
+    }
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct DbNewsAuthor {
+    #[serde(rename = "type")]
     r#type: String,
 
-    #[dynomite(sort_key)]
+    #[serde(flatten)]
+    news_author: NewsAuthor,
+}
+
+#[derive(Debug, Default, Clone, Deserialize, Serialize)]
+pub struct News {
     id: String,
 
     title: String,
@@ -31,4 +34,19 @@ pub struct News {
     summary: String,
     author: String,
     news: String,
+}
+
+impl From<DbNews> for News {
+    fn from(db: DbNews) -> Self {
+        db.news
+    }
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct DbNews {
+    #[serde(rename = "type")]
+    r#type: String,
+
+    #[serde(flatten)]
+    news: News,
 }

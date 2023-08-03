@@ -29,7 +29,7 @@ pub async fn get_download_categories_handler(
 
     let mut download_categories = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
-        let mut download_category = downloads::DownloadCategory::default();
+        let mut download_category = downloads::DbDownloadCategory::default();
         deserialize(&mut download_category)?;
 
         download_categories.push(download_category.clone());
@@ -46,6 +46,8 @@ pub async fn get_download_categories_handler(
             )));
         }
     }
+
+    let download_categories = download_categories.drain(..).map(|x| x.into()).collect();
 
     Ok(Box::new(warp::reply::json(
         &GetDownloadCategoriesResponse {
@@ -77,7 +79,7 @@ pub async fn get_downloads_handler(
 
     let mut downloads = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
-        let mut download = downloads::Download::default();
+        let mut download = downloads::DbDownload::default();
         deserialize(&mut download)?;
 
         downloads.push(download.clone());
@@ -91,6 +93,8 @@ pub async fn get_downloads_handler(
             return Ok(internal_error(format!("Error reading downloads: {}", e)));
         }
     }
+
+    let downloads = downloads.drain(..).map(|x| x.into()).collect();
 
     Ok(Box::new(warp::reply::json(&GetDownloadsResponse {
         downloads,

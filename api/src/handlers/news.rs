@@ -29,7 +29,7 @@ pub async fn get_news_authors_handler(
 
     let mut news_authors = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
-        let mut news_author = news::NewsAuthor::default();
+        let mut news_author = news::DbNewsAuthor::default();
         deserialize(&mut news_author)?;
 
         news_authors.push(news_author.clone());
@@ -43,6 +43,8 @@ pub async fn get_news_authors_handler(
             return Ok(internal_error(format!("Error reading news authors: {}", e)));
         }
     }
+
+    let news_authors = news_authors.drain(..).map(|x| x.into()).collect();
 
     Ok(Box::new(warp::reply::json(&GetNewsAuthorsResponse {
         news_authors,
@@ -78,7 +80,7 @@ pub async fn get_news_handler(
         Some(10),
         "type-timestamp-index",
         |_, deserialize| {
-            let mut news_ = news::News::default();
+            let mut news_ = news::DbNews::default();
             deserialize(&mut news_)?;
 
             news.push(news_.clone());
@@ -93,6 +95,8 @@ pub async fn get_news_handler(
             return Ok(internal_error(format!("Error reading news: {}", e)));
         }
     }
+
+    let news = news.drain(..).map(|x| x.into()).collect();
 
     Ok(Box::new(warp::reply::json(&GetNewsResponse { news })))
 }
