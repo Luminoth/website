@@ -4,6 +4,7 @@ use energonsoftware::aws::dynamodb;
 
 use super::internal_error;
 use crate::models::downloads;
+use crate::state::AppState;
 
 #[derive(Serialize)]
 struct GetDownloadCategoriesResponse {
@@ -11,7 +12,7 @@ struct GetDownloadCategoriesResponse {
 }
 
 pub async fn get_download_categories_handler(
-    region: impl Into<String>,
+    app_state: AppState,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = dynamodb_expression::Builder::new().with_key_condition(
         dynamodb_expression::key("type").equal(dynamodb_expression::value("download_category")),
@@ -24,7 +25,7 @@ pub async fn get_download_categories_handler(
         }
     };
 
-    let client = dynamodb::connect(region).await;
+    let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut download_categories = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
@@ -59,7 +60,7 @@ struct GetDownloadsResponse {
 }
 
 pub async fn get_downloads_handler(
-    region: impl Into<String>,
+    app_state: AppState,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = dynamodb_expression::Builder::new().with_key_condition(
         dynamodb_expression::key("type").equal(dynamodb_expression::value("download")),
@@ -72,7 +73,7 @@ pub async fn get_downloads_handler(
         }
     };
 
-    let client = dynamodb::connect(region).await;
+    let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut downloads = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {

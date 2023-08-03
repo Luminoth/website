@@ -4,6 +4,7 @@ use energonsoftware::aws::dynamodb;
 
 use super::internal_error;
 use crate::models::news;
+use crate::state::AppState;
 
 #[derive(Serialize)]
 struct GetNewsAuthorsResponse {
@@ -11,7 +12,7 @@ struct GetNewsAuthorsResponse {
 }
 
 pub async fn get_news_authors_handler(
-    region: impl Into<String>,
+    app_state: AppState,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = dynamodb_expression::Builder::new().with_key_condition(
         dynamodb_expression::key("type").equal(dynamodb_expression::value("news_author")),
@@ -24,7 +25,7 @@ pub async fn get_news_authors_handler(
         }
     };
 
-    let client = dynamodb::connect(region).await;
+    let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut news_authors = Vec::new();
     match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
@@ -54,7 +55,7 @@ struct GetNewsResponse {
 }
 
 pub async fn get_news_handler(
-    region: impl Into<String>,
+    app_state: AppState,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let builder = dynamodb_expression::Builder::new().with_key_condition(
         dynamodb_expression::key("type").equal(dynamodb_expression::value("news")),
@@ -67,7 +68,7 @@ pub async fn get_news_handler(
         }
     };
 
-    let client = dynamodb::connect(region).await;
+    let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut news = Vec::new();
     match dynamodb::query_index_descending(

@@ -12,6 +12,7 @@ use warp::http::Method;
 use warp::{Filter, Reply};
 
 use crate::options::SharedOptions;
+use crate::state::AppState;
 
 pub fn init_cors(local: bool) -> warp::cors::Builder {
     info!("Initializing CORS...");
@@ -41,28 +42,22 @@ fn get_root() -> BoxedFilter<(impl Reply,)> {
     warp::get().and(warp::path::end()).map(warp::reply).boxed()
 }
 
-pub fn init_routes(
-    region: impl Into<String>,
-    options: SharedOptions,
-) -> BoxedFilter<(impl Reply,)> {
+pub fn init_routes(app_state: AppState, options: SharedOptions) -> BoxedFilter<(impl Reply,)> {
     info!("Initializing routes...");
 
-    let region = region.into();
-
     get_root()
-        .or(downloads::init_routes(region.clone()))
-        .or(news::init_routes(region.clone()))
+        .or(downloads::init_routes(app_state.clone()))
+        .or(news::init_routes(app_state.clone()))
         .or(pictures::init_routes(options.clone()))
         .or(wow::init_routes(options.clone()))
-        .or(static_files::init_routes(region, options))
+        .or(static_files::init_routes(app_state.clone(), options))
         .boxed()
 }
 
-fn with_region(
-    region: impl Into<String>,
-) -> impl Filter<Extract = (String,), Error = std::convert::Infallible> + Clone {
-    let region = region.into();
-    warp::any().map(move || region.clone())
+fn with_app_state(
+    app_state: AppState,
+) -> impl Filter<Extract = (AppState,), Error = std::convert::Infallible> + Clone {
+    warp::any().map(move || app_state.clone())
 }
 
 fn with_is_local(

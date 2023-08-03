@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
+use aws_config::SdkConfig;
 use aws_sdk_dynamodb::{
-    config,
     model::{AttributeValue, KeysAndAttributes},
     types::Blob,
-    Client, Region,
+    Client,
 };
 use dynamodb_expression::Expression;
 
@@ -107,14 +107,8 @@ impl ToRusoto<dynomite::Attributes> for HashMap<String, AttributeValue> {
     }
 }
 
-pub async fn connect(region: impl Into<String>) -> Client {
-    let shared_config = aws_config::load_from_env().await;
-
-    let config = config::Builder::from(&shared_config)
-        .region(Region::new(region.into()))
-        .build();
-
-    Client::from_conf(config)
+pub async fn connect(aws_config: &SdkConfig) -> Client {
+    Client::new(aws_config)
 }
 
 pub async fn get_item<I>(

@@ -12,6 +12,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0"
+aws-config = "0.52"
 clap = { version = "4.0", features = ["derive"] }
 console-subscriber = "0.1"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }

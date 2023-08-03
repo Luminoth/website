@@ -4,6 +4,7 @@ mod handlers;
 mod models;
 mod options;
 mod routes;
+mod state;
 mod util;
 
 use std::net::SocketAddr;
@@ -16,6 +17,7 @@ use tracing_subscriber::FmtSubscriber;
 use warp::Filter;
 
 use crate::options::Options;
+use crate::state::AppState;
 use crate::util::OptFmt;
 
 fn init_logging() -> anyhow::Result<()> {
@@ -39,8 +41,9 @@ async fn main() -> anyhow::Result<()> {
         init_logging()?
     };
 
-    // TODO: make this configurable
-    let region = String::from("us-west-2");
+    // TODO: make region configurable?
+    let aws_config = aws_config::from_env().region("us-west-2").load().await;
+    let app_state = AppState::new(aws_config);
 
     let addr = options
         .address()
@@ -49,8 +52,8 @@ async fn main() -> anyhow::Result<()> {
 
     let options = Arc::new(RwLock::new(options));
 
-    let routes =
-        routes::init_routes(region, options.clone()).with(routes::init_cors(!options.read().prod));
+    let routes = routes::init_routes(app_state, options.clone())
+        .with(routes::init_cors(!options.read().prod));
     let filter = routes.with(warp::log::custom(|info| {
         // ignore AWS health check requests
         if let Some(user_agent) = info.user_agent() {
