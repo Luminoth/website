@@ -1,5 +1,9 @@
 # TODO
 
+* Move from Warp to Axum
+  * https://crates.io/crates/axum
+  * https://fasterthanli.me/series/updating-fasterthanli-me-for-2022/part-2
+  * ssjJune2023 project
 * Remove tokio_unstable when console-subscriber stops needing it
 * Need to mobile-friendly test all the pages
 * Need to screen reader test all the pages
