@@ -42,7 +42,10 @@ async fn main() -> anyhow::Result<()> {
     };
 
     // TODO: make region configurable?
-    let aws_config = aws_config::from_env().region("us-west-2").load().await;
+    let aws_config = aws_config::defaults(aws_config::BehaviorVersion::latest())
+        .region("us-west-2")
+        .load()
+        .await;
     let app_state = AppState::new(aws_config);
 
     let addr = options

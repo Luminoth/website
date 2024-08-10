@@ -28,7 +28,7 @@ pub async fn get_news_authors_handler(
     let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut news_authors = Vec::new();
-    match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
+    let result = dynamodb::query(&client, "items", expression, None, |_, deserialize| {
         let mut news_author = news::DbNewsAuthor::default();
         deserialize(&mut news_author)?;
 
@@ -36,8 +36,8 @@ pub async fn get_news_authors_handler(
 
         Ok((news_author, false))
     })
-    .await
-    {
+    .await;
+    match result {
         Ok(_) => (),
         Err(e) => {
             return Ok(internal_error(format!("Error reading news authors: {}", e)));
@@ -73,7 +73,7 @@ pub async fn get_news_handler(
     let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut news = Vec::new();
-    match dynamodb::query_index_descending(
+    let result = dynamodb::query_index_descending(
         &client,
         "items",
         expression,
@@ -88,8 +88,8 @@ pub async fn get_news_handler(
             Ok((news_, false))
         },
     )
-    .await
-    {
+    .await;
+    match result {
         Ok(_) => (),
         Err(e) => {
             return Ok(internal_error(format!("Error reading news: {}", e)));

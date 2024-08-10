@@ -28,7 +28,7 @@ pub async fn get_download_categories_handler(
     let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut download_categories = Vec::new();
-    match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
+    let result = dynamodb::query(&client, "items", expression, None, |_, deserialize| {
         let mut download_category = downloads::DbDownloadCategory::default();
         deserialize(&mut download_category)?;
 
@@ -36,8 +36,8 @@ pub async fn get_download_categories_handler(
 
         Ok((download_category, false))
     })
-    .await
-    {
+    .await;
+    match result {
         Ok(_) => (),
         Err(e) => {
             return Ok(internal_error(format!(
@@ -78,7 +78,7 @@ pub async fn get_downloads_handler(
     let client = dynamodb::connect(app_state.get_aws_config()).await;
 
     let mut downloads = Vec::new();
-    match dynamodb::query(&client, "items", expression, None, |_, deserialize| {
+    let result = dynamodb::query(&client, "items", expression, None, |_, deserialize| {
         let mut download = downloads::DbDownload::default();
         deserialize(&mut download)?;
 
@@ -86,8 +86,8 @@ pub async fn get_downloads_handler(
 
         Ok((download, false))
     })
-    .await
-    {
+    .await;
+    match result {
         Ok(_) => (),
         Err(e) => {
             return Ok(internal_error(format!("Error reading downloads: {}", e)));

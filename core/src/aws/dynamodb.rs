@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use aws_config::SdkConfig;
 use aws_sdk_dynamodb::{
-    model::{AttributeValue, KeysAndAttributes},
+    types::{AttributeValue, KeysAndAttributes},
     Client,
 };
 use dynamodb_expression::Expression;
@@ -62,7 +62,7 @@ where
             builder = builder.keys(key);
         }
 
-        req_items.insert(table_name, builder.build());
+        req_items.insert(table_name, builder.build()?);
     }
 
     let mut request_items = req_items;
