@@ -10,7 +10,7 @@ APIDIR=api
 cd ..
 
 echo "Building API..."
-$DOCKER build -t energonsoftware-api -f $APIDIR/Dockerfile .
+$DOCKER buildx build -t energonsoftware-api -f $APIDIR/Dockerfile .
 
 #echo "Building UI..."
-#$DOCKER build -t energonsoftware-ui -f $UIDIR/Dockerfile .
+#$DOCKER buildx build -t energonsoftware-ui -f $UIDIR/Dockerfile .

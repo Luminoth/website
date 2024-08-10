@@ -1,5 +1,6 @@
 # TODO
 
+* Add a route for getting the API version and print it somewhere in the UI
 * Move from Warp to Axum
   * https://crates.io/crates/axum
   * https://fasterthanli.me/series/updating-fasterthanli-me-for-2022/part-2
