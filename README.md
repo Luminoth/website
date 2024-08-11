@@ -8,3 +8,7 @@
   * Use [nvm](https://github.com/nvm-sh/nvm) to install and use the needed version
     * This doesn't seem to work with vscode, but is fine in a terminal
 * npm install -g @angular/cli
+
+## Updating
+
+* Sometimes `ng update` requires `--force` to get around `@angular/flex-layout` peer dependency issues
