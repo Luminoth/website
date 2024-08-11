@@ -1,5 +1,7 @@
 # TODO
 
+* Angular Flex-Layout is deprecated and needs to be replaced
+  * https://medium.com/@jemimaosoro/navigating-the-deprecation-of-angular-flex-layout-exploring-alternatives-and-whats-next-8b92f541c0aa
 * Add a route for getting the API version and print it somewhere in the UI
 * Move from Warp to Axum
   * https://crates.io/crates/axum
