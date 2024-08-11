@@ -28,11 +28,11 @@
   }
 
   a {
-    color: mat.get-color-from-palette($accent);
+    color: mat.m2-get-color-from-palette($accent);
 
     &:focus,
     &:hover {
-      color: mat.get-color-from-palette($accent);
+      color: mat.m2-get-color-from-palette($accent);
     }
   }
 
@@ -79,7 +79,7 @@
   /*#region Misc*/
 
   .active-link {
-    background-color: mat.get-color-from-palette($primary, darker);
+    background-color: mat.m2-get-color-from-palette($primary, darker);
   }
 
   .text-center {
@@ -87,15 +87,15 @@
   }
 
   .es-primary {
-    color: mat.get-color-from-palette($primary);
+    color: mat.m2-get-color-from-palette($primary);
   }
 
   .es-accent {
-    color: mat.get-color-from-palette($accent);
+    color: mat.m2-get-color-from-palette($accent);
   }
 
   .es-warn {
-    color: mat.get-color-from-palette($warn);
+    color: mat.m2-get-color-from-palette($warn);
   }
 
   .es-code {
@@ -113,7 +113,7 @@
   }
 
   .es-footer {
-    background-color: mat.get-color-from-palette($primary);
+    background-color: mat.m2-get-color-from-palette($primary);
     height: 32px;
     width: 100%;
     bottom: 0;

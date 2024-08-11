@@ -3,6 +3,6 @@
 // define palettes ($palette-name, main color, light variant, dark variant)
 // https://material.io/design/color/#color-usage-palettes
 
-$es-app-primary: mat.define-palette(mat.$cyan-palette, 800);
-$es-app-accent:  mat.define-palette(mat.$blue-grey-palette, 100);
-$es-app-warn:    mat.define-palette(mat.$red-palette);
+$es-app-primary: mat.m2-define-palette(mat.$m2-cyan-palette, 800);
+$es-app-accent:  mat.m2-define-palette(mat.$m2-blue-grey-palette, 100);
+$es-app-warn:    mat.m2-define-palette(mat.$m2-red-palette);

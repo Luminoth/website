@@ -7,7 +7,7 @@
 @include mat.core();
 
 // define the theme
-$es-app-theme: mat.define-dark-theme($es-app-primary, $es-app-accent, $es-app-warn);
+$es-app-theme: mat.m2-define-dark-theme($es-app-primary, $es-app-accent, $es-app-warn);
 
 // include all theme styles for the components
 @include mat.all-component-themes($es-app-theme);
