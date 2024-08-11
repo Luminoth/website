@@ -12,3 +12,4 @@
 ## Updating
 
 * Sometimes `ng update` requires `--force` to get around `@angular/flex-layout` peer dependency issues
+* Update Copyright footer in `navigation.component.html`
