@@ -72,10 +72,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "energonsoftware:build:production"
+              "buildTarget": "energonsoftware:build:production"
             },
             "development": {
-              "browserTarget": "energonsoftware:build:development"
+              "buildTarget": "energonsoftware:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "energonsoftware:build"
+            "buildTarget": "energonsoftware:build"
           }
         },
         "test": {
