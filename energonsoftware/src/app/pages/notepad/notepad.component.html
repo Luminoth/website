@@ -87,7 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
                     int nShowCmd)
 {{ '{' }}
     return 0;
-}
+&#125;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {{ '{' }}
@@ -109,10 +109,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
-    }
+    &#125;
 
     return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
+&#125;
 </pre>
   <p>
     Doing this creates a very basic shell for a Win32 application. It includes the <strong>stdlib.h</strong>,
@@ -171,7 +171,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     if(0 == RegisterClassEx(&amp;window_class)) {{ '{' }}
         MessageBox(NULL, "Could not register main window class!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
         return 0;
-    }
+    &#125;
 </pre>
   <p>
     With the window class setup and registered, we can create a new window based on it. Add the constants to the
@@ -195,7 +195,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     if(NULL == window_handle) {{ '{' }}
         MessageBox(NULL, "Could not create window!", PROGRAM_NAME, MB_OK | MB_ICONERROR);
         return 0;
-    }
+    &#125;
 </pre>
   <p>
     This sets the default base width/height of our main window and then creates it. It creates it with the extended
@@ -227,7 +227,7 @@ int set_font(HWND edit_window)
     SendMessage(edit_window, WM_SETFONT, (WPARAM)t_font, MAKELONG(true, 0));
 
     return 0;
-}
+&#125;
 </pre>
   <p>
     This just creates the font (see CreateFont() in the MSDN) that Notepad uses by default and sets it in the edit box
@@ -250,7 +250,7 @@ int set_font(HWND edit_window)
     while(GetMessage(&amp;message, NULL, 0, 0)) {{ '{' }}
         TranslateMessage(&amp;message);
         DispatchMessage(&amp;message);
-    }
+    &#125;
 </pre>
   <p>
     Now that we have a message loop, we want to change our return statement to reflect that we now have the loop. The
@@ -340,7 +340,7 @@ int set_font(HWND edit_window)
         case ID_EXIT:
             PostQuitMessage(0);
             break;
-        }
+        &#125;
         break;
 </pre>
   <p>
@@ -389,16 +389,16 @@ BOOL CALLBACK AboutDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
         case IDOK:
             EndDialog(hwndDlg, 0);
             break;
-        }
+        &#125;
         return TRUE;
     case WM_CLOSE:
     case WM_DESTROY:
         EndDialog(hwndDlg, 0);
         return TRUE;
-    }
+    &#125;
 
     return FALSE;
-}
+&#125;
 </pre>
   <p>
     Put the prototype for the function in our prototype section, and the actual function after the main window
@@ -507,7 +507,7 @@ int save(HWND main_window, HWND edit_window)
     if(0 == strcmp(g_long_filename, "")) {{ '{' }}
         // let the save_as procedure deal with it
         return save_as(main_window, edit_window);
-    } else {{ '{' }}
+    &#125; else {{ '{' }}
         // file was saved once already, so just reuse it
         memset(t_text, 0, sizeof(t_text));
         GetWindowText(edit_window, t_text, sizeof(t_text));
@@ -518,10 +518,10 @@ int save(HWND main_window, HWND edit_window)
         memset(g_title, 0, sizeof(g_title));
         _snprintf(g_title, sizeof(g_title), "%s - %s", g_short_filename, PROGRAM_NAME);
         SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
-    }
+    &#125;
 
     return 0;
-}
+&#125;
 
 
 int save_as(HWND main_window, HWND edit_window)
@@ -546,7 +546,7 @@ int save_as(HWND main_window, HWND edit_window)
             return -1;
         else
             return 1;
-    }
+    &#125;
 
     memset(t_text, 0, sizeof(t_text));
     GetWindowText(edit_window, t_text, sizeof(t_text));
@@ -559,7 +559,7 @@ int save_as(HWND main_window, HWND edit_window)
     SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
 
     return 0;
-}
+&#125;
 </pre>
   <p>
     Add them after the window procedures, and make sure to add the prototypes for them at the top of the program with
@@ -591,11 +591,11 @@ int save_text(char* file, char* text, unsigned int len)
     if(fwrite(text, sizeof(char), len, f) &lt; len) {{ '{' }}
         fclose(f);
         return -2;
-    }
+    &#125;
     fclose(f);
 
     return 0;
-}
+&#125;
 </pre>
   <p>
     This just opens the file for writing and writes the text passed to the function. If it doesn't write all the
@@ -629,7 +629,7 @@ int new_file(HWND main_window, HWND edit_window, bool saved)
             return 1;
         else if(IDYES == r)
             save(main_window, edit_window);
-    }
+    &#125;
 
     // make it all new and pretty
     memset(g_long_filename, 0, sizeof(g_long_filename));
@@ -641,7 +641,7 @@ int new_file(HWND main_window, HWND edit_window, bool saved)
     SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
 
     return 0;
-}
+&#125;
 </pre>
   <p>
     This just handles whether the file was changed or not and whether it should be saved (using the save() call). It
@@ -658,7 +658,7 @@ int new_file(HWND main_window, HWND edit_window, bool saved)
             if(lParam == (LPARAM)edit_handle)
                 saved = false;
             break;
-        }
+        &#125;
 </pre>
   <p>
     Put that after the switch(LOWORD(wParam)) of our WM_COMMAND (but before the break statement). This will parse out
@@ -724,7 +724,7 @@ int open_file(HWND main_window, HWND edit_window)
             return -1;
         else
             return 1;
-    }
+    &#125;
 
     memset(t_text, 0, sizeof(t_text));
     if(open_text(g_long_filename, t_text, sizeof(t_text)) &lt; 0)
@@ -736,7 +736,7 @@ int open_file(HWND main_window, HWND edit_window)
     SendMessage(main_window, WM_SETTEXT, NULL, (LPARAM)g_title);
 
     return 0;
-}
+&#125;
 </pre>
   <p>
     Just like save_as(), this creates a common dialog box. The only difference is that we use GetOpenFileName() to
@@ -757,12 +757,12 @@ int open_text(char* file, char* text, unsigned int len)
         if(!feof(f)) {{ '{' }}
             return -2;
             fclose(f);
-        }
-    }
+        &#125;
+    &#125;
     fclose(f);
 
     return 0;
-}
+&#125;
 </pre>
   <p>
     This opens the file for reading, reads the text into the text parameter that was passed, and then closes the file.
@@ -831,14 +831,14 @@ int set_font(HWND main_window, HWND edit_window)
             return -1;
         else
             return 1;
-    }
+    &#125;
     t_font = CreateFontIndirect(&amp;l_font);
     if(NULL == t_font)
         return -2;
     SendMessage(edit_window, WM_SETFONT, (WPARAM)t_font, MAKELONG(true, 0));
 
     return 0;
-}
+&#125;
 </pre>
   <p>
     Note that this is a seperate function from the other set_font() we wrote, and doesn't replace it (the function
