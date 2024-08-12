@@ -9,11 +9,14 @@
   <div fxFlex="20px"></div>
   <mat-divider></mat-divider>
   <div class="mat-subtitle-2 container-15">
-    Software engineer with over a decade of experience implementing multi-language cloud services and half a decade of
-    game development. Specialties in <strong>Rust</strong>, <strong>Go</strong>, <strong>C#</strong>,
-    <strong>C++</strong>, <strong>Python</strong>, <strong>Typescript</strong>, and <strong>Unity3D</strong>. Experience
-    collaborating remotely across multiple regions. Known for being able to digest new, varied tasks quickly and
-    effectively. Self-directed with specific interests in software architecture and design.
+    Software engineer with over a decade experience implementing multi-language <strong>SaaS IM services</strong>
+    and over five years experience in <strong>game and game services development</strong>.
+    Specialties in <strong>Rust</strong>, <strong>Go</strong>, <strong>C++</strong>, <strong>C#</strong>,
+    <strong>Python</strong>, <strong>Typescript</strong>,
+    and both <strong>Unity3D</strong> and <strong>Godot</strong> game engines.
+    Experience collaborating remotely across multiple regions.
+    Known for being able to digest new, varied tasks quickly and effectively.
+    Self-directed with specific interests in scalable software architecture and design.
   </div>
   <mat-accordion multi>
     <mat-expansion-panel expanded="true">
@@ -26,23 +29,79 @@
             <mat-panel-title>
               <div fxLayout="row" fxFlex>
                 <div fxLayout="column" fxFlex>
-                  <div class="es-resume-title">Senior Programmer</div>
-                  <div class="es-resume-date">1/2020 - Present</div>
+                  <div class="es-resume-title">Senior Game Services Programmer</div>
+                  <div class="es-resume-date">6/2020 - 9/2024</div>
                 </div>
-                <div class="es-resume-company" fxFlex>
-                  <a href="http://www.readyatdawn.com/">Ready at Dawn Studios</a> and Meta Reality Labs
-                </div>
-                <div class="es-resume-location" fxFlex>Portland, OR</div>
+                <div class="es-resume-company" fxFlex>Meta Reality Labs<br /><small><a
+                      href="https://www.readyatdawn.com/">Ready at Dawn</a> First Party Studio</small></div>
+                <div class="es-resume-location" fxFlex>Portland, OR Remote</div>
               </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="es-resume-info">
             <ul>
-              <li>Matchmaker scaling solutions</li>
-              <li>User data privacy and deletion requirements</li>
-              <li>Service / data migration from AWS to Meta infrastructure</li>
-              <li>Mentored and onboarded backend service developers</li>
-              <li>AWS FlexMatch investigation and implementation</li>
+              <li>Designed, documented, and implemented <strong>Rust</strong> Terraform-like <strong>AWS
+                  GameLift</strong> game server deployment CLI.
+                <ul>
+                  <li>Implemented infrastructure management, diff production, and remote resource management systems for
+                    determining desired remote resource state and applying required changes to remote infrastructure.
+                  </li>
+                  <li>Integrated with Meta configuration management and <strong>CI/CD</strong> systems for integration
+                    with
+                    <strong>TeamCity</strong> build deployment processes.
+                  </li>
+                </ul>
+              </li>
+              <li>Reviewed potential PII-aware user data storage designs for unannounced title.</li>
+              <li>Continued maintenance of legacy <strong>EchoVR</strong> backend services. Assisted with final shutdown
+                of the Echo VR game and cleanup of all associated resources.
+                <ul>
+                  <li>Worked to remove multiple long standing scaling bottlenecks across services.</li>
+                  <li>Migrated internal service state to <strong>Redis</strong>, replacing internal locking with
+                    distributed locking.</li>
+                  <li>Supported design and implementation of in-game transaction handling and game configuration
+                    services.</li>
+                  <li>Designed and implemented custom <strong>Redis Stream</strong> MQ solution.</li>
+                  <li>Assisted with migration of game servers from the <strong>Multiplay Clanforge</strong>
+                    provider to
+                    <strong>AWS GameLift</strong>.
+                    <ul>
+                      <li>Developed tooling to manage <strong>AWS FlexMatch</strong> configurations for EchoVR.
+                      </li>
+                      <li>Assisted with adapting internal tooling to support AWS GameLift <strong>Local Zones</strong>.
+                      </li>
+                    </ul>
+                  </li>
+                  <li>Assisted with building out an AWS hosted <strong>load test environment for EchoVR.</strong>.
+                    <ul>
+                      <li>Configured load test environment infrastructure.</li>
+                      <li>Developed orchestration tooling to manage <strong>AWS EC2</strong> instances for load
+                        testing.
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Assisted with migration of Ready At Dawn AWS service infrastructure to internal Meta
+                infrastructure.
+                <ul>
+                  <li>Helped migrate internal <strong>ELK</strong> stack to Meta logging solution.</li>
+                  <li>Implemented several security-related fixes across the Ready At Dawn codebase.</li>
+                  <li>Worked alongside core Reality Labs teams to ensure cross studio support and tooling met studio
+                    needs.</li>
+                  <li>Implemented Meta endpoints to replace legacy Echo VR matchmaking services.</li>
+                </ul>
+              </li>
+              <li>Implemented multiple privacy and security related updates as a part of the Meta acquisition.
+              </li>
+              <li>Participated in interviewing and hiring efforts for the services team. Mentored and onboarded
+                new
+                service developers as well as Meta developers aiding with the migration efforts.</li>
+              <li>Helped drive transition from manual code formatting process to automated
+                <strong>clang-format</strong>
+                process for the
+                studio.
+              </li>
             </ul>
           </div>
         </mat-expansion-panel>
@@ -389,7 +448,7 @@
             <ul>
               <li>Maintained district PCs</li>
               <li>Took on software and hardware tasks relating to <strong>Linux</strong> and the web</li>
-              <li>Webmaster for <a href="http://www.kunaschools.org/">http://www.kunaschools.org/</a> in 2002</li>
+              <li>Webmaster for <a href="https://www.kunaschools.org/">https://www.kunaschools.org/</a> in 2002</li>
             </ul>
           </div>
         </mat-expansion-panel>
@@ -458,7 +517,7 @@
         <div class="es-resume-info">
           <ul>
             <li>Maintained group website at <a
-                href="http://coen.boisestate.edu/vgrg/">http://coen.boisestate.edu/vgrg/</a>.
+                href="https://coen.boisestate.edu/vgrg/">https://coen.boisestate.edu/vgrg/</a>.
             </li>
           </ul>
         </div>
