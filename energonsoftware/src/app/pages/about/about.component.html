@@ -110,11 +110,11 @@
             <mat-panel-title>
               <div fxLayout="row" fxFlex>
                 <div fxLayout="column" fxFlex>
-                  <div class="es-resume-title">Programmer</div>
-                  <div class="es-resume-date">10/2017 - 1/2020</div>
+                  <div class="es-resume-title">Game Services Programmer</div>
+                  <div class="es-resume-date">10/2017 - 6/2020</div>
                 </div>
                 <div class="es-resume-company" fxFlex>
-                  <a href="http://www.readyatdawn.com/">Ready at Dawn Studios</a> and Facebook Reality Labs
+                  <a href="https://www.readyatdawn.com/">Ready at Dawn</a>
                 </div>
                 <div class="es-resume-location" fxFlex>Portland, OR</div>
               </div>
@@ -122,40 +122,67 @@
           </mat-expansion-panel-header>
           <div class="es-resume-info">
             <ul>
-              <li>Contributed to live support and development of <a href="https://www.oculus.com/echo-vr/">EchoVR</a>
-                game
+              <li>Assisted with feature implementation and maintenance of <strong>Echo VR game services</strong>
                 <ul>
-                  <li>Developed <strong>match history</strong> tracking and browsing system</li>
-                  <li>Maintained and continued development of <strong>ELK</strong>-based statistics and analytics
-                    backend and interface</li>
-                  <li>Developed and maintained <strong>Go / Angular</strong> DevOps tooling running on AWS ECS Fargate
-                  </li>
-                  <li>Developed, maintained, and adjusted various <strong>matchmaking</strong> flows and inputs</li>
-                  <li>Assisted with porting core OS interfaces to Linux / Android</li>
-                  <li>Ported core engine HTTP interface to <strong>libcurl</strong> and <strong>nghttp2</strong> for
-                    Linux / Android</li>
-                  <li>Ported core engine crash handling to <strong>Google Breakpad</strong> for Linux / Android</li>
-                  <li>Developed <strong>Rust</strong>-based game server allocation service</li>
-                  <li>Developed Social Group Moderation UI and API using Angular and <strong>AWS Lambda / API
-                      Gateway</strong></li>
-                  <li>Mentored and onboarded backend service developers</li>
-                  <li>Long term maintenance and deployment of all backend service applications using the <strong>AWS
-                      cloud platform</strong></li>
-                  <li>Converted largely hand-maintained AWS infrastructure to use <strong>Terraform</strong>
+                  <li>Focus on matchmaking, monitoring, alerting, and live support features.
                     <ul>
-                      <li>IAM policies, roles, users and groups</li>
-                      <li>EC2 instances including supporting scripts for managing deployments</li>
-                      <li>Elasticache Redis instances</li>
-                      <li>ECS Fargate services</li>
-                      <li>DynamoDB tables</li>
-                      <li>Private and public S3 buckets</li>
-                      <li>Budgeting and associated alerting</li>
-                      <li>Lambdas</li>
-                      <li>API Gateway APIs</li>
+                      <li>Developed internal <strong>match history</strong> tracking and browsing system.</li>
+                      <li>Maintained and continued development of <strong>ELK</strong> based statistics and analytics
+                        backend and interface.</li>
+                      <li>Developed internal <strong>Angular</strong> / <strong>Go</strong> live support tool for
+                        monitoring and customer support, including player profile management, player banning, and game
+                        configuration.</li>
+                      <li>Developed external Community Moderation Tool using Angular and <strong>AWS Lambda / API
+                          Gateway / Cognito</strong></li>
+                      <li>Improved and maintained various custom <strong>matchmaking</strong> flows and configurations.
+                      </li>
                     </ul>
                   </li>
-                  <li>Worked directly with game server providers</li>
-                  <li>Assisted with moving game servers from third party providers to AWS GameLift</li>
+                  <li> Worked extensively with <strong>AWS</strong> services as well as the <strong>Multiplay</strong>
+                    game server hosting platform <strong>Clanforge</strong>
+                    <ul>
+                      <li>IAM, Budgeting</li>
+                      <li>EC2, ECS Fargate, Lambda</li>
+                      <li>DynamoDB, ElastiCache Redis, S3</li>
+                      <li>API Gateway, Cognito</li>
+                    </ul>
+                  </li>
+                  <li>Ported custom write-through Redis-DynamoDB cache from C++ to Go.</li>
+                  <li>Imported unmanaged AWS infrastructure into Terraform configurations
+                    <ul>
+                      <li>Migrated manual EC2 instances to LaunchTemplates with <strong>Packer</strong> generated AMIs.
+                      </li>
+                    </ul>
+                  </li>
+                  <li>Developed tools for managing AWS credentials and deploying services and tooling to AWS.</li>
+                  <li>Extended LiveOps tooling to support Echo VR timeboxed event management using layered JSON.</li>
+                  <li>Designed and implemented <strong>Rust</strong> game server orchestration agent to allow game
+                    session placement on <strong>Vultr</strong> server provider.</li>
+                  <li>Assisted with the maintenance of internal <strong>ELK stack</strong>.</li>
+                </ul>
+              </li>
+              <li>Assisted with feature implementation and maintenance of Echo VR game client and server as well as the
+                custom Ready At Dawn game engine and tools.
+                <ul>
+                  <li> Added custom <strong>deadlock monitor</strong> utility to aid catching deadlock-related crashes
+                    in Echo VR game client.</li>
+                  <li> Implemented <strong>Dear ImGui</strong> display of real time game and network stats in Echo VR
+                    game client.</li>
+                  <li> Added spectator streaming feature to Echo VR client.</li>
+                  <li>Designed and implemented tooling and processes for Echo VR game server deployment and feature
+                    gating.</li>
+                  <li> Added build and tool support for Go and Rust applications and tooling, including long term
+                    support for both languages in the build system</li>
+                </ul>
+              </li>
+              <li>Assisted with Echo VR <strong>Quest</strong> port
+                <ul>
+                  <li>Android build signing tooling.</li>
+                  <li>Implemented several OS-level interfaces for the Linux / ARM platform.</li>
+                  <li>Updated <strong>BugSplat</strong> support to include Android and Linux platforms.</li>
+                  <li>Ported core engine HTTP interface to <strong>libcurl</strong> and <strong>nghttp2</strong> for
+                    Android and Linux.</li>
+                  <li>Ported core engine crash handling to <strong>Google Breakpad</strong> for Android and Linux.</li>
                 </ul>
               </li>
             </ul>
@@ -247,7 +274,7 @@
                   <div class="es-resume-date">7/2014 - 8/2015</div>
                 </div>
                 <div class="es-resume-company" fxFlex>Symantec Corporation</div>
-                <div class="es-resume-location" fxFlex>Portland, OR</div>
+                <div class="es-resume-location" fxFlex>Portland, OR Remote</div>
               </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -280,7 +307,7 @@
                   <div class="es-resume-date">12/2008 - 7/2014</div>
                 </div>
                 <div class="es-resume-company" fxFlex>Symantec.cloud<br /><small>Formerly MessageLabs</small></div>
-                <div class="es-resume-location" fxFlex>Boise, ID / Portland, OR</div>
+                <div class="es-resume-location" fxFlex>Boise, ID / Portland, OR Remote</div>
               </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -529,15 +556,12 @@
       </mat-expansion-panel-header>
       <div class="es-resume-info">
         <ul>
-          <li>Rust, Go, C#, C++, Python, Java, shell scripting, SQL</li>
-          <li>Unity3D</li>
-          <li>Android, Material Design</li>
-          <li>HTML5, JavaScript, TypeScript, Angular</li>
-          <li>Redis, DynamoDB, EC2, AWS Lambdas</li>
+          <li>Rust, Go, C#, C++, Python</li>
+          <li>Unity3D and Godot game engines</li>
+          <li>TypeScript, Angular, Material Design</li>
+          <li>AWS EC2, ECS, DynamoDB, SNS, ElastiCache (Redis), Lambda, GameLift / FlexMatch</li>
           <li>git, Perforce</li>
-          <li>Vim, Visual Studio</li>
-          <li>Linux (Slackware, Ubuntu), Microsoft Windows, OSX</li>
-          <li>Light exposure to OpenGL, WPF</li>
+          <li>Linux, Microsoft Windows, OSX</li>
         </ul>
       </div>
     </mat-expansion-panel>
@@ -547,13 +571,20 @@
       </mat-expansion-panel-header>
       <div class="es-resume-info">
         <ul>
-          <li>Software architecture and design patterns</li>
+          <li>Rust Programming Language</li>
+          <li>Scalable software architecture and design</li>
           <li>Software development processes and practices, particularly around maintainability and reuse</li>
-          <li>Distributed, scalable systems</li>
           <li>Video games and board games</li>
-          <li>Portland food carts and craft breweries</li>
-          <li>Snowboarding and bicycling</li>
+          <li>Snowboarding and Formula 1</li>
           <li>Lightweight / ultralight hammock backpacking</li>
+          <li><a href="https://luminoth.itch.io/">Global Game Jam (hosted on itch.io)</a></li>
+          <li>Personal website
+            <ul>
+              <li><a href="https://crates.io/crates/warp">Warp</a> backend running on AWS ECS Fargate</li>
+              <li> Angular / Material Design frontend running on AWS CloudFront</li>
+            </ul>
+          </li>
+          <li><a href="https://github.com/Luminoth">Personal GitHub repository</a></li>
         </ul>
       </div>
     </mat-expansion-panel>
