@@ -1,4 +1,4 @@
-<div fxLayout="column">
+<div class="fx-layout-col">
   <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
   <div *ngIf="!hasDownloads">
     No Downloads!
@@ -8,10 +8,10 @@
     <mat-expansion-panel *ngFor="let dataSource of dataSources | keyvalue" expanded="true">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <div fxLayout="row" fxFlex>
-            <div fxFlex>{{getDownloadCategory(dataSource.key).title.toUpperCase()}}</div>
-            <!--<div fxFlex>{{getDownloadCategory(dataSource.key).description}}</div>-->
-            <div fxFlex></div>
+          <div class="fx-layout-row fx-flex">
+            <div class="fx-flex">{{getDownloadCategory(dataSource.key).title.toUpperCase()}}</div>
+            <!--<div class="fx-flex">{{getDownloadCategory(dataSource.key).description}}</div>-->
+            <div class="fx-flex"></div>
           </div>
         </mat-panel-title>
       </mat-expansion-panel-header>

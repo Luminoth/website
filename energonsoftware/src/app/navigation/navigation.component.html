@@ -1,11 +1,13 @@
-<div fxLayout="column" fxFlexFill>
+<div class="fx-layout-col fx-flex-fill">
   <mat-toolbar class="fixed mat-elevation-z6" color="primary">
-    <mat-toolbar-row fxLayout="row">
-      <button type="button" mat-icon-button (click)="sidenav.toggle()" fxShow fxHide.gt-sm>
-        <mat-icon>menu</mat-icon>
-      </button>
+    <mat-toolbar-row class="fx-layout-row">
+      <div class="fx-hide-gt-sm">
+        <button type="button" mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
       <a mat-button routerLink="/">Energon Software</a>
-      <div fxShow fxHide.lt-md fxLayoutAlign="start stretch">
+      <div class="fx-layout-align-start-stretch fx-show fx-hide-lt-md">
         <a mat-button routerLink="/news" routerLinkActive="active-link">News</a>
         <a mat-button routerLink="/about" routerLinkActive="active-link">About</a>
         <a mat-button routerLink="/downloads" routerLinkActive="active-link">Downloads</a>
@@ -22,7 +24,7 @@
         <a mat-list-item routerLink="/links" routerLinkActive="active-link">Links</a>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content fxFlexFill>
+    <mat-sidenav-content class="fx-flex-fill">
       <div class="container-15">
         <router-outlet></router-outlet>
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -33,25 +35,25 @@
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <div class="es-footer fixed mat-elevation-z6" fxLayout="row">
-    <div class="es-copyright" fxLayout="row">
+  <div class="es-footer fixed mat-elevation-z6 fx-layout-row">
+    <div class="es-copyright">
       &copy; 2002-2024 Energon Software
     </div>
-    <div fxFlex></div>
-    <div class="es-social-icons" fxLayout="row">
+    <div class="fx-flex"></div>
+    <div class="es-social-icons fx-layout-row">
       <a href="mailto:ignignokterr@gmail.com">
         <mat-icon class="es-mail-icon">email</mat-icon>
       </a>
       <a href="https://www.linkedin.com/in/slillie"><img src="assets/img/linkedin-4-32.png" width="16" height="16"></a>
-      <div fxFlex="10px"></div>
+      <div class="fx-flex-10px"></div>
       <a href="https://github.com/luminoth"><img src="assets/img/GitHub-Mark-Light-32px.png" width="16" height="16"></a>
-      <div fxFlex="10px"></div>
+      <div class="fx-flex-10px"></div>
       <a href="https://www.twitter.com/Luminoth82"><img src="assets/img/Twitter_Social_Icon_Circle_White.png" width="16"
           height="16"></a>
-      <div fxFlex="10px"></div>
+      <div class="fx-flex-10px"></div>
       <a href="https://mastodon.gamedev.place/@luminoth"><img src="assets/img/logo-mastodon-white.png" width="16"
           height="16"></a>
-      <div fxFlex="10px"></div>
+      <div class="fx-flex-10px"></div>
       <a href="https://www.facebook.com/Luminoth82"><img src="assets/img/f_logo_RGB-White_58.png" width="16"
           height="16"></a>
     </div>

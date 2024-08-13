@@ -1,11 +1,11 @@
-<div fxLayout="column">
+<div class="fx-layout-col">
   <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
   <div *ngIf="!hasAddons">
     No Addons!
   </div>
-  <div *ngIf="hasAddons" fxLayout="column">
+  <div *ngIf="hasAddons" class="fx-layout-col">
     <div>Latest WoW version is <strong>{{ wowVersion }}</strong></div>
-    <div fxFlex="15px"></div>
+    <div class="fx-flex-15px"></div>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <!-- Disabled -->

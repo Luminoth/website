@@ -1,12 +1,12 @@
-<div fxLayout="column">
+<div class="fx-layout-col">
   <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
   <table mat-table class="mat-elevation-z8" [dataSource]="dataSource">
     <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
       <th mat-header-cell class="es-unicode-header" *matHeaderCellDef>{{column}}</th>
       <td class="es-unicode-container" mat-cell *matCellDef="let r">
-        <div class="es-unicode-container" fxLayout="row">
-          <div class="es-unicode-int" fxFlex>{{getCellHex(r, column)}}</div>
-          <div class="es-unicode-value" fxFlex [innerHTML]="getCharacter(r, column)"></div>
+        <div class="es-unicode-container fx-layout-row">
+          <div class="es-unicode-int fx-flex">{{getCellHex(r, column)}}</div>
+          <div class="es-unicode-value fx-flex" [innerHTML]="getCharacter(r, column)"></div>
         </div>
       </td>
     </ng-container>

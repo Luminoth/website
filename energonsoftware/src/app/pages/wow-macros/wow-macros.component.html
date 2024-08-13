@@ -1,4 +1,4 @@
-<div fxLayout="column">
+<div class="fx-layout-col">
   <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
   <div *ngIf="!hasMacros">
     No Macros!
@@ -8,10 +8,10 @@
       <mat-expansion-panel-header>
         <mat-panel-title>{{macroClass.character_class.toUpperCase()}}</mat-panel-title>
       </mat-expansion-panel-header>
-      <div *ngFor="let macro of macroClass.macros" fxLayout="column">
+      <div *ngFor="let macro of macroClass.macros" class="fx-layout-col">
         <div class="es-news-header">{{macro.name}}</div>
         <div [innerHtml]="macro.macro"></div>
-        <div fxFlex="15px"></div>
+        <div class="fx-flex-15px"></div>
       </div>
     </mat-expansion-panel>
   </mat-accordion>

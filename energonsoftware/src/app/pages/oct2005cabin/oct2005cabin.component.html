@@ -1,4 +1,4 @@
-<div fxLayout="column">
+<div class="fx-layout-col">
   <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
   <div>
     I spent the days of October 13th through October 17th, 2005 at my grandparent's cabin. While there, I took some
@@ -7,7 +7,7 @@
     getting it. No one got any big kills, but we saw lots of elk poop and grouse. I didn't get any pictures of any of
     that though. Here's what I did manage to get instead:
   </div>
-  <div fxFlex="15px"></div>
+  <div class="fx-flex-15px"></div>
   <ngb-carousel *ngIf="hasPictures">
     <ng-template ngbSlide *ngFor="let picture of pictures">
       <div class="picsum-img-wrapper" *ngFor="let image of picture.images">

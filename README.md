@@ -11,6 +11,4 @@
 
 ## Updating
 
-* Sometimes `ng update` requires `--force` to get around `@angular/flex-layout` peer dependency issues
-  * TODO: this will no longer be true once flex-layout is removed
 * Update Copyright footer in `navigation.component.html`

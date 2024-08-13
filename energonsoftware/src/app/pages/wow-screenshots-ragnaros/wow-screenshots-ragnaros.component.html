@@ -1,10 +1,10 @@
-<div fxLayout="column">
+<div class="fx-layout-col">
   <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
-  <div fxLayout="column">
+  <div class="fx-layout-col">
     <div><a routerLink="/wow/screenshots">Screenshots</a></div>
     <div>Absolute Dragons vs Ragnaros:</div>
   </div>
-  <div fxFlex="15px"></div>
+  <div class="fx-flex-15px"></div>
   <ngb-carousel *ngIf="hasScreenshots">
     <ng-template ngbSlide *ngFor="let screenshot of screenshots">
       <div class="picsum-img-wrapper" *ngFor="let image of screenshot.images">
