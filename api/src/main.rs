@@ -16,9 +16,9 @@ use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 use warp::Filter;
 
-use crate::options::Options;
-use crate::state::AppState;
-use crate::util::OptFmt;
+use options::Options;
+use state::AppState;
+use util::OptFmt;
 
 fn init_logging() -> anyhow::Result<()> {
     let subscriber = FmtSubscriber::builder()
@@ -87,6 +87,8 @@ async fn main() -> anyhow::Result<()> {
             info.elapsed(),
         );
     }));
+
+    info!("Listening on {}", addr);
     warp::serve(filter).run(addr).await;
 
     Ok(())
