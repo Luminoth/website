@@ -1,14 +1,16 @@
 //#![deny(warnings)]
 
+mod http_tracing;
 mod options;
 mod state;
+mod util;
 
 use std::net::SocketAddr;
 use std::sync::Arc;
 
 use axum::{
     debug_handler,
-    http::{HeaderValue, Method, StatusCode},
+    http::{HeaderValue, Method, StatusCode, Uri},
     response::IntoResponse,
     Router,
 };
@@ -19,6 +21,7 @@ use tower_http::{cors::CorsLayer, trace::TraceLayer};
 use tracing::{debug, info, warn, Level};
 use tracing_subscriber::FmtSubscriber;
 
+use http_tracing::tracing_wrapper;
 use options::Options;
 use state::AppState;
 
@@ -39,7 +42,6 @@ pub fn init_cors_layer(local: bool) -> anyhow::Result<CorsLayer> {
         .allow_methods([Method::OPTIONS, Method::HEAD, Method::GET])
         // TODO: make this configurable
         .allow_origin("https://www.energonsoftware.org".parse::<HeaderValue>()?)
-        .allow_headers([axum::http::header::CONTENT_TYPE])
         .allow_credentials(true);
 
     if local {
@@ -71,19 +73,21 @@ async fn main() -> anyhow::Result<()> {
     let addr = options
         .address()
         .parse::<SocketAddr>()
-        .expect(&format!("Invalid address: {}", options.address()));
+        .unwrap_or_else(|_| panic!("Invalid address: {}", options.address()));
 
     let options = Arc::new(RwLock::new(options));
 
     let app = Router::new()
+        // TODO: routes
+        .fallback(handler_404)
         .layer(init_cors_layer(!options.read().prod)?)
         .layer(
             ServiceBuilder::new()
+                .layer(axum::middleware::from_fn(tracing_wrapper))
                 .layer(TraceLayer::new_for_http())
                 .into_inner(),
         )
-        .with_state(app_state)
-        .fallback(handler_404);
+        .with_state(app_state);
 
     info!("Listening on {}", addr);
     let listener = tokio::net::TcpListener::bind(addr).await?;
@@ -93,7 +97,7 @@ async fn main() -> anyhow::Result<()> {
 }
 
 #[debug_handler]
-async fn handler_404() -> impl IntoResponse {
-    debug!("invalid resource");
-    (StatusCode::NOT_FOUND, "resource not found")
+async fn handler_404(uri: Uri) -> impl IntoResponse {
+    debug!("invalid resource: {}", uri);
+    (StatusCode::NOT_FOUND, "Resource not found")
 }
