@@ -1,18 +1,11 @@
-use axum::{debug_handler, extract::State, http::StatusCode, routing::get, Json, Router};
-use tracing::info;
+use axum::{routing::get, Router};
 
-use crate::error::AppError;
+use crate::handlers::pictures::*;
 use crate::state::AppState;
 
 pub fn init_routes(app: Router<AppState>) -> Router<AppState> {
-    app.route("/pictures", get(pictures))
-}
-
-#[debug_handler]
-pub async fn pictures(
-    State(app_state): State<AppState>,
-) -> Result<(StatusCode, Json<()>), AppError> {
-    info!("pictures");
-
-    Ok((StatusCode::OK, Json(())))
+    app.route(
+        "/v1/pictures/vacation/:id",
+        get(get_pictures_vacation_handler),
+    )
 }
