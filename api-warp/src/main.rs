@@ -11,7 +11,6 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use clap::Parser;
-use parking_lot::RwLock;
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 use warp::Filter;
@@ -36,6 +35,7 @@ async fn main() -> anyhow::Result<()> {
 
     // TODO: make this not mutually exclusive
     if options.tracing {
+        println!("Enabling tracing ...");
         console_subscriber::init();
     } else {
         init_logging()?
@@ -53,10 +53,10 @@ async fn main() -> anyhow::Result<()> {
         .parse::<SocketAddr>()
         .unwrap_or_else(|_| panic!("Invalid address: {}", options.address()));
 
-    let options = Arc::new(RwLock::new(options));
+    let options = Arc::new(options);
 
-    let routes = routes::init_routes(app_state, options.clone())
-        .with(routes::init_cors(!options.read().prod));
+    let routes =
+        routes::init_routes(app_state, options.clone()).with(routes::init_cors(!options.prod));
     let filter = routes.with(warp::log::custom(|info| {
         // ignore AWS health check requests
         if let Some(user_agent) = info.user_agent() {

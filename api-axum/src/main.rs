@@ -1,4 +1,4 @@
-//#![deny(warnings)]
+#![deny(warnings)]
 //#![deny(missing_docs)]
 
 mod error;
@@ -62,6 +62,7 @@ async fn main() -> anyhow::Result<()> {
 
     // TODO: make this not mutually exclusive
     if options.tracing {
+        println!("Enabling tracing ...");
         console_subscriber::init();
     } else {
         init_logging()?

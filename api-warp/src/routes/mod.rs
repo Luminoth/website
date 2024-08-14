@@ -63,11 +63,11 @@ fn with_app_state(
 fn with_is_local(
     options: SharedOptions,
 ) -> impl Filter<Extract = (bool,), Error = std::convert::Infallible> + Clone {
-    warp::any().map(move || !options.read().prod)
+    warp::any().map(move || !options.prod)
 }
 
 fn with_share_dir(
     options: SharedOptions,
 ) -> impl Filter<Extract = (PathBuf,), Error = std::convert::Infallible> + Clone {
-    warp::any().map(move || options.read().share_dir())
+    warp::any().map(move || options.share_dir())
 }

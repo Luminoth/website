@@ -1,16 +1,12 @@
 # TODO
 
 * Add a route for getting the API version and print it somewhere in the UI
-* Move from Warp to Axum
-  * https://crates.io/crates/axum
-  * https://fasterthanli.me/series/updating-fasterthanli-me-for-2022/part-2
-  * ssjJune2023 project
 * Remove tokio_unstable when console-subscriber stops needing it
 * Need to mobile-friendly test all the pages
 * Need to screen reader test all the pages
 * Check RSS links
 * Finish converting WoW data from .ini to .json
-* Rebuild resume page using a JSON backend
+* Rebuild resume page using a TeX / JSON backend
 * Rebuild links page with a JSON backend
 * Carousels should be centered and fit to the viewport
 * Download links are all broken

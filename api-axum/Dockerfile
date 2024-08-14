@@ -6,7 +6,7 @@ WORKDIR /app
 
 # copy source
 COPY core/ core/
-COPY api/ api/
+COPY api-axum/ api/
 
 # build
 RUN cargo install --path api/ --root .
@@ -36,4 +36,4 @@ COPY --from=builder /app/bin bin/
 
 EXPOSE 8000
 
-CMD ["bin/energonsoftware", "--prod"]
+CMD ["bin/energonsoftware-axum", "--prod"]

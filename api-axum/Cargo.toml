@@ -18,7 +18,7 @@ dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" 
 http = "1.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tokio = { version = "1.39", features = ["full"] }
+tokio = { version = "1.39", features = ["full", "tracing"] }
 tower = "0.5"
 tower-http = { version = "0.5", features = ["cors", "trace"] }
 tracing = "0.1"

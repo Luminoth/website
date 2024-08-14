@@ -14,7 +14,7 @@ use crate::util::{self, OptFmt};
 #[allow(dead_code)]
 pub fn on_request<B>(request: &http::Request<B>, span: &tracing::Span) {
     let mut forwarded = true;
-    let mut remote_addr = util::get_forwarded_addr(&request);
+    let mut remote_addr = util::get_forwarded_addr(request);
     if remote_addr.is_none() {
         remote_addr = request
             .extensions()
@@ -33,8 +33,8 @@ pub fn on_request<B>(request: &http::Request<B>, span: &tracing::Span) {
         request.method(),
         request.uri(),
         request.version(),
-        OptFmt(util::get_request_header(&request, header::REFERER).map(str::to_owned)),
-        OptFmt(util::get_request_header(&request, header::USER_AGENT).map(str::to_owned)),
+        OptFmt(util::get_request_header(request, header::REFERER).map(str::to_owned)),
+        OptFmt(util::get_request_header(request, header::USER_AGENT).map(str::to_owned)),
     );
 }
 
