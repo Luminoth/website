@@ -2,7 +2,9 @@
 //#![deny(missing_docs)]
 
 mod error;
+mod handlers;
 mod http_tracing;
+mod models;
 mod options;
 mod routes;
 mod state;
@@ -11,20 +13,17 @@ mod util;
 use std::net::SocketAddr;
 
 use axum::{
-    debug_handler,
-    http::{HeaderValue, Method, StatusCode, Uri},
-    middleware,
-    response::IntoResponse,
-    routing::get,
-    Router,
+    http::{HeaderValue, Method},
+    middleware, Router,
 };
 use clap::Parser;
 use tower::ServiceBuilder;
 use tower_http::{
     cors::CorsLayer,
-    trace::{DefaultMakeSpan, TraceLayer},
+    trace::{DefaultMakeSpan, DefaultOnFailure, TraceLayer},
+    LatencyUnit,
 };
-use tracing::{debug, info, warn, Level};
+use tracing::{info, warn, Level};
 use tracing_subscriber::FmtSubscriber;
 
 use options::Options;
@@ -82,28 +81,25 @@ async fn main() -> anyhow::Result<()> {
         .parse::<SocketAddr>()
         .unwrap_or_else(|_| panic!("Invalid address: {}", app_state.options.address()));
 
-    let app = Router::new()
-        .route("/downloads", get(routes::downloads))
-        .route("/news", get(routes::news))
-        .route("/pictures", get(routes::pictures))
-        .route("/wow", get(routes::wow))
-        .route("/static_files", get(routes::static_files))
-        .fallback(handler_404)
+    let app = routes::init_routes(Router::new())
         .layer(init_cors_layer(!app_state.options.prod)?)
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(http_tracing::tracing_wrapper))
                 .layer(
-                    TraceLayer::new_for_http().make_span_with(
-                        DefaultMakeSpan::new()
-                            //.level(Level::INFO)
-                            .include_headers(true),
-                    ), //.on_request(http_tracing::on_request)
-                       //.on_response(http_tracing::on_response),
+                    TraceLayer::new_for_http()
+                        .make_span_with(
+                            DefaultMakeSpan::new()
+                                //.level(Level::INFO)
+                                .include_headers(true),
+                        )
+                        //.on_request(http_tracing::on_request)
+                        //.on_response(http_tracing::on_response),
+                        .on_failure(DefaultOnFailure::new().latency_unit(LatencyUnit::Micros)),
                 )
                 .into_inner(),
         )
-        .with_state(app_state);
+        .with_state(app_state.clone());
 
     info!("Listening on {}", addr);
     let listener = tokio::net::TcpListener::bind(addr).await?;
@@ -114,11 +110,4 @@ async fn main() -> anyhow::Result<()> {
     .await?;
 
     Ok(())
-}
-
-#[debug_handler]
-async fn handler_404(uri: Uri) -> impl IntoResponse {
-    debug!("invalid resource: {}", uri);
-
-    (StatusCode::NOT_FOUND, "Resource not found")
 }
