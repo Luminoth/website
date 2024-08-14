@@ -1,6 +1,7 @@
 use std::fmt;
 use std::net::SocketAddr;
 
+use axum::extract::ConnectInfo;
 use http::{header::AsHeaderName, Request};
 
 // copied from warp's log filter
@@ -44,8 +45,8 @@ fn get_forwarded_for<B>(request: &Request<B>) -> Option<&str> {
 pub fn get_forwarded_addr<B>(request: &Request<B>) -> Option<SocketAddr> {
     let forwarded_for = get_forwarded_for(request);
     if let Some(forwarded_for) = forwarded_for {
-        // TODO: this isn't working (into_make_service_with_connect_info)
-        let port = if let Some(remote_addr) = request.extensions().get::<SocketAddr>() {
+        let port = if let Some(remote_addr) = request.extensions().get::<ConnectInfo<SocketAddr>>()
+        {
             remote_addr.port()
         } else {
             0

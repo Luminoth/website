@@ -18,11 +18,13 @@ use axum::{
 use clap::Parser;
 use parking_lot::RwLock;
 use tower::ServiceBuilder;
-use tower_http::{cors::CorsLayer, trace::TraceLayer};
+use tower_http::{
+    cors::CorsLayer,
+    trace::{DefaultMakeSpan, TraceLayer},
+};
 use tracing::{debug, info, warn, Level};
 use tracing_subscriber::FmtSubscriber;
 
-use http_tracing::tracing_wrapper;
 use options::Options;
 use state::AppState;
 
@@ -84,8 +86,15 @@ async fn main() -> anyhow::Result<()> {
         .layer(init_cors_layer(!options.read().prod)?)
         .layer(
             ServiceBuilder::new()
-                .layer(middleware::from_fn(tracing_wrapper))
-                .layer(TraceLayer::new_for_http())
+                .layer(middleware::from_fn(http_tracing::tracing_wrapper))
+                .layer(
+                    TraceLayer::new_for_http().make_span_with(
+                        DefaultMakeSpan::new()
+                            //.level(Level::INFO)
+                            .include_headers(true),
+                    ), //.on_request(http_tracing::on_request)
+                       //.on_response(http_tracing::on_response),
+                )
                 .into_inner(),
         )
         .with_state(app_state);
@@ -104,5 +113,6 @@ async fn main() -> anyhow::Result<()> {
 #[debug_handler]
 async fn handler_404(uri: Uri) -> impl IntoResponse {
     debug!("invalid resource: {}", uri);
+
     (StatusCode::NOT_FOUND, "Resource not found")
 }
