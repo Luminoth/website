@@ -1,16 +1,11 @@
-use axum::{debug_handler, extract::State, http::StatusCode, routing::get, Json, Router};
-use tracing::info;
+use axum::{routing::get, Router};
 
-use crate::error::AppError;
+use crate::handlers::wow::*;
 use crate::state::AppState;
 
 pub fn init_routes(app: Router<AppState>) -> Router<AppState> {
-    app.route("/wow", get(wow))
-}
-
-#[debug_handler]
-async fn wow(State(app_state): State<AppState>) -> Result<(StatusCode, Json<()>), AppError> {
-    info!("wow");
-
-    Ok((StatusCode::OK, Json(())))
+    app.route("/v1/wow/addons", get(get_addons_handler))
+        .route("/v1/wow/macros", get(get_macros_handler))
+        .route("/v1/wow/screenshots", get(get_screenshots_handler))
+        .route("/v1/wow/screenshots/:id", get(get_screenshot_handler))
 }
