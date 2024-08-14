@@ -1,3 +1,4 @@
+use std::net::SocketAddr;
 use std::time::Instant;
 
 use http::header;
@@ -5,7 +6,7 @@ use tracing::info;
 
 use crate::util::{self, OptFmt};
 
-// using this instead of dealing with TraceLayer
+// using this instead of TraceLayer
 // because I want to log everything about the
 // request / response together
 pub async fn tracing_wrapper(
@@ -19,9 +20,10 @@ pub async fn tracing_wrapper(
     let user_agent = util::get_request_header(&request, header::USER_AGENT).map(str::to_owned);
 
     let mut forwarded = true;
-    let remote_addr = util::get_forwarded_addr(&request);
+    let mut remote_addr = util::get_forwarded_addr(&request);
     if remote_addr.is_none() {
-        //remote_addr = request.remote_addr();
+        // TODO: this isn't working (into_make_service_with_connect_info)
+        remote_addr = request.extensions().get::<SocketAddr>().copied();
         forwarded = false;
     }
 

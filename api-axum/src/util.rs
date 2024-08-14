@@ -30,7 +30,7 @@ where
 }
 
 fn get_forwarded_for<B>(request: &Request<B>) -> Option<&str> {
-    // TODO: not sure if HeaderName::FORWARDED works here or not
+    // TODO: not sure if header::FORWARDED works here or not
     let forwarded_for = get_request_header(request, "X-Forwarded-For");
     if let Some(forwarded_for) = forwarded_for {
         let addrs = forwarded_for.split(',').collect::<Vec<&str>>();
@@ -44,12 +44,12 @@ fn get_forwarded_for<B>(request: &Request<B>) -> Option<&str> {
 pub fn get_forwarded_addr<B>(request: &Request<B>) -> Option<SocketAddr> {
     let forwarded_for = get_forwarded_for(request);
     if let Some(forwarded_for) = forwarded_for {
-        /*let port = if let Some(remote_addr) = request.remote_addr() {
+        // TODO: this isn't working (into_make_service_with_connect_info)
+        let port = if let Some(remote_addr) = request.extensions().get::<SocketAddr>() {
             remote_addr.port()
         } else {
             0
-        };*/
-        let port = 0;
+        };
 
         return format!("{}:{}", forwarded_for, port).parse().ok();
     }

@@ -11,6 +11,7 @@ use std::sync::Arc;
 use axum::{
     debug_handler,
     http::{HeaderValue, Method, StatusCode, Uri},
+    middleware,
     response::IntoResponse,
     Router,
 };
@@ -83,7 +84,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(init_cors_layer(!options.read().prod)?)
         .layer(
             ServiceBuilder::new()
-                .layer(axum::middleware::from_fn(tracing_wrapper))
+                .layer(middleware::from_fn(tracing_wrapper))
                 .layer(TraceLayer::new_for_http())
                 .into_inner(),
         )
@@ -91,7 +92,11 @@ async fn main() -> anyhow::Result<()> {
 
     info!("Listening on {}", addr);
     let listener = tokio::net::TcpListener::bind(addr).await?;
-    axum::serve(listener, app).await?;
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await?;
 
     Ok(())
 }
