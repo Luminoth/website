@@ -1,22 +1,24 @@
 //#![deny(warnings)]
+//#![deny(missing_docs)]
 
+mod error;
 mod http_tracing;
 mod options;
+mod routes;
 mod state;
 mod util;
 
 use std::net::SocketAddr;
-use std::sync::Arc;
 
 use axum::{
     debug_handler,
     http::{HeaderValue, Method, StatusCode, Uri},
     middleware,
     response::IntoResponse,
+    routing::get,
     Router,
 };
 use clap::Parser;
-use parking_lot::RwLock;
 use tower::ServiceBuilder;
 use tower_http::{
     cors::CorsLayer,
@@ -71,19 +73,23 @@ async fn main() -> anyhow::Result<()> {
         .region("us-west-2")
         .load()
         .await;
-    let app_state = AppState::new(aws_config);
 
-    let addr = options
+    let app_state = AppState::new(options, aws_config);
+
+    let addr = app_state
+        .options
         .address()
         .parse::<SocketAddr>()
-        .unwrap_or_else(|_| panic!("Invalid address: {}", options.address()));
-
-    let options = Arc::new(RwLock::new(options));
+        .unwrap_or_else(|_| panic!("Invalid address: {}", app_state.options.address()));
 
     let app = Router::new()
-        // TODO: routes
+        .route("/downloads", get(routes::downloads))
+        .route("/news", get(routes::news))
+        .route("/pictures", get(routes::pictures))
+        .route("/wow", get(routes::wow))
+        .route("/static_files", get(routes::static_files))
         .fallback(handler_404)
-        .layer(init_cors_layer(!options.read().prod)?)
+        .layer(init_cors_layer(!app_state.options.prod)?)
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(http_tracing::tracing_wrapper))

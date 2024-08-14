@@ -1,8 +1,6 @@
 use std::path::PathBuf;
-use std::sync::Arc;
 
 use clap::Parser;
-use parking_lot::RwLock;
 
 /// Website API
 #[derive(Parser, Debug)]
@@ -43,5 +41,3 @@ impl Options {
         self.prefix.join("share")
     }
 }
-
-pub type SharedOptions = Arc<RwLock<Options>>;
