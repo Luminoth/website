@@ -24,18 +24,26 @@ pub fn on_request<B>(request: &http::Request<B>, span: &tracing::Span) {
         forwarded = false;
     }
 
-    info!(
-        target: "energonsoftware::api",
-        "req:{} {}{} \"{} {} {:?}\" \"{}\" \"{}\"",
-        OptFmt(span.id().map(|x| x.into_u64())),
-        OptFmt(remote_addr),
-        if forwarded { " (forwarded)" } else { "" },
-        request.method(),
-        request.uri(),
-        request.version(),
-        OptFmt(util::get_request_header(request, header::REFERER).map(str::to_owned)),
-        OptFmt(util::get_request_header(request, header::USER_AGENT).map(str::to_owned)),
-    );
+    let user_agent = util::get_request_header(request, header::USER_AGENT);
+
+    // don't log AWS health check requests
+    if !user_agent
+        .as_ref()
+        .is_some_and(|user_agent| user_agent.contains("HealthChecker"))
+    {
+        info!(
+            target: "energonsoftware::api",
+            "req:{} {}{} \"{} {} {:?}\" \"{}\" \"{}\"",
+            OptFmt(span.id().map(|x| x.into_u64())),
+            OptFmt(remote_addr),
+            if forwarded { " (forwarded)" } else { "" },
+            request.method(),
+            request.uri(),
+            request.version(),
+            OptFmt(util::get_request_header(request, header::REFERER)),
+            OptFmt(user_agent),
+        );
+    }
 }
 
 #[allow(dead_code)]
@@ -44,6 +52,8 @@ pub fn on_response<B>(
     latency: std::time::Duration,
     span: &tracing::Span,
 ) {
+    // TODO: need to not log if the User-Agent is the health checker
+
     info!(
         target: "energonsoftware::api",
         "req:{} {} {:?}",
@@ -81,19 +91,25 @@ pub async fn tracing_wrapper(
     let response = next.run(request).await;
     let elapsed = now.elapsed();
 
-    info!(
-        target: "energonsoftware::api",
-        "{}{} \"{} {} {:?}\" {} \"{}\" \"{}\" {:?}",
-        OptFmt(remote_addr),
-        if forwarded { " (forwarded)" } else { "" },
-        method,
-        uri,
-        version,
-        response.status().as_u16(),
-        OptFmt(referer),
-        OptFmt(user_agent),
-        elapsed,
-    );
+    // don't log AWS health check requests
+    if !user_agent
+        .as_ref()
+        .is_some_and(|user_agent| user_agent.contains("HealthChecker"))
+    {
+        info!(
+            target: "energonsoftware::api",
+            "{}{} \"{} {} {:?}\" {} \"{}\" \"{}\" {:?}",
+            OptFmt(remote_addr),
+            if forwarded { " (forwarded)" } else { "" },
+            method,
+            uri,
+            version,
+            response.status().as_u16(),
+            OptFmt(referer),
+            OptFmt(user_agent),
+            elapsed,
+        );
+    }
 
     Ok(response)
 }
