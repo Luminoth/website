@@ -264,6 +264,14 @@
     @extend .es-news-title;
   }
 
+  .es-resume-media-title {
+    @extend .es-news-title;
+  }
+
+  .es-resume-media {
+    text-align: center;
+  }
+
   .es-resume-location {
     text-align: right;
   }
