@@ -26,9 +26,10 @@ tasks:
     silent: true
 
   run-ui:
+    dir: energonsoftware
     cmds:
-      - cd energonsoftware
       - ng serve
+    silent: true
 
   deploy-api:
     cmds:
@@ -38,14 +39,14 @@ tasks:
       - aws ecs update-service --cluster arn:aws:ecs:us-west-2:$AWS_ACCOUNT:cluster/energonsoftware-api --service energonsoftware-api --force-new-deployment > /dev/null
     silent: true
   deploy-static:
+    dir: static
     cmds:
-      - cd static
       - aws s3 rm s3://energonsoftware-static --recursive
       - aws s3 cp . s3://energonsoftware-static --recursive --acl public-read
     silent: true
   deploy-ui:
+    dir: energonsoftware
     cmds:
-      - cd energonsoftware
       - rm -rf dist/
       - ng build
       - aws s3 rm s3://energonsoftware-website --recursive
