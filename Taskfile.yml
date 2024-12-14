@@ -1,0 +1,63 @@
+version: "3"
+
+tasks:
+  clippy:
+    cmds:
+      - cargo clippy
+    silent: true
+  clean:
+    cmds:
+      - cargo clean
+      - rm -rf bin/
+      - rm -rf energonsoftware/dist
+    silent: true
+  really-clean:
+    deps: [clean]
+    cmds:
+      - docker image prune
+      - docker rmi -f energonsoftware-api
+    silent: true
+
+  build:
+    cmds:
+      #- docker buildx build -t energonsoftware-api -f api-warp/Dockerfile .
+      - docker buildx build -t energonsoftware-api -f api-axum/Dockerfile .
+      #- docker buildx build -t energonsoftware-ui -f energonsoftware/Dockerfile .
+    silent: true
+
+  run-ui:
+    cmds:
+      - cd energonsoftware
+      - ng serve
+
+  deploy-api:
+    cmds:
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
+      - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
+      - docker push $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
+      - aws ecs update-service --cluster arn:aws:ecs:us-west-2:$AWS_ACCOUNT:cluster/energonsoftware-api --service energonsoftware-api --force-new-deployment > /dev/null
+    silent: true
+  deploy-static:
+    cmds:
+      - cd static
+      - aws s3 rm s3://energonsoftware-static --recursive
+      - aws s3 cp . s3://energonsoftware-static --recursive --acl public-read
+    silent: true
+  deploy-ui:
+    cmds:
+      - cd energonsoftware
+      - rm -rf dist/
+      - ng build
+      - aws s3 rm s3://energonsoftware-website --recursive
+      - aws s3 cp dist/energonsoftware s3://energonsoftware-website --recursive
+      - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION --paths "/*"
+    silent: true
+
+  start:
+    cmds:
+      - docker-compose up -d
+    silent: true
+  stop:
+    cmds:
+      - docker-compose stop && docker-compose rm -f
+    silent: true
