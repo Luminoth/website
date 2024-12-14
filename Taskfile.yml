@@ -18,11 +18,16 @@ tasks:
       - docker rmi -f energonsoftware-api
     silent: true
 
-  build:
+  build-api:
     cmds:
       #- docker buildx build -t energonsoftware-api -f api-warp/Dockerfile .
       - docker buildx build -t energonsoftware-api -f api-axum/Dockerfile .
-      #- docker buildx build -t energonsoftware-ui -f energonsoftware/Dockerfile .
+    silent: true
+  build-ui:
+    dir: energonsoftware
+    cmds:
+      - rm -rf dist/
+      - ng build
     silent: true
 
   run-ui:
@@ -32,26 +37,26 @@ tasks:
     silent: true
 
   deploy-api:
+    deps: [build-api]
     cmds:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
       - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
       - docker push $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
       - aws ecs update-service --cluster arn:aws:ecs:us-west-2:$AWS_ACCOUNT:cluster/energonsoftware-api --service energonsoftware-api --force-new-deployment > /dev/null
     silent: true
+  deploy-ui:
+    deps: [build-ui]
+    dir: energonsoftware
+    cmds:
+      - aws s3 rm s3://energonsoftware-website --recursive
+      - aws s3 cp dist/energonsoftware s3://energonsoftware-website --recursive
+      - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION --paths "/*"
+    silent: true
   deploy-static:
     dir: static
     cmds:
       - aws s3 rm s3://energonsoftware-static --recursive
       - aws s3 cp . s3://energonsoftware-static --recursive --acl public-read
-    silent: true
-  deploy-ui:
-    dir: energonsoftware
-    cmds:
-      - rm -rf dist/
-      - ng build
-      - aws s3 rm s3://energonsoftware-website --recursive
-      - aws s3 cp dist/energonsoftware s3://energonsoftware-website --recursive
-      - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION --paths "/*"
     silent: true
 
   start:
