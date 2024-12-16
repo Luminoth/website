@@ -30,4 +30,4 @@ COPY --from=builder /app/dist/energonsoftware /usr/share/nginx/html
 
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

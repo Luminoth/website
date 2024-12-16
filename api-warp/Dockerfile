@@ -36,4 +36,4 @@ COPY --from=builder /app/bin bin/
 
 EXPOSE 8000
 
-CMD ["bin/energonsoftware-warp", "--prod"]
+ENTRYPOINT ["bin/energonsoftware-warp", "--prod"]
