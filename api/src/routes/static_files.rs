@@ -5,5 +5,5 @@ use crate::state::AppState;
 
 pub fn init_routes(app: Router<AppState>) -> Router<AppState> {
     app.route("/static", get(get_static_files_handler))
-        .route("/static/:path", get(get_static_file_handler))
+        .route("/static/{path}", get(get_static_file_handler))
 }

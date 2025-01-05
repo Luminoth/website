@@ -13,9 +13,11 @@ use crate::state::AppState;
 pub fn init_routes(app: Router<AppState>) -> Router<AppState> {
     info!("Initializing routes...");
 
-    // TODO: is there a cleaner way to do this?
-    // it's needed for the ELB health checks
-    let app = app.route("/", get(|| async {}));
+    let app = app
+        // TODO: is there a cleaner way to do this?
+        // it's needed for the ELB health checks
+        .route("/", get(|| async {}))
+        .route("/status", get(handlers::get_status));
 
     // TODO: this is ugly
     let app = downloads::init_routes(app);

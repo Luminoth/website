@@ -29,6 +29,10 @@ tasks:
       - ng build
     silent: true
 
+  run-api:
+    cmds:
+      - cargo run --bin energonsoftware
+    silent: true
   run-ui:
     dir: energonsoftware
     cmds:
