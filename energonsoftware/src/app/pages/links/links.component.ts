@@ -7,11 +7,11 @@ import { Title, Meta } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
 
 @Component({
-    selector: 'app-links',
-    templateUrl: './links.component.html',
-    styleUrls: ['./links.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-links',
+  templateUrl: './links.component.html',
+  styleUrls: ['./links.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class LinksComponent implements OnInit {
   readonly environment = environment;

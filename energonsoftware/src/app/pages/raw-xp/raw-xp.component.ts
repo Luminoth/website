@@ -5,11 +5,11 @@ import {
 import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
-    selector: 'app-raw-xp',
-    templateUrl: './raw-xp.component.html',
-    styleUrls: ['./raw-xp.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-raw-xp',
+  templateUrl: './raw-xp.component.html',
+  styleUrls: ['./raw-xp.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class RawXPComponent implements OnInit {
 

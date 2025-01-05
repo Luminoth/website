@@ -2,7 +2,7 @@
 @use '@angular/material' as mat;
 
 /* Importing Bootstrap SCSS file. */
-@import "bootstrap/scss/bootstrap";
+@use "bootstrap/scss/bootstrap";
 
 @mixin theme-color-grabber($theme) {
   $primary: map-get($theme, primary);

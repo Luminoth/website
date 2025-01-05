@@ -5,8 +5,8 @@ import {
 import { Title, Meta } from '@angular/platform-browser';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import * as lodash from 'lodash';
-import * as moment from 'moment';
+import lodash from 'lodash';
+import moment from 'moment';
 
 import { IUnicode } from '../../core/unicode';
 
@@ -16,11 +16,11 @@ enum State {
 }
 
 @Component({
-    selector: 'app-unicode',
-    templateUrl: './unicode.component.html',
-    styleUrls: ['./unicode.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-unicode',
+  templateUrl: './unicode.component.html',
+  styleUrls: ['./unicode.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class UnicodeComponent implements OnInit, AfterViewInit {
   readonly State = State;

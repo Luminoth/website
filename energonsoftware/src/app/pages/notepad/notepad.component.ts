@@ -7,11 +7,11 @@ import { Title, Meta } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
 
 @Component({
-    selector: 'app-notepad',
-    templateUrl: './notepad.component.html',
-    styleUrls: ['./notepad.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-notepad',
+  templateUrl: './notepad.component.html',
+  styleUrls: ['./notepad.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class NotepadComponent implements OnInit {
   readonly environment = environment;

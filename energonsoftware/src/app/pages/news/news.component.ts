@@ -16,11 +16,11 @@ enum State {
 }
 
 @Component({
-    selector: 'app-news',
-    templateUrl: './news.component.html',
-    styleUrls: ['./news.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-news',
+  templateUrl: './news.component.html',
+  styleUrls: ['./news.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class NewsComponent implements OnInit, AfterViewInit {
   readonly formatTimestamp = formatTimestamp;

@@ -17,11 +17,11 @@ enum State {
 }
 
 @Component({
-    selector: 'app-wow-screenshots',
-    templateUrl: './wow-screenshots.component.html',
-    styleUrls: ['./wow-screenshots.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-wow-screenshots',
+  templateUrl: './wow-screenshots.component.html',
+  styleUrls: ['./wow-screenshots.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class WoWScreenshotsComponent implements OnInit, AfterViewInit {
   readonly State = State;

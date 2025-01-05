@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-import * as lodash from 'lodash';
+import lodash from 'lodash';
 
 import { IUnicode } from '../core/unicode';
 

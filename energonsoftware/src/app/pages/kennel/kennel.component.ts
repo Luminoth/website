@@ -3,16 +3,16 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import * as lodash from 'lodash';
+import lodash from 'lodash';
 
 import { environment } from '../../../environments/environment';
 
 @Component({
-    selector: 'app-kennel',
-    templateUrl: './kennel.component.html',
-    styleUrls: ['./kennel.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-kennel',
+  templateUrl: './kennel.component.html',
+  styleUrls: ['./kennel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class KennelComponent implements OnInit {
   readonly lodash = lodash;

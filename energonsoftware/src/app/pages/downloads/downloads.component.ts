@@ -17,11 +17,11 @@ enum State {
 }
 
 @Component({
-    selector: 'app-downloads',
-    templateUrl: './downloads.component.html',
-    styleUrls: ['./downloads.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-downloads',
+  templateUrl: './downloads.component.html',
+  styleUrls: ['./downloads.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class DownloadsComponent implements OnInit, AfterViewInit {
   readonly State = State;

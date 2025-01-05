@@ -5,11 +5,11 @@ import {
 import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
-    selector: 'app-wow',
-    templateUrl: './wow.component.html',
-    styleUrls: ['./wow.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-wow',
+  templateUrl: './wow.component.html',
+  styleUrls: ['./wow.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class WoWComponent implements OnInit {
 

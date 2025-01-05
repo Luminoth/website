@@ -7,11 +7,11 @@ import { Title, Meta } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
 
 @Component({
-    selector: 'app-socket',
-    templateUrl: './socket.component.html',
-    styleUrls: ['./socket.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-socket',
+  templateUrl: './socket.component.html',
+  styleUrls: ['./socket.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class SocketComponent implements OnInit {
   readonly environment = environment;

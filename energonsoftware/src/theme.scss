@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@import 'palette.scss';
-@import 'styles.scss';
+@use 'palette.scss';
+@use 'styles.scss';
 
 // include non-theme styles for core
 @include mat.all-component-typographies();
@@ -10,6 +10,8 @@
 // define the theme
 $es-app-theme: mat.m2-define-dark-theme($es-app-primary, $es-app-accent, $es-app-warn);
 
-// include all theme styles for the components
-@include mat.all-component-themes($es-app-theme);
-@include theme-color-grabber($es-app-theme);
+html {
+  // include all theme styles for the components
+  @include mat.all-component-themes($es-app-theme);
+  @include styles.theme-color-grabber($es-app-theme);
+}
