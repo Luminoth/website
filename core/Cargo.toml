@@ -4,12 +4,10 @@ version = "0.1.0"
 authors = ["Shane Lillie <ignignokterr@gmail.com>"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 anyhow = "1.0"
 aws-config = "1.5"
-aws-sdk-dynamodb = "1.4"
+aws-sdk-dynamodb = "1.58"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
 serde = "1.0"
 serde_dynamo = { version = "4.2", features = ["aws-sdk-dynamodb+1"] }

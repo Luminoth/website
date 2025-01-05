@@ -11,16 +11,17 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1.0"
 aws-config = "1.5"
-axum = { version = "0.7", features = ["macros"] }
+axum = { version = "0.8", features = ["macros"] }
 clap = { version = "4.5", features = ["derive"] }
 console-subscriber = "0.4"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
-http = "1.1"
+http = "1.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tokio = { version = "1.39", features = ["full", "tracing"] }
+# tracing requires tokio_unstable in .cargo/config.toml
+tokio = { version = "1.42", features = ["full", "tracing"] }
 tower = "0.5"
-tower-http = { version = "0.5", features = ["cors", "trace"] }
+tower-http = { version = "0.6", features = ["cors", "trace"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
 
