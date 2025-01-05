@@ -6,7 +6,7 @@ WORKDIR /app
 
 # copy source
 COPY core/ core/
-COPY api-warp/ api/
+COPY api/ api/
 
 # build
 RUN cargo install --path api/ --root .
@@ -36,4 +36,4 @@ COPY --from=builder /app/bin bin/
 
 EXPOSE 8000
 
-ENTRYPOINT ["bin/energonsoftware-warp", "--prod"]
+ENTRYPOINT ["bin/energonsoftware", "--prod"]

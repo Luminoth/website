@@ -20,8 +20,7 @@ tasks:
 
   build-api:
     cmds:
-      #- docker buildx build -t energonsoftware-api -f api-warp/Dockerfile .
-      - docker buildx build -t energonsoftware-api -f api-axum/Dockerfile .
+      - docker buildx build -t energonsoftware-api -f api/Dockerfile .
     silent: true
   build-ui:
     dir: energonsoftware
