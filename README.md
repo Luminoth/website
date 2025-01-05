@@ -12,3 +12,7 @@
 ## Updating
 
 * Update Copyright footer in `navigation.component.html`
+
+## Notes
+
+* Warp removed in 292496f850aebd54875d40f2a041afcb60777fac
