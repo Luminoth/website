@@ -16,10 +16,11 @@ enum State {
 }
 
 @Component({
-  selector: 'app-wow-macros',
-  templateUrl: './wow-macros.component.html',
-  styleUrls: ['./wow-macros.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-wow-macros',
+    templateUrl: './wow-macros.component.html',
+    styleUrls: ['./wow-macros.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WoWMacrosComponent implements OnInit, AfterViewInit {
   readonly State = State;

@@ -16,10 +16,11 @@ enum State {
 }
 
 @Component({
-  selector: 'app-unicode',
-  templateUrl: './unicode.component.html',
-  styleUrls: ['./unicode.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-unicode',
+    templateUrl: './unicode.component.html',
+    styleUrls: ['./unicode.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UnicodeComponent implements OnInit, AfterViewInit {
   readonly State = State;

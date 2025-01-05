@@ -17,10 +17,11 @@ enum State {
 }
 
 @Component({
-  selector: 'app-oct2005cabin',
-  templateUrl: './oct2005cabin.component.html',
-  styleUrls: ['./oct2005cabin.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-oct2005cabin',
+    templateUrl: './oct2005cabin.component.html',
+    styleUrls: ['./oct2005cabin.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class Oct2005CabinComponent implements OnInit, AfterViewInit {
   readonly State = State;

@@ -16,10 +16,11 @@ enum State {
 }
 
 @Component({
-  selector: 'app-wow-addons',
-  templateUrl: './wow-addons.component.html',
-  styleUrls: ['./wow-addons.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-wow-addons',
+    templateUrl: './wow-addons.component.html',
+    styleUrls: ['./wow-addons.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WoWAddonsComponent implements OnInit, AfterViewInit {
   readonly State = State;
