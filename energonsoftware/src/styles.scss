@@ -1,16 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
+@use "sass:map";
 
 /* Importing Bootstrap SCSS file. */
 @use "bootstrap/scss/bootstrap";
 
 @mixin theme-color-grabber($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
 
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
 
   html,
   body {

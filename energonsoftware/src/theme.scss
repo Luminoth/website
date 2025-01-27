@@ -4,14 +4,15 @@
 
 // include non-theme styles for core
 @include mat.all-component-typographies();
-@include mat.elevation-classes();
-@include mat.app-background();
+@include mat.core();
 
 // define the theme
-$es-app-theme: mat.m2-define-dark-theme($es-app-primary, $es-app-accent, $es-app-warn);
+$es-app-theme: mat.m2-define-dark-theme((color: (primary: palette.$es-app-primary,
+        accent: palette.$es-app-accent,
+        warn: palette.$es-app-warn ),
+      typography: mat.m2-define-typography-config(),
+      density: 0));
 
-html {
-  // include all theme styles for the components
-  @include mat.all-component-themes($es-app-theme);
-  @include styles.theme-color-grabber($es-app-theme);
-}
+// include all theme styles for the components
+@include mat.all-component-themes($es-app-theme);
+@include styles.theme-color-grabber($es-app-theme);
