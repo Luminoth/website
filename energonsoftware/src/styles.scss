@@ -5,306 +5,303 @@
 /* Importing Bootstrap SCSS file. */
 @use "bootstrap/scss/bootstrap";
 
-@mixin theme-color-grabber($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
-
-  $background: map.get($theme, background);
-  $foreground: map.get($theme, foreground);
-
-  html,
-  body {
-    height: 100%;
-    min-height: 100%;
-  }
-
-  body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  a {
-    color: mat.m2-get-color-from-palette($accent);
-
-    &:focus,
-    &:hover {
-      color: mat.m2-get-color-from-palette($accent);
-    }
-  }
-
-  /*#region Material Overrides*/
-
-  .mat-mdc-form-field {
-    font-size: 14px;
-    width: 100%;
-  }
-
-  .mat-toolbar {
-    &.fixed {
-      position: fixed;
-      z-index: 998;
-    }
-  }
-
-  .mat-sidenav-container {
-    top: 64px;
-    bottom: 32px;
-    height: calc(100vh - 64px - 32px);
-  }
-
-  /*#endregion*/
-
-  /*#region Bootstrap Overrides */
-
-  ngb-carousel .picsum-img-wrapper {
-    position: relative;
-    height: 0;
-    padding-top: 55%;
-  }
-
-  ngb-carousel .picsum-img-wrapper>img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-
-  /*#endregion*/
-
-  /*#region flex-layout replacements*/
-
-  .fx {
-    display: flex;
-    box-sizing: border-box;
-  }
-
-  .fx-flex {
-    box-sizing: border-box;
-
-    flex: 1 1 0;
-  }
-
-  .fx-flex-10px {
-    @extend .fx;
-
-    flex: 1 1 10px;
-    max-width: 10px;
-    min-width: 10px;
-  }
-
-  .fx-flex-15px {
-    @extend .fx;
-
-    flex: 1 1 15px;
-    max-width: 15px;
-    min-width: 15px;
-  }
-
-  .fx-flex-20px {
-    @extend .fx;
-
-    flex: 1 1 20px;
-    max-width: 20px;
-    min-width: 20px;
-  }
-
-  .fx-flex-fill {
-    @extend .fx;
-
-    min-height: 100%;
-    min-width: 100%;
-    width: 100%;
-    height: 100%;
-  }
-
-  .fx-layout-row {
-    @extend .fx;
-
-    flex-direction: row;
-  }
-
-  .fx-layout-col {
-    @extend .fx;
-
-    flex-direction: column;
-  }
-
-  .fx-layout-align-start-stretch {
-    @extend .fx;
-
-    place-content: start;
-    align-items: stretch;
-  }
-
-  .fx-show {
-    display: block;
-  }
-
-  .fx-hide-gt-sm {
-    @media screen and (min-width: 960px) {
-      display: none;
-    }
-  }
-
-  .fx-hide-lt-md {
-    @media screen and (max-width: 959px) {
-      display: none;
-    }
-  }
-
-  /*#region Misc*/
-
-  .active-link {
-    background-color: mat.m2-get-color-from-palette($primary, darker);
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-  .es-primary {
-    color: mat.m2-get-color-from-palette($primary);
-  }
-
-  .es-accent {
-    color: mat.m2-get-color-from-palette($accent);
-  }
-
-  .es-warn {
-    color: mat.m2-get-color-from-palette($warn);
-  }
-
-  .es-code {
-    color: blue;
-    background-color: grey;
-    padding: 15px;
-  }
-
-  /*#endregion*/
-
-  /*#region Containers*/
-
-  .container-15 {
-    padding: 15px;
-  }
-
-  .es-footer {
-    background-color: mat.m2-get-color-from-palette($primary);
-    height: 32px;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-
-    &.fixed {
-      position: fixed;
-      z-index: 998;
-    }
-  }
-
-  .es-copyright {
-    margin: auto;
-    padding: 10px;
-    font-size: 75%;
-  }
-
-  .es-mail-icon {
-    font-size: 16px;
-    color: white;
-  }
-
-  .es-social-icons {
-    margin: auto;
-    padding: 10px;
-  }
-
-  /*#endregion*/
-
-  /*#region News*/
-
-  .es-news-header {
-    font-weight: bold;
-    white-space: nowrap;
-    text-align: left;
-  }
-
-  .es-news-date {
-    font-style: italic;
-    text-align: left;
-    font-size: 12px;
-  }
-
-  .es-news-author {
-    text-align: left;
-  }
-
-  .es-news-title {
-    font-weight: bold;
-    text-align: center;
-  }
-
-  /*#endregion*/
-
-  /*#region Resume*/
-
-  .es-resume-title {
-    font-weight: bold;
-    text-align: left;
-  }
-
-  .es-resume-date {
-    @extend .es-news-date;
-  }
-
-  .es-resume-company {
-    @extend .es-news-title;
-  }
-
-  .es-resume-media-title {
-    @extend .es-news-title;
-  }
-
-  .es-resume-media {
-    text-align: center;
-  }
-
-  .es-resume-location {
-    text-align: right;
-  }
-
-  .es-resume-info {
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
-  }
-
-  /*#endregion*/
-
-  /*#region Unicode*/
-
-  .mat-mdc-header-cell.es-unicode-header {
-    font-weight: bold;
-    text-align: center;
-  }
-
-  .es-unicode-container {
-    height: 100%;
-  }
-
-  .es-unicode-int {
-    padding: 10px;
-    text-align: center;
-  }
-
-  .es-unicode-value {
-    background-color: gray;
-    padding: 10px;
-    text-align: center;
-  }
-
-  /*#endregion*/
+@use 'theme.scss';
+
+$primary: mat.get-theme-color(theme.$es-app-theme, primary, default);
+$accent: mat.get-theme-color(theme.$es-app-theme, accent, default);
+$warn: mat.get-theme-color(theme.$es-app-theme, warn, default);
+
+html,
+body {
+  height: 100%;
+  min-height: 100%;
 }
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+table {
+  width: 100%;
+}
+
+a {
+  color: $accent;
+
+  &:focus,
+  &:hover {
+    color: $accent;
+  }
+}
+
+/*#region Material Overrides*/
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-toolbar {
+  &.fixed {
+    position: fixed;
+    z-index: 998;
+  }
+}
+
+.mat-sidenav-container {
+  top: 64px;
+  bottom: 32px;
+  height: calc(100vh - 64px - 32px);
+}
+
+/*#endregion*/
+
+/*#region Bootstrap Overrides */
+
+ngb-carousel .picsum-img-wrapper {
+  position: relative;
+  height: 0;
+  padding-top: 55%;
+}
+
+ngb-carousel .picsum-img-wrapper>img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/*#endregion*/
+
+/*#region flex-layout replacements*/
+
+.fx {
+  display: flex;
+  box-sizing: border-box;
+}
+
+.fx-flex {
+  box-sizing: border-box;
+
+  flex: 1 1 0;
+}
+
+.fx-flex-10px {
+  @extend .fx;
+
+  flex: 1 1 10px;
+  max-width: 10px;
+  min-width: 10px;
+}
+
+.fx-flex-15px {
+  @extend .fx;
+
+  flex: 1 1 15px;
+  max-width: 15px;
+  min-width: 15px;
+}
+
+.fx-flex-20px {
+  @extend .fx;
+
+  flex: 1 1 20px;
+  max-width: 20px;
+  min-width: 20px;
+}
+
+.fx-flex-fill {
+  @extend .fx;
+
+  min-height: 100%;
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.fx-layout-row {
+  @extend .fx;
+
+  flex-direction: row;
+}
+
+.fx-layout-col {
+  @extend .fx;
+
+  flex-direction: column;
+}
+
+.fx-layout-align-start-stretch {
+  @extend .fx;
+
+  place-content: start;
+  align-items: stretch;
+}
+
+.fx-show {
+  display: block;
+}
+
+.fx-hide-gt-sm {
+  @media screen and (min-width: 960px) {
+    display: none;
+  }
+}
+
+.fx-hide-lt-md {
+  @media screen and (max-width: 959px) {
+    display: none;
+  }
+}
+
+/*#region Misc*/
+
+.active-link {
+  background-color: mat.get-theme-color(theme.$es-app-theme, primary, darker);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.es-primary {
+  color: $primary;
+}
+
+.es-accent {
+  color: $accent;
+}
+
+.es-warn {
+  color: $warn;
+}
+
+.es-code {
+  color: blue;
+  background-color: grey;
+  padding: 15px;
+}
+
+/*#endregion*/
+
+/*#region Containers*/
+
+.container-15 {
+  padding: 15px;
+}
+
+.es-footer {
+  background-color: $primary;
+  height: 32px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+
+  &.fixed {
+    position: fixed;
+    z-index: 998;
+  }
+}
+
+.es-copyright {
+  margin: auto;
+  padding: 10px;
+  font-size: 75%;
+}
+
+.es-mail-icon {
+  font-size: 16px;
+  color: white;
+}
+
+.es-social-icons {
+  margin: auto;
+  padding: 10px;
+}
+
+/*#endregion*/
+
+/*#region News*/
+
+.es-news-header {
+  font-weight: bold;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.es-news-date {
+  font-style: italic;
+  text-align: left;
+  font-size: 12px;
+}
+
+.es-news-author {
+  text-align: left;
+}
+
+.es-news-title {
+  font-weight: bold;
+  text-align: center;
+}
+
+/*#endregion*/
+
+/*#region Resume*/
+
+.es-resume-title {
+  font-weight: bold;
+  text-align: left;
+}
+
+.es-resume-date {
+  @extend .es-news-date;
+}
+
+.es-resume-company {
+  @extend .es-news-title;
+}
+
+.es-resume-media-title {
+  @extend .es-news-title;
+}
+
+.es-resume-media {
+  text-align: center;
+}
+
+.es-resume-location {
+  text-align: right;
+}
+
+.es-resume-info {
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+}
+
+/*#endregion*/
+
+/*#region Unicode*/
+
+.mat-mdc-header-cell.es-unicode-header {
+  font-weight: bold;
+  text-align: center;
+}
+
+.es-unicode-container {
+  height: 100%;
+}
+
+.es-unicode-int {
+  padding: 10px;
+  text-align: center;
+}
+
+.es-unicode-value {
+  background-color: gray;
+  padding: 10px;
+  text-align: center;
+}
+
+/*#endregion*/
