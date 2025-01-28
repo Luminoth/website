@@ -17,23 +17,20 @@ body {
 }
 
 @mixin theme2($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
-
-  $background: map.get($theme, background);
-  $foreground: map.get($theme, foreground);
+  $primary: mat.get-theme-color($theme, primary);
+  $accent: mat.get-theme-color($theme, accent);
+  $warn: mat.get-theme-color($theme, warn);
 
   table {
     width: 100%;
   }
 
   a {
-    color: mat.m2-get-color-from-palette($accent);
+    color: $accent;
 
     &:focus,
     &:hover {
-      color: mat.m2-get-color-from-palette($accent);
+      color: $accent;
     }
   }
 
@@ -161,7 +158,7 @@ body {
   /*#region Misc*/
 
   .active-link {
-    background-color: mat.m2-get-color-from-palette($primary, darker);
+    background-color: mat.get-theme-color($theme, primary, darker);
   }
 
   .text-center {
@@ -169,15 +166,15 @@ body {
   }
 
   .es-primary {
-    color: mat.m2-get-color-from-palette($primary);
+    color: $primary;
   }
 
   .es-accent {
-    color: mat.m2-get-color-from-palette($accent);
+    color: $accent;
   }
 
   .es-warn {
-    color: mat.m2-get-color-from-palette($warn);
+    color: $warn;
   }
 
   .es-code {
@@ -195,7 +192,7 @@ body {
   }
 
   .es-footer {
-    background-color: mat.m2-get-color-from-palette($primary);
+    background-color: $primary;
     height: 32px;
     width: 100%;
     bottom: 0;
@@ -319,14 +316,14 @@ body {
     width: 100%;
   }
 
-  /*a {
-    color: mat.m2-get-color-from-palette($accent);
+  a {
+    color: $accent;
 
     &:focus,
     &:hover {
-      color: mat.m2-get-color-from-palette($accent);
+      color: $accent;
     }
-  }*/
+  }
 
   /*#region Material Overrides*/
 
@@ -451,8 +448,8 @@ body {
 
   /*#region Misc*/
 
-  /*.active-link {
-    background-color: mat.m2-get-color-from-palette($primary, darker);
+  .active-link {
+    background-color: mat.get-theme-color($theme, primary, darker);
   }
 
   .text-center {
@@ -460,16 +457,16 @@ body {
   }
 
   .es-primary {
-    color: mat.m2-get-color-from-palette($primary);
+    color: $primary;
   }
 
   .es-accent {
-    color: mat.m2-get-color-from-palette($accent);
+    color: $accent;
   }
 
   .es-warn {
-    color: mat.m2-get-color-from-palette($warn);
-  }*/
+    color: $warn;
+  }
 
   .es-code {
     color: blue;
@@ -486,7 +483,7 @@ body {
   }
 
   .es-footer {
-    //background-color: mat.m2-get-color-from-palette($primary);
+    background-color: $primary;
     height: 32px;
     width: 100%;
     bottom: 0;
