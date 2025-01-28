@@ -1,8 +1,6 @@
 @use '@angular/material' as mat;
 @use 'styles.scss';
 
-@include mat.core();
-
 // define the theme
 $es-app-theme3: mat.define-theme((color: (theme-type: dark,
         primary: mat.$cyan-palette,
@@ -15,8 +13,10 @@ $es-app-theme3: mat.define-theme((color: (theme-type: dark,
 html {
   color-scheme: dark;
 
+  @include mat.elevation-classes();
+  @include mat.app-background();
+
   // include all theme styles for the components
-  @include mat.core-theme($es-app-theme3);
   @include mat.all-component-themes($es-app-theme3);
   @include mat.typography-hierarchy($es-app-theme3, $back-compat: true);
   @include styles.theme3($es-app-theme3);
