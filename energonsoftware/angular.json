@@ -31,7 +31,6 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/palette.scss",
               "src/theme.scss"
             ],
             "scripts": [],
@@ -95,7 +94,6 @@
             "karmaConfig": "src/karma.conf.js",
             "styles": [
               "src/styles.scss",
-              "src/palette.scss",
               "src/theme.scss"
             ],
             "scripts": [],
