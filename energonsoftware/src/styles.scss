@@ -306,6 +306,10 @@ body {
 }
 
 @mixin theme3($theme) {
+  $primary: mat.get-theme-color($theme, primary);
+  //$accent: mat.get-theme-color($theme, accent);
+  //$warn: mat.get-theme-color($theme, warn);
+
   body {
     background: var(--mat-sys-surface);
     color: var(--mat-sys-on-surface);
@@ -315,14 +319,14 @@ body {
     width: 100%;
   }
 
-  a {
+  /*a {
     color: $accent;
 
     &:focus,
     &:hover {
       color: $accent;
     }
-  }
+  }*/
 
   /*#region Material Overrides*/
 
@@ -332,6 +336,8 @@ body {
   }
 
   .mat-toolbar {
+    --mat-toolbar-container-background-color: #{mat.get-theme-color($theme, primary, 40)};
+
     &.fixed {
       position: fixed;
       z-index: 998;
@@ -448,7 +454,7 @@ body {
   /*#region Misc*/
 
   .active-link {
-    background-color: mat.get-theme-color($theme, primary, darker);
+    background-color: mat.get-theme-color($theme, primary, 40);
   }
 
   .text-center {
@@ -459,13 +465,13 @@ body {
     color: $primary;
   }
 
-  .es-accent {
+  /*.es-accent {
     color: $accent;
   }
 
   .es-warn {
     color: $warn;
-  }
+  }*/
 
   .es-code {
     color: blue;

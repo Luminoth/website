@@ -17,8 +17,10 @@ $es-app-theme2: mat.m2-define-dark-theme((color: (primary: palette.$es-app-prima
 @include styles.theme2($es-app-theme2);
 
 /*
+// define the theme
 $es-app-theme3: mat.define-theme((color: (theme-type: dark,
-        primary: mat.$violet-palette,
+        primary: mat.$cyan-palette,
+        tertiary: mat.$red-palette,
       ),
       typography: (brand-family: 'Roboto',
         bold-weight: 900),
@@ -29,7 +31,7 @@ html {
 
   // include all theme styles for the components
   @include mat.all-component-themes($es-app-theme3);
-  @include mat.typography-hierarchy($theme, $back-compat: true);
+  @include mat.typography-hierarchy($es-app-theme3, $back-compat: true);
   @include mat.color-variants-backwards-compatibility($es-app-theme3);
   @include styles.theme3($es-app-theme3);
 }
