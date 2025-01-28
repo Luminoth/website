@@ -52,7 +52,7 @@ tasks:
     dir: energonsoftware
     cmds:
       - aws s3 rm s3://energonsoftware-website --recursive
-      - aws s3 cp dist/energonsoftware s3://energonsoftware-website --recursive
+      - aws s3 cp dist/energonsoftware/browser s3://energonsoftware-website --recursive
       - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION --paths "/*"
     silent: true
   deploy-static:
