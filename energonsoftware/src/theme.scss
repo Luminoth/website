@@ -13,9 +13,22 @@ $es-app-theme2: mat.m2-define-dark-theme((color: (primary: palette.$es-app-prima
       typography: mat.m2-define-typography-config(),
       density: 0));
 
-//html {
+$es-app-theme3: mat.define-theme((color: (theme-type: dark,
+        primary: mat.$violet-palette,
+      ),
+      typography: (brand-family: 'Roboto',
+        bold-weight: 900),
+      density: (scale: 0)));
+
 // include all theme styles for the components
 @include mat.all-component-themes($es-app-theme2);
-//@include mat.color-variants-backwards-compatibility($es-app-theme3);
-@include styles.theme($es-app-theme2);
-//}
+@include styles.theme2($es-app-theme2);
+
+/*html {
+  color-scheme: dark;
+
+  // include all theme styles for the components
+  @include mat.all-component-themes($es-app-theme3);
+  @include mat.color-variants-backwards-compatibility($es-app-theme3);
+  @include styles.theme3($es-app-theme3);
+}*/
