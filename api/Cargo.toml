@@ -2,7 +2,7 @@
 name = "api"
 version = "0.1.1"
 authors = ["Shane Lillie <ignignokterr@gmail.com>"]
-edition = "2021"
+edition = "2024"
 
 [[bin]]
 name = "energonsoftware"
@@ -28,6 +28,3 @@ tracing-subscriber = "0.3"
 [dependencies.energonsoftware]
 version = "*"
 path = "../core"
-
-[lints]
-workspace = true

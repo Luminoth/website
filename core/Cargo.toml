@@ -2,7 +2,7 @@
 name = "energonsoftware"
 version = "0.1.0"
 authors = ["Shane Lillie <ignignokterr@gmail.com>"]
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 anyhow = "1.0"
@@ -12,6 +12,3 @@ dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" 
 serde = "1.0"
 serde_dynamo = { version = "4.2", features = ["aws-sdk-dynamodb+1"] }
 tracing = "0.1"
-
-[lints]
-workspace = true

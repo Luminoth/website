@@ -1,6 +1,3 @@
 [workspace]
 resolver = "2"
 members = ["core", "api"]
-
-[workspace.lints.rust]
-rust_2024_compatibility = "warn"
