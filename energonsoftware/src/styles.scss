@@ -47,8 +47,8 @@
     --mat-expansion-container-background-color: #{mat.get-theme-color($theme, neutral, 30)};
   }
 
-  .mat-table {
-    --mat-table-background-color: #{mat.get-theme-color($theme, neutral, 30)};
+  .mat-mdc-table {
+    --mat-table-background-color: #{mat.get-theme-color($theme, neutral, 20)};
   }
 
   .mat-toolbar {
