@@ -2,9 +2,8 @@ use std::fs::File;
 use std::io::BufReader;
 
 use axum::{
-    debug_handler,
+    Json, debug_handler,
     extract::{Path, State},
-    Json,
 };
 use serde::Serialize;
 
@@ -26,7 +25,7 @@ pub async fn get_pictures_vacation_handler(
         .options
         .share_dir()
         .join("vacation")
-        .join(format!("{}.json", id));
+        .join(format!("{id}.json"));
 
     let file = match File::open(&pics_file_path) {
         Ok(file) => file,

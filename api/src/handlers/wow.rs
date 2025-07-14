@@ -2,9 +2,8 @@ use std::fs::File;
 use std::io::BufReader;
 
 use axum::{
-    debug_handler,
+    Json, debug_handler,
     extract::{Path, State},
-    Json,
 };
 use serde::{Deserialize, Serialize};
 
@@ -121,7 +120,7 @@ pub async fn get_screenshot_handler(
         .options
         .share_dir()
         .join("wow")
-        .join(format!("{}.json", id));
+        .join(format!("{id}.json"));
 
     let file = match File::open(&screenshots_file_path) {
         Ok(file) => file,

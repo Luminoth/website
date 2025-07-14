@@ -2,7 +2,7 @@ use std::fmt;
 use std::net::SocketAddr;
 
 use axum::extract::ConnectInfo;
-use http::{header::AsHeaderName, Request};
+use http::{Request, header::AsHeaderName};
 
 // copied from warp's log filter
 pub struct OptFmt<T>(pub Option<T>);
@@ -52,7 +52,7 @@ pub fn get_forwarded_addr<B>(request: &Request<B>) -> Option<SocketAddr> {
             0
         };
 
-        return format!("{}:{}", forwarded_for, port).parse().ok();
+        return format!("{forwarded_for}:{port}").parse().ok();
     }
 
     None
