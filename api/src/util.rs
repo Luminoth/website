@@ -22,10 +22,10 @@ where
     K: AsHeaderName,
 {
     let header = request.headers().get(header);
-    if let Some(header) = header {
-        if let Ok(header) = header.to_str() {
-            return Some(header);
-        }
+    if let Some(header) = header
+        && let Ok(header) = header.to_str()
+    {
+        return Some(header);
     }
     None
 }

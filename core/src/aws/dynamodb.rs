@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use aws_config::SdkConfig;
 use aws_sdk_dynamodb::{
-    types::{AttributeValue, KeysAndAttributes},
     Client,
+    types::{AttributeValue, KeysAndAttributes},
 };
 use dynamodb_expression::Expression;
 use serde::Deserialize;
@@ -168,10 +168,10 @@ where
         }
 
         item_count += items.len() as i32;
-        if let Some(limit) = limit {
-            if item_count >= limit {
-                break;
-            }
+        if let Some(limit) = limit
+            && item_count >= limit
+        {
+            break;
         }
 
         exclusive_start_key = output.last_evaluated_key;
@@ -324,10 +324,10 @@ where
         }
 
         item_count += items.len() as i32;
-        if let Some(limit) = limit {
-            if item_count >= limit {
-                break;
-            }
+        if let Some(limit) = limit
+            && item_count >= limit
+        {
+            break;
         }
 
         exclusive_start_key = output.last_evaluated_key;
