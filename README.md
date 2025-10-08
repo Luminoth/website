@@ -9,7 +9,17 @@
     * This doesn't seem to work with vscode, but is fine in a terminal
 * npm install -g @angular/cli
 
-## Updating
+## General backend updating
+
+* cargo update
+
+## General frontend updating
+
+* cd energonsoftware
+* ng update
+* npm update
+
+## Yearly updating
 
 * Update Copyright footer in `navigation.component.html`
 
