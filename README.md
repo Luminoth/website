@@ -17,7 +17,8 @@
 
 * https://angular.dev/update-guide
 * cd energonsoftware
-* ng update @angular/cli @angular/core @angular/material @angular/cdk
+* ng update @angular/cli @angular/core
+* ng update @angular/material @angular/cdk
 * npm update
 
 ## Yearly updating
