@@ -19,6 +19,7 @@
 * cd energonsoftware
 * ng update @angular/cli @angular/core
 * ng update @angular/material @angular/cdk
+* Check [npm](https://www.npmjs.com/) for any other updated packages
 * npm update
 
 ## Yearly updating
