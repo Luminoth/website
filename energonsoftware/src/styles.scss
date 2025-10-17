@@ -36,7 +36,7 @@
     }
   }
 
-  /*#region Material Overrides*/
+  //#region Material Overrides
 
   .mat-mdc-form-field {
     font-size: 14px;
@@ -69,9 +69,9 @@
     height: calc(100vh - 64px - 32px);
   }
 
-  /*#endregion*/
+  //#endregion
 
-  /*#region Bootstrap Overrides */
+  //#region Bootstrap Overrides
 
   ngb-carousel .picsum-img-wrapper {
     position: relative;
@@ -87,9 +87,9 @@
     right: 0;
   }
 
-  /*#endregion*/
+  //#endregion
 
-  /*#region flex-layout replacements*/
+  //#region flex-layout replacements
 
   .fx {
     display: flex;
@@ -170,7 +170,7 @@
     }
   }
 
-  /*#region Misc*/
+  //#region Misc
 
   .active-link {
     background-color: mat.get-theme-color($theme, primary, 40);
@@ -198,9 +198,9 @@
     padding: 15px;
   }
 
-  /*#endregion*/
+  //#endregion
 
-  /*#region Containers*/
+  //#region Containers
 
   .container-15 {
     padding: 15px;
@@ -235,9 +235,9 @@
     padding: 10px;
   }
 
-  /*#endregion*/
+  //#endregion
 
-  /*#region News*/
+  //#region News
 
   .es-news-header {
     font-weight: bold;
@@ -260,9 +260,9 @@
     text-align: center;
   }
 
-  /*#endregion*/
+  //#endregion
 
-  /*#region Resume*/
+  //#region Resume
 
   .es-resume-title {
     font-weight: bold;
@@ -294,9 +294,9 @@
     border-bottom: 1px solid white;
   }
 
-  /*#endregion*/
+  //#endregion
 
-  /*#region Unicode*/
+  //#region Unicode
 
   .mat-mdc-header-cell.es-unicode-header {
     font-weight: bold;
@@ -318,5 +318,5 @@
     text-align: center;
   }
 
-  /*#endregion*/
+  //#endregion
 }
