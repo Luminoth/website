@@ -1,23 +1,25 @@
 @use '@angular/material' as mat;
 @use 'styles.scss';
 
-// define the theme
-$es-app-theme3: mat.define-theme((color: (theme-type: dark,
-        primary: mat.$cyan-palette,
-        tertiary: mat.$red-palette,
-      ),
-      typography: (brand-family: 'Roboto',
-        bold-weight: 900),
-      density: (scale: 0)));
+// theme config (v19)
+$es-app-theme-config: (
+  color: (theme-type: dark,
+    primary: mat.$cyan-palette,
+    secondary: mat.$azure-palette,
+    error: mat.$red-palette,
+  ),
+  typography: (brand-family: 'Roboto',
+    bold-weight: 900,
+  ),
+  density: 0,
+);
 
 html {
   color-scheme: dark;
 
-  @include mat.elevation-classes();
-  @include mat.app-background();
+  // apply base theme
+  @include mat.theme($es-app-theme-config);
 
-  // include all theme styles for the components
-  @include mat.all-component-themes($es-app-theme3);
-  @include mat.typography-hierarchy($es-app-theme3, $back-compat: true);
-  @include styles.theme3($es-app-theme3);
+  // apply custom theme
+  @include styles.theme3($es-app-theme-config);
 }

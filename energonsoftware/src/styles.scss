@@ -1,13 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
-
-/* Importing Bootstrap SCSS file. */
+@use 'sass:map';
 @use "bootstrap/scss/bootstrap";
 
-@mixin theme3($theme) {
-  $primary: mat.get-theme-color($theme, primary, 50);
-  $accent: mat.get-theme-color($theme, secondary, 50);
-  $error: mat.get-theme-color($theme, error, 50);
+// v19 mixin
+@mixin theme3($theme-config) {
+  // get color palettes from config map
+  $color-config: map.get($theme-config, color);
+  $primary-palette: map.get($color-config, primary);
+  $secondary-palette: map.get($color-config, secondary);
+
+  // get the primary and accent colors
+  $primary-50: map.get($primary-palette, 50);
+  $primary-40: map.get($primary-palette, 40);
+  $link-accent: map.get($secondary-palette, 50);
 
   html,
   body {
@@ -28,11 +33,11 @@
   }
 
   a {
-    color: mat.get-theme-color($theme, neutral, 80);
+    color: var(--mat-sys-on-surface-variant); // was neutral-80
 
     &:focus,
     &:hover {
-      color: $accent;
+      color: $link-accent;
     }
   }
 
@@ -44,15 +49,15 @@
   }
 
   .mat-expansion-panel {
-    --mat-expansion-container-background-color: #{mat.get-theme-color($theme, neutral, 30)};
+    --mat-expansion-container-background-color: var(--mat-sys-surface-container-high); // was neutral-30
   }
 
   .mat-mdc-table {
-    --mat-table-background-color: #{mat.get-theme-color($theme, neutral, 20)};
+    --mat-table-background-color: var(--mat-sys-surface-container-lowest); // was neutral-20
   }
 
   .mat-toolbar {
-    --mat-toolbar-container-background-color: #{$primary};
+    --mat-toolbar-container-background-color: #{$primary-50};
 
     &.fixed {
       position: fixed;
@@ -61,8 +66,8 @@
   }
 
   .mat-sidenav-container {
-    --mat-sidenav-container-background-color: #{mat.get-theme-color($theme, neutral, 30)};
-    --mat-sidenav-content-background-color: #{mat.get-theme-color($theme, neutral, 20)};
+    --mat-sidenav-container-background-color: var(--mat-sys-surface-container-high); // was neutral-30
+    --mat-sidenav-content-background-color: var(--mat-sys-surface-container-low); // was neutral-20
 
     top: 64px;
     bottom: 32px;
@@ -173,7 +178,7 @@
   //#region Misc
 
   .active-link {
-    background-color: mat.get-theme-color($theme, primary, 40);
+    background-color: #{$primary-40};
   }
 
   .text-center {
@@ -181,15 +186,15 @@
   }
 
   .es-primary {
-    color: $primary;
+    color: var(--mat-sys-primary);
   }
 
   .es-accent {
-    color: $accent;
+    color: var(--mat-sys-secondary);
   }
 
   .es-warn {
-    color: $error;
+    color: var(--mat-sys-error);
   }
 
   .es-code {
@@ -207,7 +212,7 @@
   }
 
   .es-footer {
-    background-color: $primary;
+    background-color: #{$primary-50};
     height: 32px;
     width: 100%;
     bottom: 0;
@@ -290,8 +295,8 @@
   }
 
   .es-resume-info {
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
+    border-top: 1px solid var(--mat-sys-outline); // was white
+    border-bottom: 1px solid var(--mat-sys-outline); // was white
   }
 
   //#endregion
