@@ -76,6 +76,22 @@
 
   //#endregion
 
+  //#region Material 3 typography replacements
+
+  .es-header-medium {
+    font: var(--mat-sys-headline-medium);
+  }
+
+  .es-header-large {
+    font: var(--mat-sys-headline-large);
+  }
+
+  .es-subtitle-medium {
+    font: var(--mat-sys-title-medium);
+  }
+
+  //#region
+
   //#region Bootstrap Overrides
 
   ngb-carousel .picsum-img-wrapper {
