@@ -12,7 +12,8 @@ COPY api/ api/
 RUN cargo install --path api/ --root .
 
 # stage 2: create image
-# TODO: find a way to move this to alpine
+# TODO: find a way to move this to alpine:latest
+#FROM debian:stable-slim (this is larger than using ubuntu latest ???)
 FROM ubuntu:latest
 
 # install dependencies
