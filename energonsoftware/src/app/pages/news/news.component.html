@@ -1,10 +1,15 @@
 <div class="fx-layout-col">
-  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
-  <div *ngIf="!hasNews">
+  @if (state === State.Loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (!hasNews) {
+  <div>
     No News!
   </div>
-  <mat-accordion *ngIf="hasNews" multi>
-    <mat-expansion-panel *ngFor="let news of news" expanded="true">
+  } @else {
+  <mat-accordion multi>
+    @for (news of news; track news) {
+    <mat-expansion-panel expanded="true">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <div class="fx-layout-row fx-flex">
@@ -21,5 +26,7 @@
       </mat-expansion-panel-header>
       <div [innerHtml]="news.news | safeHtml"></div>
     </mat-expansion-panel>
+    }
   </mat-accordion>
+  }
 </div>

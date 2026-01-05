@@ -15,10 +15,14 @@
 
 ## General frontend updating
 
+* See package.json for current versions
 * https://angular.dev/update-guide
+  * For major version upgrades
 * cd energonsoftware
 * ng update @angular/cli @angular/core
+  * Major version upgrades include the major version on these
 * ng update @angular/material @angular/cdk
+  * Major version upgrades include the major version on these
 * Check [npm](https://www.npmjs.com/) for any other updated packages
 * npm update
 

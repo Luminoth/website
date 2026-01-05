@@ -1,18 +1,27 @@
 <div class="fx-layout-col">
-  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
-  <div *ngIf="!hasMacros">
+  @if (state === State.Loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (!hasMacros) {
+  <div>
     No Macros!
   </div>
-  <mat-accordion *ngIf="hasMacros" multi>
-    <mat-expansion-panel *ngFor="let macroClass of macroClasses" expanded="true">
+  } @else {
+  <mat-accordion multi>
+    @for (macroClass of macroClasses; track macroClass) {
+    <mat-expansion-panel expanded="true">
       <mat-expansion-panel-header>
         <mat-panel-title>{{macroClass.character_class.toUpperCase()}}</mat-panel-title>
       </mat-expansion-panel-header>
-      <div *ngFor="let macro of macroClass.macros" class="fx-layout-col">
+      @for (macro of macroClass.macros; track macro) {
+      <div class="fx-layout-col">
         <div class="es-news-header">{{macro.name}}</div>
         <div [innerHtml]="macro.macro"></div>
         <div class="fx-flex-15px"></div>
       </div>
+      }
     </mat-expansion-panel>
+    }
   </mat-accordion>
+  }
 </div>

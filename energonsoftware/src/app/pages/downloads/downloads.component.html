@@ -1,11 +1,16 @@
 <div class="fx-layout-col">
-  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
-  <div *ngIf="!hasDownloads">
+  @if (state === State.Loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (!hasDownloads) {
+  <div>
     No Downloads!
   </div>
-  <mat-accordion *ngIf="hasDownloads" multi>
+  } @else {
+  <mat-accordion multi>
     <!-- TODO: these should be sorted in some way -->
-    <mat-expansion-panel *ngFor="let dataSource of dataSources | keyvalue" expanded="true">
+    @for (dataSource of dataSources | keyvalue; track dataSource) {
+    <mat-expansion-panel expanded="true">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <div class="fx-layout-row fx-flex">
@@ -39,5 +44,7 @@
         </table>
       </div>
     </mat-expansion-panel>
+    }
   </mat-accordion>
+  }
 </div>

@@ -1,18 +1,26 @@
 <div class="fx-layout-col">
-  <mat-progress-bar *ngIf="state === State.Loading" mode="indeterminate"></mat-progress-bar>
+  @if (state === State.Loading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
   <div class="fx-layout-col">
     <div><a routerLink="/wow/screenshots/ragnaros">Absolute Dragons vs Ragnaros</a></div>
     <div>These are some screenshots I've taken:</div>
   </div>
   <div class="fx-flex-15px"></div>
-  <ngb-carousel *ngIf="hasScreenshots">
-    <ng-template ngbSlide *ngFor="let screenshot of screenshots">
-      <div class="picsum-img-wrapper" *ngFor="let image of screenshot.images">
+  @if (hasScreenshots) {
+  <ngb-carousel>
+    @for (screenshot of screenshots; track screenshot) {
+    <ng-template ngbSlide>
+      @for (image of screenshot.images; track image) {
+      <div class="picsum-img-wrapper">
         <img [src]="getImageUrl(image)">
       </div>
+      }
       <div class="carousel-caption">
         {{screenshot.text}}
       </div>
     </ng-template>
+    }
   </ngb-carousel>
+  }
 </div>

@@ -1,9 +1,11 @@
 <div class="fx-layout-col">
   <ngb-carousel>
-    <ng-template ngbSlide *ngFor="let x of lodash.range(81, 99)">
+    @for (x of lodash.range(81, 99); track x) {
+    <ng-template ngbSlide>
       <div class="picsum-img-wrapper">
         <img [src]="getImageUrl(x)">
       </div>
     </ng-template>
+    }
   </ngb-carousel>
 </div>
