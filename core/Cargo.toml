@@ -7,7 +7,7 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0"
 aws-config = "1.8"
-aws-sdk-dynamodb = "1.95"
+aws-sdk-dynamodb = "1.101"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
 serde = "1.0"
 serde_dynamo = { version = "4.3", features = ["aws-sdk-dynamodb+1"] }
