@@ -2,7 +2,7 @@
 FROM node:alpine AS builder
 
 # build args
-ARG configuration=prod
+ARG configuration=production
 
 WORKDIR /app
 

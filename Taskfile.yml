@@ -44,6 +44,8 @@ tasks:
 
   deploy-api:
     deps: [build-api]
+    requires:
+      vars: [AWS_ACCOUNT]
     cmds:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
       - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
@@ -53,23 +55,23 @@ tasks:
   deploy-ui:
     deps: [build-ui]
     dir: energonsoftware
+    requires:
+      vars: [UI_DISTRIBUTION]
     cmds:
-      - aws s3 rm s3://energonsoftware-website --recursive
-      - aws s3 cp dist/energonsoftware/browser s3://energonsoftware-website --recursive
+      - aws s3 sync dist/energonsoftware/browser s3://energonsoftware-website --delete
       - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION --paths "/*"
     silent: true
   deploy-static:
     dir: static
     cmds:
-      - aws s3 rm s3://energonsoftware-static --recursive
-      - aws s3 cp . s3://energonsoftware-static --recursive --acl public-read
+      - aws s3 sync . s3://energonsoftware-static --delete --acl public-read
     silent: true
 
   start:
     cmds:
-      - docker-compose up -d
+      - docker compose up -d
     silent: true
   stop:
     cmds:
-      - docker-compose stop && docker-compose rm -f
+      - docker compose stop && docker compose rm -f
     silent: true
