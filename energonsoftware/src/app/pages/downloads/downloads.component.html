@@ -8,8 +8,7 @@
   </div>
   } @else {
   <mat-accordion multi>
-    <!-- TODO: these should be sorted in some way -->
-    @for (dataSource of dataSources | keyvalue; track dataSource) {
+    @for (dataSource of dataSources | keyvalue: sortCategories; track dataSource) {
     <mat-expansion-panel expanded="true">
       <mat-expansion-panel-header>
         <mat-panel-title>

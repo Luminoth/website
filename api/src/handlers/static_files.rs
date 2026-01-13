@@ -18,6 +18,9 @@ pub async fn get_static_files_handler(
     // TODO: read the file / dir or whatever list from S3 and return that
     // if not prod tho, do that but using the local static files
 
+    // NOTE: it's unsafe to hard-code the bucket name here
+    // (or anywhere else in source)
+
     Ok(Json(GetStaticFilesResponse {}))
 }
 

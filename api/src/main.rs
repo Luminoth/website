@@ -39,16 +39,15 @@ fn init_logging() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn init_cors_layer(local: bool) -> anyhow::Result<CorsLayer> {
+pub fn init_cors_layer(options: &Options) -> anyhow::Result<CorsLayer> {
     info!("Initializing CORS layer...");
 
     let mut layer = CorsLayer::new()
         .allow_methods([Method::OPTIONS, Method::HEAD, Method::GET])
-        // TODO: make this configurable
-        .allow_origin("https://www.energonsoftware.org".parse::<HeaderValue>()?)
+        .allow_origin(options.cors_origin.parse::<HeaderValue>()?)
         .allow_credentials(true);
 
-    if local {
+    if !options.prod {
         warn!("Allowing localhost...");
         layer = layer.allow_origin("http://localhost:4200".parse::<HeaderValue>()?);
     }
@@ -61,6 +60,7 @@ async fn main() -> anyhow::Result<()> {
     let options = Options::parse();
 
     // TODO: make this not mutually exclusive
+    // we should probably use `tracing_subscriber::registry().with(console_layer).with(fmt_layer).init()` ?
     if options.tracing {
         println!("Enabling tracing ...");
         console_subscriber::init();
@@ -68,9 +68,8 @@ async fn main() -> anyhow::Result<()> {
         init_logging()?
     };
 
-    // TODO: make region configurable?
     let aws_config = aws_config::defaults(aws_config::BehaviorVersion::latest())
-        .region("us-west-2")
+        .region(aws_config::Region::new(options.aws_region.clone()))
         .load()
         .await;
 
@@ -83,7 +82,7 @@ async fn main() -> anyhow::Result<()> {
         .unwrap_or_else(|_| panic!("Invalid address: {}", app_state.options.address()));
 
     let app = routes::init_routes(Router::new())
-        .layer(init_cors_layer(!app_state.options.prod)?)
+        .layer(init_cors_layer(&app_state.options)?)
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(http_tracing::tracing_wrapper))

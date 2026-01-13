@@ -13,6 +13,14 @@ pub struct Options {
     #[arg(short, long, default_value_t = 8000)]
     pub port: u16,
 
+    /// aws region
+    #[arg(long, default_value = "us-west-2")]
+    pub aws_region: String,
+
+    /// cors origin
+    #[arg(long, default_value = "https://www.energonsoftware.org")]
+    pub cors_origin: String,
+
     /// data prefix
     #[arg(default_value = ".")]
     prefix: PathBuf,

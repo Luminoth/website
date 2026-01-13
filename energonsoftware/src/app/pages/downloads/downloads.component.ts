@@ -142,4 +142,10 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  sortCategories = (a: any, b: any): number => {
+    const aTitle = this.getDownloadCategory(a.key).title;
+    const bTitle = this.getDownloadCategory(b.key).title;
+    return aTitle.localeCompare(bTitle);
+  }
+
 }
