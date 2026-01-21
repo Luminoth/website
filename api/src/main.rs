@@ -13,17 +13,18 @@ mod util;
 use std::net::SocketAddr;
 
 use axum::{
+    Router,
     http::{HeaderValue, Method},
-    middleware, Router,
+    middleware,
 };
 use clap::Parser;
 use tower::ServiceBuilder;
 use tower_http::{
+    LatencyUnit,
     cors::CorsLayer,
     trace::{DefaultMakeSpan, DefaultOnFailure, TraceLayer},
-    LatencyUnit,
 };
-use tracing::{info, warn, Level};
+use tracing::{Level, info, warn};
 use tracing_subscriber::FmtSubscriber;
 
 use options::Options;
@@ -57,6 +58,8 @@ pub fn init_cors_layer(options: &Options) -> anyhow::Result<CorsLayer> {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    dotenvy::dotenv()?;
+
     let options = Options::parse();
 
     // TODO: make this not mutually exclusive
