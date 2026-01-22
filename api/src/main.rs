@@ -58,7 +58,7 @@ pub fn init_cors_layer(options: &Options) -> anyhow::Result<CorsLayer> {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    dotenvy::dotenv()?;
+    dotenvy::dotenv().ok();
 
     let options = Options::parse();
 
