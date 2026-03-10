@@ -1,5 +1,7 @@
 # stage 1: build
-FROM rust:latest AS builder
+FROM rust:alpine AS builder
+
+RUN apk add --no-cache musl-dev
 
 WORKDIR /app
 
@@ -14,7 +16,7 @@ RUN mkdir -p api/src core/src && \
 
 # build dependencies
 # we install specifically the binary we want, which pulls in dependencies
-RUN cargo build --release --bin energonsoftware
+RUN cargo build --release --bin energonsoftware --locked
 
 # remove dummy source
 RUN rm -rf api/src core/src
@@ -27,15 +29,12 @@ COPY api/src api/src
 RUN touch api/src/main.rs && cargo install --path api/ --root .
 
 # stage 2: create image
-FROM debian:stable-slim
+FROM alpine:latest
 
 # install dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache libgcc ca-certificates
 
-RUN useradd --create-home appuser
+RUN adduser -S -D appuser
 
 WORKDIR /app
 

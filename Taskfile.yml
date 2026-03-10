@@ -1,6 +1,6 @@
 version: "3"
 
-dotenv: ['.env']
+dotenv: [".env"]
 
 set:
   - nounset
@@ -37,6 +37,11 @@ tasks:
   run-api:
     cmds:
       - cargo run --bin energonsoftware
+    silent: true
+  run-api-docker:
+    deps: [build-api]
+    cmds:
+      - docker run --rm -it -p 8000:8000 energonsoftware-api
     silent: true
   run-ui:
     dir: energonsoftware
