@@ -6,6 +6,10 @@ set:
   - nounset
 
 tasks:
+  default:
+    cmds:
+      - task --list-all
+
   clippy:
     cmds:
       - cargo clippy
