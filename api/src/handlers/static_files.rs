@@ -1,7 +1,6 @@
 use axum::{
-    debug_handler,
+    Json, debug_handler,
     extract::{Path, State},
-    Json,
 };
 use serde::Serialize;
 

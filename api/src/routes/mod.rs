@@ -4,7 +4,7 @@ mod pictures;
 mod static_files;
 mod wow;
 
-use axum::{routing::get, Router};
+use axum::{Router, routing::get};
 use tracing::info;
 
 use crate::handlers;

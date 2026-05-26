@@ -1,8 +1,9 @@
-use axum::{debug_handler, extract::State, Json};
+use axum::{Json, debug_handler, extract::State};
 use serde::Serialize;
 
 use energonsoftware::aws::dynamodb;
 
+use crate::constants::ITEMS_TABLE;
 use crate::error::AppError;
 use crate::models::downloads;
 use crate::state::AppState;
@@ -30,7 +31,7 @@ pub async fn get_downloads_handler(
     let client = dynamodb::connect(&app_state.aws_config).await;
 
     let mut downloads = Vec::new();
-    let result = dynamodb::query(&client, "items", expression, None, |_, deserialize| {
+    let result = dynamodb::query(&client, ITEMS_TABLE, expression, None, |_, deserialize| {
         let mut download = downloads::DbDownload::default();
         deserialize(&mut download)?;
 
@@ -74,7 +75,7 @@ pub async fn get_download_categories_handler(
     let client = dynamodb::connect(&app_state.aws_config).await;
 
     let mut download_categories = Vec::new();
-    let result = dynamodb::query(&client, "items", expression, None, |_, deserialize| {
+    let result = dynamodb::query(&client, ITEMS_TABLE, expression, None, |_, deserialize| {
         let mut download_category = downloads::DbDownloadCategory::default();
         deserialize(&mut download_category)?;
 

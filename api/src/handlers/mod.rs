@@ -4,7 +4,7 @@ pub mod pictures;
 pub mod static_files;
 pub mod wow;
 
-use axum::{debug_handler, http::StatusCode, http::Uri, response::IntoResponse, Json};
+use axum::{Json, debug_handler, http::StatusCode, http::Uri, response::IntoResponse};
 use serde::Serialize;
 use tracing::debug;
 

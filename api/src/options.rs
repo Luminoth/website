@@ -39,12 +39,10 @@ impl Options {
         format!("{}:{}", self.host, self.port)
     }
 
-    #[allow(dead_code)]
     pub fn conf_dir(&self) -> PathBuf {
         self.prefix.join("etc")
     }
 
-    #[allow(dead_code)]
     pub fn share_dir(&self) -> PathBuf {
         self.prefix.join("share")
     }

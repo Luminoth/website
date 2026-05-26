@@ -1,100 +1,182 @@
 version: "3"
 
-dotenv: [ ".env" ]
+dotenv: [".env"]
 
 set:
   - nounset
 
 tasks:
   default:
+    silent: true
     cmds:
       - task --list-all
 
+  # ── setup ────────────────────────────────────────────────────────────────
+
   init:
+    desc: Install frontend npm dependencies
     dir: energonsoftware
     cmds:
       - npm install
 
-  clippy:
+  # ── development ──────────────────────────────────────────────────────────
+
+  run-api:
+    desc: Start the API locally via cargo
     cmds:
-      - cargo clippy
-    silent: true
-  clean:
+      - cargo run --bin energonsoftware
+
+  run-api-docker:
+    desc: Build and run the API in Docker
+    deps: [build-api]
     cmds:
-      - cargo clean
-      - rm -rf bin/
-      - rm -rf energonsoftware/dist
-    silent: true
-  really-clean:
-    deps: [ clean ]
+      - docker run --rm -it -p 8000:8000 energonsoftware-api
+
+  run-ui:
+    desc: Start the Angular dev server on :4200
+    dir: energonsoftware
     cmds:
-      - docker image prune
-      - docker rmi -f energonsoftware-api
+      - ng serve
+
+  start:
+    desc: Start API via docker compose (detached)
     silent: true
+    cmds:
+      - docker compose up -d
+
+  stop:
+    desc: Stop and remove docker compose containers
+    silent: true
+    cmds:
+      - docker compose stop && docker compose rm -f
+
+  # ── build ─────────────────────────────────────────────────────────────────
 
   build-api:
+    desc: Build the API Docker image
+    silent: true
     cmds:
       - docker buildx build -t energonsoftware-api -f api/Dockerfile .
-    silent: true
+
   build-ui:
+    desc: Build the Angular app for production
+    silent: true
     dir: energonsoftware
     cmds:
       - rm -rf dist/
       - ng build
-    silent: true
 
-  run-api:
+  # ── check / lint / format ─────────────────────────────────────────────────
+
+  check:
+    desc: Fast compile check (cargo check)
     cmds:
-      - cargo run --bin energonsoftware
-    silent: true
-  run-api-docker:
-    deps: [ build-api ]
+      - cargo check
+
+  clippy:
+    desc: Run Rust linter (cargo clippy)
     cmds:
-      - docker run --rm -it -p 8000:8000 energonsoftware-api
-    silent: true
-  run-ui:
+      - cargo clippy
+
+  fmt:
+    desc: Format Rust source code (cargo fmt)
+    cmds:
+      - cargo fmt
+
+  fmt-check:
+    desc: Check Rust formatting without modifying files
+    cmds:
+      - cargo fmt --check
+
+  # ── test ──────────────────────────────────────────────────────────────────
+
+  test:
+    desc: Run all tests (API + UI headless)
+    deps: [test-api, test-ui]
+
+  test-api:
+    desc: Run Rust unit tests
+    cmds:
+      - cargo test
+
+  test-ui:
+    desc: Run Angular unit tests headless (single run, no watch)
     dir: energonsoftware
     cmds:
-      - ng serve
+      - ng test --no-watch --no-progress --browsers=ChromeHeadless
+
+  test-ui-watch:
+    desc: Run Angular unit tests in watch mode
+    dir: energonsoftware
+    cmds:
+      - ng test
+
+  # ── update ────────────────────────────────────────────────────────────────
+
+  update:
+    desc: Update all dependencies (API + UI)
+    deps: [update-api, update-ui]
+
+  update-api:
+    desc: Update Rust dependencies (cargo update)
+    cmds:
+      - cargo update
+
+  update-ui:
+    desc: Update frontend npm dependencies within semver ranges
+    dir: energonsoftware
+    cmds:
+      - npm update
+
+  # ── clean ─────────────────────────────────────────────────────────────────
+
+  clean:
+    desc: Remove build artifacts
     silent: true
+    cmds:
+      - cargo clean
+      - rm -rf bin/
+      - rm -rf energonsoftware/dist
+
+  really-clean:
+    desc: Clean and remove Docker images
+    silent: true
+    deps: [clean]
+    cmds:
+      - docker image prune --filter label=com.docker.compose.project=energonsoftware
+      - docker rmi -f energonsoftware-api
+
+  # ── deploy ────────────────────────────────────────────────────────────────
 
   deploy-api:
-    deps: [ build-api ]
+    desc: Build, push to ECR, and force ECS redeploy
+    deps: [build-api]
     requires:
-      vars: [ AWS_ACCOUNT ]
+      vars: [AWS_ACCOUNT]
     cmds:
-      - aws ecr get-login-password --region us-west-2 | docker login --username
-        AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
-      - docker tag energonsoftware-api:latest
-        $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
-      - docker push
-        $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
-      - aws ecs update-service --cluster
-        arn:aws:ecs:us-west-2:$AWS_ACCOUNT:cluster/energonsoftware-api --service
-        energonsoftware-api --force-new-deployment > /dev/null
-    silent: true
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
+      - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
+      - docker push $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
+      - aws ecs update-service --cluster arn:aws:ecs:us-west-2:$AWS_ACCOUNT:cluster/energonsoftware-api --service energonsoftware-api --force-new-deployment > /dev/null
+
   deploy-ui:
-    deps: [ build-ui ]
+    desc: Build and deploy frontend to S3 + invalidate CloudFront
+    deps: [build-ui]
     dir: energonsoftware
     requires:
-      vars: [ UI_DISTRIBUTION ]
+      vars: [UI_DISTRIBUTION]
     cmds:
-      - aws s3 sync dist/energonsoftware/browser s3://energonsoftware-website
-        --delete
-      - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION
-        --paths "/*"
-    silent: true
+      - aws s3 sync dist/energonsoftware/browser s3://energonsoftware-website --delete
+      - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION --paths "/*"
+
   deploy-static:
+    desc: Sync static assets to S3
     dir: static
     cmds:
-      - aws s3 sync . s3://energonsoftware-static --delete --acl public-read
-    silent: true
+      - aws s3 sync . s3://energonsoftware-static --delete
 
-  start:
+  deploy-static-dryrun:
+    desc: Dry-run sync of static assets (no changes made)
+    dir: static
     cmds:
-      - docker compose up -d
-    silent: true
-  stop:
-    cmds:
-      - docker compose stop && docker compose rm -f
-    silent: true
+      - aws s3 sync . s3://energonsoftware-static --delete --dryrun

@@ -1,8 +1,9 @@
-use axum::{debug_handler, extract::State, Json};
+use axum::{Json, debug_handler, extract::State};
 use serde::Serialize;
 
 use energonsoftware::aws::dynamodb;
 
+use crate::constants::{ITEMS_TABLE, TYPE_TIMESTAMP_INDEX};
 use crate::error::AppError;
 use crate::models::news;
 use crate::state::AppState;
@@ -32,10 +33,10 @@ pub async fn get_news_handler(
     let mut news = Vec::new();
     let result = dynamodb::query_index_descending(
         &client,
-        "items",
+        ITEMS_TABLE,
         expression,
         Some(10),
-        "type-timestamp-index",
+        TYPE_TIMESTAMP_INDEX,
         |_, deserialize| {
             let mut news_ = news::DbNews::default();
             deserialize(&mut news_)?;
@@ -81,7 +82,7 @@ pub async fn get_news_authors_handler(
     let client = dynamodb::connect(&app_state.aws_config).await;
 
     let mut news_authors = Vec::new();
-    let result = dynamodb::query(&client, "items", expression, None, |_, deserialize| {
+    let result = dynamodb::query(&client, ITEMS_TABLE, expression, None, |_, deserialize| {
         let mut news_author = news::DbNewsAuthor::default();
         deserialize(&mut news_author)?;
 
