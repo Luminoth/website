@@ -73,10 +73,20 @@ tasks:
     cmds:
       - cargo check
 
-  clippy:
+  lint:
+    desc: Run all linters (Rust + Angular)
+    deps: [lint-api, lint-ui]
+
+  lint-api:
     desc: Run Rust linter (cargo clippy)
     cmds:
       - cargo clippy
+
+  lint-ui:
+    desc: Run Angular linter (ng lint)
+    dir: energonsoftware
+    cmds:
+      - ng lint
 
   fmt:
     desc: Format Rust source code (cargo fmt)

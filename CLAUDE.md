@@ -22,7 +22,9 @@ task run-ui         # ng serve on :4200
 task build-api      # docker buildx build
 task build-ui       # ng build (production)
 task check          # cargo check (fast)
-task clippy         # cargo clippy
+task lint           # cargo clippy + ng lint (parallel)
+task lint-api       # cargo clippy
+task lint-ui        # ng lint
 task fmt            # cargo fmt
 task fmt-check      # cargo fmt --check
 task test-api       # cargo test
@@ -72,4 +74,4 @@ See `TODO.md` for the current list. Key items:
 - WoW data migration from `.ini` to `.json` is incomplete
 - Download links are broken
 - No CI/CD pipeline exists — all deploys are manual via `task`
-- ESLint not yet configured (`ng lint` will report no lint target)
+- ESLint is configured (`eslint.config.js`); run via `task lint-ui` or `task lint`
