@@ -67,8 +67,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "buildTarget": "energonsoftware:build:production"
@@ -102,12 +101,24 @@
               "src/assets"
             ]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
-    },
+    }
   },
   "cli": {
-    "analytics": "7881f366-598a-4065-8534-41a0b395d9d3"
+    "analytics": "7881f366-598a-4065-8534-41a0b395d9d3",
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "schematics": {
     "@schematics/angular:component": {

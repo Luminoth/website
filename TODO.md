@@ -13,7 +13,6 @@
 * All of the caps locked titles should be using CSS to upper case them
 * Double check slide interval is 5000 everywhere
 * Need a better way to re-populate the item database
-* Add ESLint via `ng add @angular-eslint/schematics` (replaces removed tslint/codelyzer)
 * Add a route for getting the API version and print it somewhere in the UI
 
 # Conversion
