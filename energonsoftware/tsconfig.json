@@ -1,11 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "importHelpers": true,
     "esModuleInterop": true,
     "module": "es2020",
-    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "bundler",
@@ -15,6 +13,7 @@
       "node_modules/@types"
     ],
     "strict": true,
+    "skipLibCheck": true,
     "useDefineForClassFields": false
   }
 }

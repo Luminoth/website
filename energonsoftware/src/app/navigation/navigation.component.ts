@@ -12,6 +12,8 @@ import {
 })
 export class NavigationComponent {
 
+  readonly currentYear = new Date().getFullYear();
+
   //#region Lifecycle
 
   constructor() {

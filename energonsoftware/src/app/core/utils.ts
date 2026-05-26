@@ -1,6 +1,3 @@
-import moment from 'moment';
-
-const TimestampFormat = 'L LTS ZZ';
 
 //#region Types
 
@@ -25,7 +22,10 @@ export function stringCompare(x: string, y: string) {
 }
 
 export function formatTimestamp(timestamp: number) {
-  return moment.unix(timestamp).format(TimestampFormat);
+  return new Date(timestamp * 1000).toLocaleString(undefined, {
+    dateStyle: 'short',
+    timeStyle: 'long',
+  });
 }
 
 //#endregion

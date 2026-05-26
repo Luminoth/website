@@ -6,7 +6,6 @@ import { Title, Meta } from '@angular/platform-browser';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import lodash from 'lodash';
-import moment from 'moment';
 
 import { IUnicode } from '../../core/unicode';
 
@@ -91,9 +90,9 @@ export class UnicodeComponent implements OnInit, AfterViewInit {
 
     const worker = new Worker(new URL('../../workers/unicode.worker', import.meta.url), { type: 'module' });
 
-    const start = moment().valueOf();
+    const start = Date.now();
     worker.onmessage = ({ data }) => {
-      //console.log(`worker completed in ${moment().valueOf() - start}ms`);
+      //console.log(`worker completed in ${Date.now() - start}ms`);
 
       this.dataSource.data = data;
 
