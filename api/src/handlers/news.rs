@@ -1,3 +1,4 @@
+use anyhow::Context as _;
 use axum::{Json, debug_handler, extract::State};
 use serde::Serialize;
 
@@ -31,7 +32,7 @@ pub async fn get_news_handler(
     let client = dynamodb::connect(&app_state.aws_config).await;
 
     let mut news = Vec::new();
-    let result = dynamodb::query_index_descending(
+    dynamodb::query_index_descending(
         &client,
         ITEMS_TABLE,
         expression,
@@ -46,13 +47,8 @@ pub async fn get_news_handler(
             Ok((news_, false))
         },
     )
-    .await;
-    match result {
-        Ok(_) => (),
-        Err(e) => {
-            return Err(anyhow::anyhow!("Error reading news: {}", e).into());
-        }
-    }
+    .await
+    .context("Error reading news")?;
 
     let news = news.drain(..).map(|x| x.into()).collect();
 
@@ -82,7 +78,7 @@ pub async fn get_news_authors_handler(
     let client = dynamodb::connect(&app_state.aws_config).await;
 
     let mut news_authors = Vec::new();
-    let result = dynamodb::query(&client, ITEMS_TABLE, expression, None, |_, deserialize| {
+    dynamodb::query(&client, ITEMS_TABLE, expression, None, |_, deserialize| {
         let mut news_author = news::DbNewsAuthor::default();
         deserialize(&mut news_author)?;
 
@@ -90,13 +86,8 @@ pub async fn get_news_authors_handler(
 
         Ok((news_author, false))
     })
-    .await;
-    match result {
-        Ok(_) => (),
-        Err(e) => {
-            return Err(anyhow::anyhow!("Error reading news authors: {}", e).into());
-        }
-    }
+    .await
+    .context("Error reading news authors")?;
 
     let news_authors = news_authors.drain(..).map(|x| x.into()).collect();
 
