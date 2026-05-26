@@ -20,7 +20,7 @@ http = "1.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 # tracing requires tokio_unstable in .cargo/config.toml
-tokio = { version = "1.51", features = ["full", "tracing"] }
+tokio = { version = "1.52", features = ["full", "tracing"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "trace"] }
 tracing = "0.1"
