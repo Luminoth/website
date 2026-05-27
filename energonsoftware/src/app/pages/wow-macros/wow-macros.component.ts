@@ -4,6 +4,9 @@ import {
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { inject } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { WoWService } from '../../services/wow.service';
 
@@ -20,7 +23,8 @@ enum State {
   templateUrl: './wow-macros.component.html',
   styleUrls: ['./wow-macros.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatProgressBarModule, MatExpansionModule],
 })
 export class WoWMacrosComponent implements OnInit, AfterViewInit {
   readonly State = State;
@@ -28,14 +32,11 @@ export class WoWMacrosComponent implements OnInit, AfterViewInit {
 
   macroClasses: IMacroClass[] = [];
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta,
-    private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
-    private wowService: WoWService) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private cd = inject(ChangeDetectorRef);
+  private snackBar = inject(MatSnackBar);
+  private wowService = inject(WoWService);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - World of Warcraft Macros');
@@ -48,8 +49,6 @@ export class WoWMacrosComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.getDataAsync();
   }
-
-  //#endregion
 
   get state() {
     return this._state;

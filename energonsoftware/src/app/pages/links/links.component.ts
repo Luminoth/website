@@ -3,6 +3,9 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { environment } from '../../../environments/environment';
 
@@ -11,16 +14,14 @@ import { environment } from '../../../environments/environment';
   templateUrl: './links.component.html',
   styleUrls: ['./links.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [RouterModule, MatExpansionModule],
 })
 export class LinksComponent implements OnInit {
   readonly environment = environment;
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - Links');
@@ -29,7 +30,5 @@ export class LinksComponent implements OnInit {
       content: 'Links',
     });
   }
-
-  //#endregion
 
 }

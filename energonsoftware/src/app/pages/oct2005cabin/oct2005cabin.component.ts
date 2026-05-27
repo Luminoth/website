@@ -4,6 +4,9 @@ import {
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { inject } from '@angular/core';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { environment } from '../../../environments/environment';
 
@@ -21,24 +24,21 @@ enum State {
   templateUrl: './oct2005cabin.component.html',
   styleUrls: ['./oct2005cabin.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatProgressBarModule, NgbCarouselModule],
 })
 export class Oct2005CabinComponent implements OnInit, AfterViewInit {
   readonly State = State;
   private _state = State.Idle;
 
-  staticUrl: string;
+  readonly staticUrl = `${environment.staticUrl}/images/vacation/oct2005cabin`;
   pictures: IPictures[] = [];
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta,
-    private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
-    private picturesService: PicturesService) {
-    this.staticUrl = `${environment.staticUrl}/images/vacation/oct2005cabin`;
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private cd = inject(ChangeDetectorRef);
+  private snackBar = inject(MatSnackBar);
+  private picturesService = inject(PicturesService);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - October 2005 Cabin Trip');
@@ -51,8 +51,6 @@ export class Oct2005CabinComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.getDataAsync();
   }
-
-  //#endregion
 
   get state() {
     return this._state;
@@ -67,11 +65,6 @@ export class Oct2005CabinComponent implements OnInit, AfterViewInit {
   get hasPictures() {
     return this.pictures.length > 0;
   }
-
-  // TODO: thumbnails can go away
-  /*getImageThumbnailUrl(imageId: string) {
-    return `${this.staticUrl}/thumbnails/${imageId}.jpg`;
-  }*/
 
   getImageUrl(imageId: string) {
     return `${this.staticUrl}/${imageId}.jpg`;

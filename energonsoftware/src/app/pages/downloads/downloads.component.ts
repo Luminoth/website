@@ -5,6 +5,11 @@ import {
 import { Title, Meta } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { inject } from '@angular/core';
+import { KeyValuePipe, KeyValue } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
 
 import { DownloadsService } from '../../services/downloads.service';
 
@@ -21,7 +26,8 @@ enum State {
   templateUrl: './downloads.component.html',
   styleUrls: ['./downloads.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatProgressBarModule, MatExpansionModule, MatTableModule, KeyValuePipe],
 })
 export class DownloadsComponent implements OnInit, AfterViewInit {
   readonly State = State;
@@ -39,14 +45,11 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
 
   downloadCategories: IDictionary<IDownloadCategory> = {};
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta,
-    private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
-    private downloadsService: DownloadsService) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private cd = inject(ChangeDetectorRef);
+  private snackBar = inject(MatSnackBar);
+  private downloadsService = inject(DownloadsService);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - Downloads');
@@ -59,8 +62,6 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.getDataAsync();
   }
-
-  //#endregion
 
   get state() {
     return this._state;
@@ -142,7 +143,7 @@ export class DownloadsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  sortCategories = (a: any, b: any): number => {
+  sortCategories = (a: KeyValue<string, MatTableDataSource<IDownload>>, b: KeyValue<string, MatTableDataSource<IDownload>>): number => {
     const aTitle = this.getDownloadCategory(a.key).title;
     const bTitle = this.getDownloadCategory(b.key).title;
     return aTitle.localeCompare(bTitle);

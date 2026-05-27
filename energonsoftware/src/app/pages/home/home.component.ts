@@ -3,21 +3,19 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
 })
 export class HomeComponent implements OnInit {
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - Home');
@@ -26,7 +24,5 @@ export class HomeComponent implements OnInit {
       content: 'Downloads',
     });
   }
-
-  //#endregion
 
 }

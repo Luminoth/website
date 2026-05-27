@@ -8,14 +8,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
 
-  //#region Lifecycle
-
-  constructor() {
-  }
-
-  //#endregion
-
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
+  intercept(req: HttpRequest<unknown>, next: HttpHandler) {
     return next.handle(req).pipe(
       tap(evt => {
         if (!(evt instanceof HttpResponse)) {

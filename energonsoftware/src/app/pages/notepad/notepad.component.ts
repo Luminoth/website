@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { inject } from '@angular/core';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { environment } from '../../../environments/environment';
 
@@ -11,25 +13,21 @@ import { environment } from '../../../environments/environment';
   templateUrl: './notepad.component.html',
   styleUrls: ['./notepad.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatDividerModule],
 })
 export class NotepadComponent implements OnInit {
   readonly environment = environment;
 
-  //#region Lifecycle
+  private title = inject(Title);
+  private meta = inject(Meta);
 
-  constructor(private title: Title,
-    private meta: Meta) {
+  ngOnInit() {
     this.title.setTitle('Energon Software - Notepad Clone Tutorial in C');
     this.meta.updateTag({
       name: 'description',
       content: 'Notepad Tutorial',
     });
   }
-
-  ngOnInit() {
-  }
-
-  //#endregion
 
 }

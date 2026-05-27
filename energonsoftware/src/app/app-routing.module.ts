@@ -26,7 +26,7 @@ import { WoWScreenshotsRagnarosComponent } from './pages/wow-screenshots-ragnaro
 // what we actually want is a more generic screenshot page
 // that can load the general screenshots or a "type" of screenshots
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: 'news', component: NewsComponent },
   { path: 'about', component: AboutComponent },
   { path: 'downloads', component: DownloadsComponent },

@@ -4,6 +4,10 @@ import {
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { environment } from '../../../environments/environment';
 
@@ -21,24 +25,21 @@ enum State {
   templateUrl: './wow-screenshots.component.html',
   styleUrls: ['./wow-screenshots.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [RouterModule, MatProgressBarModule, NgbCarouselModule],
 })
 export class WoWScreenshotsComponent implements OnInit, AfterViewInit {
   readonly State = State;
   private _state = State.Idle;
 
-  staticUrl: string;
+  readonly staticUrl = `${environment.staticUrl}/images/wow/screenshots`;
   screenshots: IScreenshots[] = [];
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta,
-    private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
-    private wowService: WoWService) {
-    this.staticUrl = `${environment.staticUrl}/images/wow/screenshots`;
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private cd = inject(ChangeDetectorRef);
+  private snackBar = inject(MatSnackBar);
+  private wowService = inject(WoWService);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - World of Warcraft Screenshots');
@@ -51,8 +52,6 @@ export class WoWScreenshotsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.getDataAsync();
   }
-
-  //#endregion
 
   get state() {
     return this._state;
@@ -67,11 +66,6 @@ export class WoWScreenshotsComponent implements OnInit, AfterViewInit {
   get hasScreenshots() {
     return this.screenshots.length > 0;
   }
-
-  // TODO: thumbnails can go away
-  /*getImageThumbnailUrl(imageId: string) {
-    return `${this.staticUrl}/${imageId}_small.jpg`;
-  }*/
 
   getImageUrl(imageId: string) {
     return `${this.staticUrl}/${imageId}.jpg`;

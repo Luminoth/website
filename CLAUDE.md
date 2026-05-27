@@ -45,7 +45,7 @@ Run `task` with no args for the full task list.
 - CLI args via Clap 4; `.env` file via `dotenvy`
 
 **Frontend:**
-- Angular 21 (NgModule-based, not standalone components)
+- Angular 21 (standalone components; bootstrapped via `bootstrapApplication` in `main.ts`)
 - Angular Material 21 + ng-bootstrap 20 + Bootstrap 5
 - State: no store library; services return `lastValueFrom(HttpClient.get(...))`
 - Styling: SCSS with Angular Material theming

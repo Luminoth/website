@@ -4,6 +4,10 @@ import {
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { inject } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 
 import { NewsService } from '../../services/news.service';
 
@@ -20,7 +24,8 @@ enum State {
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatProgressBarModule, MatExpansionModule, SafeHtmlPipe],
 })
 export class NewsComponent implements OnInit, AfterViewInit {
   readonly formatTimestamp = formatTimestamp;
@@ -34,14 +39,11 @@ export class NewsComponent implements OnInit, AfterViewInit {
   newsAuthors: IDictionary<INewsAuthor> = {};
   news: INews[] = [];
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta,
-    private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
-    private newsService: NewsService) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private cd = inject(ChangeDetectorRef);
+  private snackBar = inject(MatSnackBar);
+  private newsService = inject(NewsService);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - News');
@@ -54,8 +56,6 @@ export class NewsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.getDataAsync();
   }
-
-  //#endregion
 
   get state() {
     return this._state;

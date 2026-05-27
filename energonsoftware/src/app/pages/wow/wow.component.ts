@@ -3,21 +3,22 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-wow',
   templateUrl: './wow.component.html',
   styleUrls: ['./wow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [RouterModule, MatExpansionModule],
 })
 export class WoWComponent implements OnInit {
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - World of Warcraft');
@@ -26,7 +27,5 @@ export class WoWComponent implements OnInit {
       content: 'World of Warcraft',
     });
   }
-
-  //#endregion
 
 }

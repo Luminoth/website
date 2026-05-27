@@ -5,6 +5,10 @@ import {
 import { Title, Meta } from '@angular/platform-browser';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { inject } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import lodash from 'lodash';
 
 import { IUnicode } from '../../core/unicode';
@@ -19,7 +23,8 @@ enum State {
   templateUrl: './unicode.component.html',
   styleUrls: ['./unicode.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatProgressBarModule, MatTableModule, MatPaginatorModule],
 })
 export class UnicodeComponent implements OnInit, AfterViewInit {
   readonly State = State;
@@ -36,12 +41,9 @@ export class UnicodeComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta,
-    private cd: ChangeDetectorRef) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private cd = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - Unicode');
@@ -56,8 +58,6 @@ export class UnicodeComponent implements OnInit, AfterViewInit {
 
     this.constructTable();
   }
-
-  //#endregion
 
   get state() {
     return this._state;
@@ -90,9 +90,7 @@ export class UnicodeComponent implements OnInit, AfterViewInit {
 
     const worker = new Worker(new URL('../../workers/unicode.worker', import.meta.url), { type: 'module' });
 
-    const start = Date.now();
     worker.onmessage = ({ data }) => {
-      //console.log(`worker completed in ${Date.now() - start}ms`);
 
       this.dataSource.data = data;
 

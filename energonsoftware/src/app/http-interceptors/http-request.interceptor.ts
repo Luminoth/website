@@ -7,14 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
 
-  //#region Lifecycle
-
-  constructor() {
-  }
-
-  //#endregion
-
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
+  intercept(req: HttpRequest<unknown>, next: HttpHandler) {
     if (!environment.production) {
       console.log(req);
     }

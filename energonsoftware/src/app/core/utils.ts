@@ -1,7 +1,7 @@
 
 //#region Types
 
-export interface IDictionary<T> { [key: string]: T; }
+export type IDictionary<T> = Record<string, T>;
 
 export function dictionarySize<T>(dict: IDictionary<T>) {
   return Object.keys(dict).length;

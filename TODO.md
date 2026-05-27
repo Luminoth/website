@@ -7,7 +7,6 @@
 * Finish converting WoW data from .ini to .json
 * Rebuild resume page using a TeX / JSON backend
 * Rebuild links page with a JSON backend
-* Carousels should be centered and fit to the viewport
 * Download links are all broken
   * Probably lots of other links broken as well
 * All of the caps locked titles should be using CSS to upper case them

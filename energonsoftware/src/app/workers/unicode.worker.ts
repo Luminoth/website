@@ -3,7 +3,7 @@ import lodash from 'lodash';
 
 import { IUnicode } from '../core/unicode';
 
-addEventListener('message', ({ data }) => {
+addEventListener('message', () => {
   const unicode: IUnicode[][] = [];
 
   let row = -1;

@@ -5,6 +5,10 @@ import {
 import { Title, Meta } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { inject } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { WoWService } from '../../services/wow.service';
 
@@ -20,7 +24,8 @@ enum State {
   templateUrl: './wow-addons.component.html',
   styleUrls: ['./wow-addons.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatProgressBarModule, MatTableModule, MatSlideToggleModule],
 })
 export class WoWAddonsComponent implements OnInit, AfterViewInit {
   readonly State = State;
@@ -35,14 +40,11 @@ export class WoWAddonsComponent implements OnInit, AfterViewInit {
 
   wowVersion = '0.0';
 
-  //#region Lifecycle
-
-  constructor(private title: Title,
-    private meta: Meta,
-    private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
-    private wowService: WoWService) {
-  }
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private cd = inject(ChangeDetectorRef);
+  private snackBar = inject(MatSnackBar);
+  private wowService = inject(WoWService);
 
   ngOnInit() {
     this.title.setTitle('Energon Software - World of Warcraft Addons');
@@ -55,8 +57,6 @@ export class WoWAddonsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.getDataAsync();
   }
-
-  //#endregion
 
   get state() {
     return this._state;

@@ -3,30 +3,28 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { inject } from '@angular/core';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-raw-xp',
   templateUrl: './raw-xp.component.html',
   styleUrls: ['./raw-xp.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  standalone: true,
+  imports: [MatDividerModule],
 })
 export class RawXPComponent implements OnInit {
 
-  //#region Lifecycle
+  private title = inject(Title);
+  private meta = inject(Meta);
 
-  constructor(private title: Title,
-    private meta: Meta) {
+  ngOnInit() {
     this.title.setTitle('Energon Software - Thoughts on Raw Sockets in WindowsXP');
     this.meta.updateTag({
       name: 'description',
       content: 'Raw Sockets in WindowsXP Tutorial',
     });
   }
-
-  ngOnInit() {
-  }
-
-  //#endregion
 
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
@@ -13,12 +13,7 @@ import {
 })
 export class NewsService {
 
-  //#region Lifecycle
-
-  constructor(private http: HttpClient) {
-  }
-
-  //#endregion
+  private http = inject(HttpClient);
 
   //#region Commands
 
