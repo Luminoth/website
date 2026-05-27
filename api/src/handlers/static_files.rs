@@ -1,8 +1,15 @@
+use std::path::Path as StdPath;
+
 use axum::{
-    Json, debug_handler,
+    Json,
+    body::Body,
+    debug_handler,
     extract::{Path, State},
+    http::{StatusCode, header},
+    response::{IntoResponse, Response},
 };
 use serde::Serialize;
+use tokio::fs;
 
 use crate::error::AppError;
 use crate::state::AppState;
@@ -25,11 +32,42 @@ pub async fn get_static_files_handler(
 
 #[debug_handler]
 pub async fn get_static_file_handler(
-    Path(_path): Path<String>,
-    State(_app_state): State<AppState>,
-) -> Result<(), AppError> {
-    // TODO: this should only be available when not prod
-    // and should just return the static file
+    Path(path): Path<String>,
+    State(app_state): State<AppState>,
+) -> Response {
+    if app_state.options.prod {
+        return StatusCode::NOT_FOUND.into_response();
+    }
 
-    Ok(())
+    let file_path = app_state.options.static_dir().join(&path);
+
+    let Ok(content) = fs::read(&file_path).await else {
+        return StatusCode::NOT_FOUND.into_response();
+    };
+
+    let content_type = content_type_from_path(&path);
+
+    Response::builder()
+        .header(header::CONTENT_TYPE, content_type)
+        .body(Body::from(content))
+        .unwrap_or_else(|_| StatusCode::INTERNAL_SERVER_ERROR.into_response())
+}
+
+fn content_type_from_path(path: &str) -> &'static str {
+    let ext = StdPath::new(path)
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+
+    match ext.as_str() {
+        "jpg" | "jpeg" => "image/jpeg",
+        "png" => "image/png",
+        "gif" => "image/gif",
+        "svg" => "image/svg+xml",
+        "webp" => "image/webp",
+        "css" => "text/css",
+        "js" => "application/javascript",
+        _ => "application/octet-stream",
+    }
 }

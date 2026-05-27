@@ -46,4 +46,8 @@ impl Options {
     pub fn share_dir(&self) -> PathBuf {
         self.prefix.join("share")
     }
+
+    pub fn static_dir(&self) -> PathBuf {
+        self.prefix.join("static")
+    }
 }
