@@ -1,5 +1,6 @@
 # TODO
 
+* Add some tests
 * Remove tokio_unstable when console-subscriber stops needing it
 * Need to mobile-friendly test all the pages
 * Need to screen reader test all the pages
