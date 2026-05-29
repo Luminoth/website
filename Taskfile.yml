@@ -6,12 +6,12 @@ set:
   - nounset
 
 includes:
-  api: ./Taskfile.api.yml
+  api: ./taskfiles/Taskfile.api.yml
   ui:
-    taskfile: ./Taskfile.ui.yml
+    taskfile: ./taskfiles/Taskfile.ui.yml
     dir: ./energonsoftware
   static:
-    taskfile: ./Taskfile.static.yml
+    taskfile: ./taskfiles/Taskfile.static.yml
     dir: ./static
 
 tasks:
