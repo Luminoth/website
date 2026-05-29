@@ -71,3 +71,65 @@ fn content_type_from_path(path: &str) -> &'static str {
         _ => "application/octet-stream",
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn jpg_and_jpeg_map_to_image_jpeg() {
+        assert_eq!(content_type_from_path("photo.jpg"), "image/jpeg");
+        assert_eq!(content_type_from_path("photo.jpeg"), "image/jpeg");
+    }
+
+    #[test]
+    fn png_maps_to_image_png() {
+        assert_eq!(content_type_from_path("image.png"), "image/png");
+    }
+
+    #[test]
+    fn gif_maps_to_image_gif() {
+        assert_eq!(content_type_from_path("anim.gif"), "image/gif");
+    }
+
+    #[test]
+    fn svg_maps_to_image_svg_xml() {
+        assert_eq!(content_type_from_path("icon.svg"), "image/svg+xml");
+    }
+
+    #[test]
+    fn webp_maps_to_image_webp() {
+        assert_eq!(content_type_from_path("photo.webp"), "image/webp");
+    }
+
+    #[test]
+    fn css_maps_to_text_css() {
+        assert_eq!(content_type_from_path("styles.css"), "text/css");
+    }
+
+    #[test]
+    fn js_maps_to_application_javascript() {
+        assert_eq!(content_type_from_path("app.js"), "application/javascript");
+    }
+
+    #[test]
+    fn unknown_extension_maps_to_octet_stream() {
+        assert_eq!(content_type_from_path("data.bin"), "application/octet-stream");
+    }
+
+    #[test]
+    fn no_extension_maps_to_octet_stream() {
+        assert_eq!(content_type_from_path("Makefile"), "application/octet-stream");
+    }
+
+    #[test]
+    fn extension_matching_is_case_insensitive() {
+        assert_eq!(content_type_from_path("photo.JPG"), "image/jpeg");
+        assert_eq!(content_type_from_path("photo.PNG"), "image/png");
+    }
+
+    #[test]
+    fn path_with_directories_uses_final_extension() {
+        assert_eq!(content_type_from_path("images/vacation/photo.jpg"), "image/jpeg");
+    }
+}

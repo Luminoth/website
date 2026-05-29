@@ -57,3 +57,32 @@ pub fn get_forwarded_addr<B>(request: &Request<B>) -> Option<SocketAddr> {
 
     None
 }
+
+#[cfg(test)]
+mod tests {
+    use http::Request;
+
+    use super::*;
+
+    fn request_with_header(name: &str, value: &str) -> Request<()> {
+        Request::builder().header(name, value).body(()).unwrap()
+    }
+
+    #[test]
+    fn single_ip_is_returned() {
+        let req = request_with_header("X-Forwarded-For", "1.2.3.4");
+        assert_eq!(get_forwarded_for(&req), Some("1.2.3.4"));
+    }
+
+    #[test]
+    fn first_ip_is_returned_from_chain() {
+        let req = request_with_header("X-Forwarded-For", "1.2.3.4, 10.0.0.1, 192.168.1.1");
+        assert_eq!(get_forwarded_for(&req), Some("1.2.3.4"));
+    }
+
+    #[test]
+    fn missing_header_returns_none() {
+        let req = Request::builder().body(()).unwrap();
+        assert_eq!(get_forwarded_for(&req), None);
+    }
+}
