@@ -1,0 +1,48 @@
+version: "3"
+
+tasks:
+  init:
+    desc: Install frontend npm dependencies
+    cmds:
+      - npm install
+
+  run:
+    desc: Start the Angular dev server on :4200
+    cmds:
+      - ng serve
+
+  build:
+    desc: Build the Angular app for production
+    silent: true
+    cmds:
+      - rm -rf dist/
+      - ng build
+
+  lint:
+    desc: Run Angular linter (ng lint)
+    cmds:
+      - ng lint
+
+  test:
+    desc: Run Angular unit tests headless (single run, no watch)
+    cmds:
+      - ng test --no-watch --no-progress --browsers=ChromeHeadless
+
+  test-watch:
+    desc: Run Angular unit tests in watch mode
+    cmds:
+      - ng test
+
+  update:
+    desc: Update frontend npm dependencies within semver ranges
+    cmds:
+      - npm update
+
+  deploy:
+    desc: Build and deploy frontend to S3 + invalidate CloudFront
+    deps: [build]
+    requires:
+      vars: [UI_DISTRIBUTION]
+    cmds:
+      - aws s3 sync dist/energonsoftware/browser s3://energonsoftware-website --delete
+      - aws cloudfront create-invalidation --distribution-id $UI_DISTRIBUTION --paths "/*"

@@ -1,0 +1,60 @@
+version: "3"
+
+tasks:
+  run:
+    desc: Start the API locally via cargo
+    cmds:
+      - cargo run --bin energonsoftware
+
+  run-docker:
+    desc: Build and run the API in Docker
+    deps: [build]
+    cmds:
+      - docker run --rm -it -p 8000:8000 energonsoftware-api
+
+  build:
+    desc: Build the API Docker image
+    silent: true
+    cmds:
+      - docker buildx build -t energonsoftware-api -f api/Dockerfile .
+
+  check:
+    desc: Fast compile check (cargo check)
+    cmds:
+      - cargo check
+
+  lint:
+    desc: Run Rust linter (cargo clippy)
+    cmds:
+      - cargo clippy
+
+  fmt:
+    desc: Format Rust source code (cargo fmt)
+    cmds:
+      - cargo fmt
+
+  fmt-check:
+    desc: Check Rust formatting without modifying files
+    cmds:
+      - cargo fmt --check
+
+  test:
+    desc: Run Rust unit tests
+    cmds:
+      - cargo test
+
+  update:
+    desc: Update Rust dependencies (cargo update)
+    cmds:
+      - cargo update
+
+  deploy:
+    desc: Build, push to ECR, and force ECS redeploy
+    deps: [build]
+    requires:
+      vars: [AWS_ACCOUNT]
+    cmds:
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
+      - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
+      - docker push $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
+      - aws ecs update-service --cluster arn:aws:ecs:us-west-2:$AWS_ACCOUNT:cluster/energonsoftware-api --service energonsoftware-api --force-new-deployment > /dev/null

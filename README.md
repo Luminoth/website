@@ -13,9 +13,9 @@ Full-stack personal website: Angular 21 frontend + Axum (Rust) backend + AWS Dyn
 ## Quick start
 
 ```sh
-task init        # install frontend dependencies
-task run-api     # start the Rust backend on :8000
-task run-ui      # start the Angular dev server on :4200
+task ui:init     # install frontend dependencies
+task api:run     # start the Rust backend on :8000
+task ui:run      # start the Angular dev server on :4200
 ```
 
 Or use Docker Compose to run the API in a container:
@@ -29,70 +29,64 @@ task stop        # docker compose stop + rm
 
 Run `task` with no arguments to list all tasks.
 
-**Setup & development**
+**Docker Compose**
 
 | Task | Description |
 |---|---|
-| `task init` | Install frontend npm dependencies |
-| `task run-api` | Start the API locally via cargo |
-| `task run-api-docker` | Build and run the API in Docker |
-| `task run-ui` | Start the Angular dev server on :4200 |
 | `task start` | Start API via docker compose (detached) |
 | `task stop` | Stop and remove docker compose containers |
 
-**Build**
+**API (`api:*`)**
 
 | Task | Description |
 |---|---|
-| `task build-api` | Build the API Docker image |
-| `task build-ui` | Build the Angular app for production |
+| `task api:run` | Start the API locally via cargo |
+| `task api:run-docker` | Build and run the API in Docker |
+| `task api:build` | Build the API Docker image |
+| `task api:check` | Fast compile check (`cargo check`) |
+| `task api:lint` | Run Rust linter (`cargo clippy`) |
+| `task api:fmt` | Format Rust source (`cargo fmt`) |
+| `task api:fmt-check` | Check Rust formatting without modifying files |
+| `task api:test` | Run Rust unit tests |
+| `task api:update` | Update Rust dependencies (`cargo update`) |
+| `task api:deploy` | Build, push to ECR, force ECS redeploy |
 
-**Check / lint / format**
-
-| Task | Description |
-|---|---|
-| `task check` | Fast compile check (`cargo check`) |
-| `task clippy` | Run Rust linter (`cargo clippy`) |
-| `task fmt` | Format Rust source (`cargo fmt`) |
-| `task fmt-check` | Check Rust formatting without modifying files |
-
-**Test**
-
-| Task | Description |
-|---|---|
-| `task test-api` | Run Rust unit tests |
-| `task test-ui` | Run Angular tests headless, single run |
-| `task test-ui-watch` | Run Angular tests in watch mode |
-
-**Update**
+**UI (`ui:*`)**
 
 | Task | Description |
 |---|---|
-| `task update-api` | Update Rust dependencies (`cargo update`) |
-| `task update-ui` | Update frontend npm dependencies (`npm update`) |
+| `task ui:init` | Install frontend npm dependencies |
+| `task ui:run` | Start the Angular dev server on :4200 |
+| `task ui:build` | Build the Angular app for production |
+| `task ui:lint` | Run Angular linter (`ng lint`) |
+| `task ui:test` | Run Angular tests headless, single run |
+| `task ui:test-watch` | Run Angular tests in watch mode |
+| `task ui:update` | Update frontend npm dependencies (`npm update`) |
+| `task ui:deploy` | Build and sync frontend to S3 + invalidate CloudFront |
 
-**Clean**
+**Static assets (`static:*`)**
 
 | Task | Description |
 |---|---|
+| `task static:deploy` | Sync static assets to S3 |
+| `task static:deploy-dryrun` | Dry-run sync of static assets (no changes made) |
+
+**Aggregate**
+
+| Task | Description |
+|---|---|
+| `task lint` | Run all linters (`api:lint` + `ui:lint`) |
+| `task test` | Run all tests (`api:test` + `ui:test`) |
+| `task update` | Update all dependencies (`api:update` + `ui:update`) |
 | `task clean` | Remove build artifacts |
 | `task really-clean` | Clean and remove Docker images |
-
-**Deploy** (requires `.env`)
-
-| Task | Description |
-|---|---|
-| `task deploy-api` | Build, push to ECR, force ECS redeploy |
-| `task deploy-ui` | Build and sync frontend to S3 + invalidate CloudFront |
-| `task deploy-static` | Sync static assets to S3 |
-| `task deploy-static-dryrun` | Dry-run sync of static assets (no changes made) |
 
 ## Updating dependencies
 
 ### Backend
 
 ```sh
-cargo update
+task api:update
 ```
 
 ### Frontend
@@ -101,7 +95,7 @@ See `energonsoftware/package.json` for current versions.
 
 For minor/patch updates:
 ```sh
-cd energonsoftware && npm update
+task ui:update
 ```
 
 For major Angular version upgrades, follow the [Angular update guide](https://angular.dev/update-guide):

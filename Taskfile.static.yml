@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  deploy:
+    desc: Sync static assets to S3
+    cmds:
+      - aws s3 sync . s3://energonsoftware-static --delete
+
+  deploy-dryrun:
+    desc: Dry-run sync of static assets (no changes made)
+    cmds:
+      - aws s3 sync . s3://energonsoftware-static --delete --dryrun
