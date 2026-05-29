@@ -9,7 +9,7 @@ tasks:
   default:
     silent: true
     cmds:
-      - task --list-all
+      - task --list
 
   # ── setup ────────────────────────────────────────────────────────────────
 
