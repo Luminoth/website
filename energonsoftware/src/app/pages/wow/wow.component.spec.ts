@@ -1,20 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
-import { WowComponent } from './wow.component';
+import { WoWComponent } from './wow.component';
 
-describe('WowComponent', () => {
-  let component: WowComponent;
-  let fixture: ComponentFixture<WowComponent>;
+describe('WoWComponent', () => {
+  let component: WoWComponent;
+  let fixture: ComponentFixture<WoWComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ WowComponent ]
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [WoWComponent],
+      providers: [provideRouter([])],
+    }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(WowComponent);
+    fixture = TestBed.createComponent(WoWComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

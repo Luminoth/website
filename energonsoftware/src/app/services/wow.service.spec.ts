@@ -1,13 +1,17 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { WowService } from './wow.service';
+import { WoWService } from './wow.service';
 
-describe('WowService', () => {
-  let service: WowService;
+describe('WoWService', () => {
+  let service: WoWService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(WowService);
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+    service = TestBed.inject(WoWService);
   });
 
   it('should be created', () => {

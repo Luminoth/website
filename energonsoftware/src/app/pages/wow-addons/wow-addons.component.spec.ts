@@ -1,20 +1,20 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { WowAddonsComponent } from './wow-addons.component';
+import { WoWAddonsComponent } from './wow-addons.component';
 
-describe('WowAddonsComponent', () => {
-  let component: WowAddonsComponent;
-  let fixture: ComponentFixture<WowAddonsComponent>;
+describe('WoWAddonsComponent', () => {
+  let component: WoWAddonsComponent;
+  let fixture: ComponentFixture<WoWAddonsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ WowAddonsComponent ]
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [WoWAddonsComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(WowAddonsComponent);
+    fixture = TestBed.createComponent(WoWAddonsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

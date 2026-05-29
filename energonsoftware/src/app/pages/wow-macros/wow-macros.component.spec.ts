@@ -1,20 +1,20 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { WowMacrosComponent } from './wow-macros.component';
+import { WoWMacrosComponent } from './wow-macros.component';
 
-describe('WowMacrosComponent', () => {
-  let component: WowMacrosComponent;
-  let fixture: ComponentFixture<WowMacrosComponent>;
+describe('WoWMacrosComponent', () => {
+  let component: WoWMacrosComponent;
+  let fixture: ComponentFixture<WoWMacrosComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ WowMacrosComponent ]
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [WoWMacrosComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(WowMacrosComponent);
+    fixture = TestBed.createComponent(WoWMacrosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

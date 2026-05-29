@@ -32,7 +32,7 @@ export class KennelComponent implements OnInit {
     });
   }
 
-  getImageUrl(imageId: string) {
+  getImageUrl(imageId: number) {
     return `${this.staticUrl}/IMG_00${imageId}.JPG`;
   }
 

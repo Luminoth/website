@@ -1,7 +1,12 @@
 {
   "extends": "../tsconfig.json",
+  "references": [
+    { "path": "./tsconfig.app.json" }
+  ],
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
+    "composite": true,
+    "declaration": true,
     "types": [
       "jasmine",
       "node"

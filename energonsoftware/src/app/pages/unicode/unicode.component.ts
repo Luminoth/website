@@ -88,7 +88,13 @@ export class UnicodeComponent implements OnInit, AfterViewInit {
     this.state = State.Loading;
     this.dataSource.data = [];
 
-    const worker = new Worker(new URL('../../workers/unicode.worker', import.meta.url), { type: 'module' });
+    let worker: Worker;
+    try {
+      worker = new Worker(new URL('../../workers/unicode.worker', import.meta.url), { type: 'module' });
+    } catch {
+      this.state = State.Idle;
+      return;
+    }
 
     worker.onmessage = ({ data }) => {
 

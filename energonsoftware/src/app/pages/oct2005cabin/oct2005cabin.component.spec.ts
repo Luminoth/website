@@ -1,20 +1,20 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { Oct2005cabinComponent } from './oct2005cabin.component';
+import { Oct2005CabinComponent } from './oct2005cabin.component';
 
-describe('Oct2005cabinComponent', () => {
-  let component: Oct2005cabinComponent;
-  let fixture: ComponentFixture<Oct2005cabinComponent>;
+describe('Oct2005CabinComponent', () => {
+  let component: Oct2005CabinComponent;
+  let fixture: ComponentFixture<Oct2005CabinComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ Oct2005cabinComponent ]
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [Oct2005CabinComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(Oct2005cabinComponent);
+    fixture = TestBed.createComponent(Oct2005CabinComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

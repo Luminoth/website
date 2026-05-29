@@ -2,6 +2,8 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
+    "composite": true,
+    "declaration": true,
     "types": []
   },
   "files": [
@@ -9,6 +11,13 @@
     "polyfills.ts"
   ],
   "include": [
-    "src/**/*.d.ts"
-  ]
+    "**/*.ts",
+    "**/*.d.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
 }

@@ -1,7 +1,8 @@
-import { Unicode } from './unicode';
+import { IUnicode } from './unicode';
 
-describe('Unicode', () => {
-  it('should create an instance', () => {
-    expect(new Unicode()).toBeTruthy();
+describe('unicode', () => {
+  it('IUnicode is usable', () => {
+    const u: IUnicode = { value: 65, hexValue: '0041', character: 'A' };
+    expect(u.character).toBe('A');
   });
 });

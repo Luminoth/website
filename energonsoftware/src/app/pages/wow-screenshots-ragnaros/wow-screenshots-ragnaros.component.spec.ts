@@ -1,20 +1,21 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { WowScreenshotsRagnarosComponent } from './wow-screenshots-ragnaros.component';
+import { WoWScreenshotsRagnarosComponent } from './wow-screenshots-ragnaros.component';
 
-describe('WowScreenshotsRagnarosComponent', () => {
-  let component: WowScreenshotsRagnarosComponent;
-  let fixture: ComponentFixture<WowScreenshotsRagnarosComponent>;
+describe('WoWScreenshotsRagnarosComponent', () => {
+  let component: WoWScreenshotsRagnarosComponent;
+  let fixture: ComponentFixture<WoWScreenshotsRagnarosComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ WowScreenshotsRagnarosComponent ]
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [WoWScreenshotsRagnarosComponent],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(WowScreenshotsRagnarosComponent);
+    fixture = TestBed.createComponent(WoWScreenshotsRagnarosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
