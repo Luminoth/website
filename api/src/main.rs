@@ -1,5 +1,4 @@
 #![deny(warnings)]
-//#![deny(missing_docs)]
 
 mod constants;
 mod error;

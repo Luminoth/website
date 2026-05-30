@@ -4,6 +4,7 @@ use std::net::SocketAddr;
 use axum::extract::ConnectInfo;
 use http::{Request, header::AsHeaderName};
 
+/// Displays an `Option` as its inner value, or `"-"` when `None`.
 // copied from warp's log filter
 pub struct OptFmt<T>(pub Option<T>);
 
@@ -17,6 +18,8 @@ impl<T: fmt::Display> fmt::Display for OptFmt<T> {
     }
 }
 
+/// Returns the value of a request header as a `&str`, or `None` if the header
+/// is absent or contains non-UTF-8 bytes.
 pub fn get_request_header<B, K>(request: &Request<B>, header: K) -> Option<&str>
 where
     K: AsHeaderName,
@@ -42,6 +45,9 @@ fn get_forwarded_for<B>(request: &Request<B>) -> Option<&str> {
     None
 }
 
+/// Returns a `SocketAddr` combining the first IP from `X-Forwarded-For` with
+/// the port from the underlying `ConnectInfo` (or port 0 if unavailable).
+/// Returns `None` if the header is absent or the resulting address fails to parse.
 pub fn get_forwarded_addr<B>(request: &Request<B>) -> Option<SocketAddr> {
     let forwarded_for = get_forwarded_for(request);
     if let Some(forwarded_for) = forwarded_for {

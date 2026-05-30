@@ -8,10 +8,16 @@ use aws_sdk_dynamodb::{
 use dynamodb_expression::Expression;
 use serde::Deserialize;
 
+/// Creates a DynamoDB client from an SDK config.
 pub async fn connect(aws_config: &SdkConfig) -> Client {
     Client::new(aws_config)
 }
 
+/// Fetches a single item by primary key, deserializing it into `item`.
+///
+/// Returns `true` if the item was found and deserialized, `false` if it
+/// does not exist. The `expression` controls projection (which attributes
+/// are returned).
 pub async fn get_item<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -40,6 +46,17 @@ where
     }
 }
 
+/// Batch-fetches items across one or more tables, retrying unprocessed keys.
+///
+/// `request_items` maps each table name to a list of keys and a projection
+/// expression. For each returned item, `item_cb` is called with:
+/// - the table name the item came from
+/// - the raw attribute map
+/// - a deserializer closure — call it with `&mut I` to populate your value
+///
+/// The callback returns `(I, bool)`; returning `true` for the bool halts
+/// iteration early. Unprocessed keys from DynamoDB are automatically retried
+/// until all items have been fetched or the callback signals a stop.
 pub async fn get_items<'a, I>(
     client: &Client,
     mut request_items: HashMap<String, (Vec<HashMap<String, AttributeValue>>, Expression)>,
@@ -108,6 +125,12 @@ where
     Ok(())
 }
 
+/// Shared pagination loop used by all `query*` functions.
+///
+/// Iterates pages of DynamoDB query results, calling `item_cb` for each item
+/// until `limit` items have been processed, the callback returns `stop=true`,
+/// or there are no more pages. Setting `forward=false` reads in descending
+/// sort-key order.
 async fn do_query<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -183,6 +206,11 @@ where
     Ok(())
 }
 
+/// Queries a table in ascending sort-key order, paging automatically.
+///
+/// `item_cb` is called for each item with the raw attribute map and a
+/// deserializer closure. Return `(item, true)` from the callback to stop
+/// early. `limit` caps the total number of items processed across all pages.
 pub async fn query<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -199,6 +227,9 @@ where
     do_query(client, table_name, expression, limit, None, true, item_cb).await
 }
 
+/// Queries a GSI in ascending sort-key order, paging automatically.
+///
+/// Like [`query`] but targets a named global secondary index.
 pub async fn query_index<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -225,6 +256,9 @@ where
     .await
 }
 
+/// Queries a table in descending sort-key order, paging automatically.
+///
+/// Like [`query`] but reads newest-first (descending sort key).
 pub async fn query_descending<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -241,6 +275,9 @@ where
     do_query(client, table_name, expression, limit, None, false, item_cb).await
 }
 
+/// Queries a GSI in descending sort-key order, paging automatically.
+///
+/// Like [`query_index`] but reads newest-first (descending sort key).
 pub async fn query_index_descending<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -267,6 +304,11 @@ where
     .await
 }
 
+/// Shared pagination loop used by all `scan*` functions.
+///
+/// Iterates pages of DynamoDB scan results, calling `item_cb` for each item
+/// until `limit` items have been processed, the callback returns `stop=true`,
+/// or there are no more pages.
 async fn do_scan<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -339,6 +381,11 @@ where
     Ok(())
 }
 
+/// Scans an entire table with an optional filter, paging automatically.
+///
+/// `item_cb` is called for each item with the raw attribute map and a
+/// deserializer closure. Return `(item, true)` from the callback to stop
+/// early. `limit` caps the total number of items processed across all pages.
 pub async fn scan<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
@@ -355,6 +402,9 @@ where
     do_scan(client, table_name, expression, limit, None, item_cb).await
 }
 
+/// Scans a GSI with an optional filter, paging automatically.
+///
+/// Like [`scan`] but targets a named global secondary index.
 pub async fn scan_index<'a, I>(
     client: &Client,
     table_name: impl Into<String>,
