@@ -4,8 +4,8 @@ import {
 } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { inject } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
+import { ResumeComponent } from '../../components/resume/resume.component';
 
 @Component({
   selector: 'app-about',
@@ -13,7 +13,7 @@ import { MatDividerModule } from '@angular/material/divider';
   styleUrls: ['./about.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatExpansionModule, MatDividerModule],
+  imports: [MatDividerModule, ResumeComponent],
 })
 export class AboutComponent implements OnInit {
 
