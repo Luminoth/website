@@ -54,12 +54,28 @@ tasks:
       - cargo update
 
   deploy:
-    desc: Build, push to ECR, and force ECS redeploy
-    deps: [build-image]
+    desc: Build and push to ECR tagged with the current git SHA
     requires:
       vars: [AWS_ACCOUNT]
+    vars:
+      IMAGE_TAG:
+        sh: git rev-parse --short HEAD
     cmds:
+      - |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "Refusing to deploy: working tree has uncommitted changes (the image tag is derived from the git SHA, so it wouldn't reflect what's actually built). Commit or stash first." >&2
+          exit 1
+        fi
+      - task: build-image
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
-      - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
-      - docker push $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:latest
-      - aws ecs update-service --cluster arn:aws:ecs:us-west-2:$AWS_ACCOUNT:cluster/energonsoftware-api --service energonsoftware-api --force-new-deployment > /dev/null
+      - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:{{.IMAGE_TAG}}
+      - docker push $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:{{.IMAGE_TAG}}
+      - |
+        echo ""
+        echo "Pushed energonsoftware-api:{{.IMAGE_TAG}}. Now, in the infrastructure repo:"
+        echo ""
+        echo "  1. Set image_tag = \"{{.IMAGE_TAG}}\" on module \"energonsoftware_api\" in envs/prod/main.tf"
+        echo "  2. git commit -am 'Deploy energonsoftware-api {{.IMAGE_TAG}}'"
+        echo "  3. task prod:plan   # preview"
+        echo "  4. task prod:apply"
+        echo ""
