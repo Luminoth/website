@@ -8,11 +8,16 @@ tasks:
 
   run-docker:
     desc: Build and run the API in Docker
-    deps: [build]
+    deps: [build-image]
     cmds:
       - docker run --rm -it -p 8000:8000 energonsoftware-api
 
   build:
+    desc: Build the API locally (cargo build)
+    cmds:
+      - cargo build
+
+  build-image:
     desc: Build the API Docker image
     silent: true
     cmds:
@@ -50,7 +55,7 @@ tasks:
 
   deploy:
     desc: Build, push to ECR, and force ECS redeploy
-    deps: [build]
+    deps: [build-image]
     requires:
       vars: [AWS_ACCOUNT]
     cmds:
