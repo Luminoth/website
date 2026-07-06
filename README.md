@@ -42,7 +42,8 @@ Run `task` with no arguments to list all tasks.
 |---|---|
 | `task api:run` | Start the API locally via cargo |
 | `task api:run-docker` | Build and run the API in Docker |
-| `task api:build` | Build the API Docker image |
+| `task api:build` | Build the API locally (`cargo build`) |
+| `task api:build-image` | Build the API Docker image |
 | `task api:check` | Fast compile check (`cargo check`) |
 | `task api:lint` | Run Rust linter (`cargo clippy`) |
 | `task api:fmt` | Format Rust source (`cargo fmt`) |

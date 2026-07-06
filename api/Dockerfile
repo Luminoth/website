@@ -25,8 +25,8 @@ RUN rm -rf api/src core/src
 COPY core/src core/src
 COPY api/src api/src
 
-# build app (touch main.rs to ensure rebuild)
-RUN touch api/src/main.rs && cargo install --path api/ --root .
+# build app (touch main.rs/lib.rs to ensure rebuild)
+RUN touch api/src/main.rs core/src/lib.rs && cargo install --path api/ --root .
 
 # stage 2: create image
 FROM alpine:latest

@@ -19,7 +19,8 @@ Taskfile.yml  All build/run/deploy commands
 task ui:init        # npm install for frontend
 task api:run        # cargo run API on :8000
 task ui:run         # ng serve on :4200
-task api:build      # docker buildx build
+task api:build      # cargo build (local)
+task api:build-image # docker buildx build
 task ui:build       # ng build (production)
 task api:check      # cargo check (fast)
 task lint           # cargo clippy + ng lint (parallel)
