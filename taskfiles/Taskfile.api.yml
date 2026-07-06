@@ -60,6 +60,7 @@ tasks:
     vars:
       IMAGE_TAG:
         sh: git rev-parse --short HEAD
+      AWS_REGION: '{{.AWS_REGION | default "us-west-2"}}'
     cmds:
       - |
         if [ -n "$(git status --porcelain)" ]; then
@@ -67,9 +68,9 @@ tasks:
           exit 1
         fi
       - task: build-image
-      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com
-      - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:{{.IMAGE_TAG}}
-      - docker push $AWS_ACCOUNT.dkr.ecr.us-west-2.amazonaws.com/energonsoftware-api:{{.IMAGE_TAG}}
+      - aws ecr get-login-password --region {{.AWS_REGION}} | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.{{.AWS_REGION}}.amazonaws.com
+      - docker tag energonsoftware-api:latest $AWS_ACCOUNT.dkr.ecr.{{.AWS_REGION}}.amazonaws.com/energonsoftware-api:{{.IMAGE_TAG}}
+      - docker push $AWS_ACCOUNT.dkr.ecr.{{.AWS_REGION}}.amazonaws.com/energonsoftware-api:{{.IMAGE_TAG}}
       - |
         echo ""
         echo "Pushed energonsoftware-api:{{.IMAGE_TAG}}. Now, in the infrastructure repo:"
