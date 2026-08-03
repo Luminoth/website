@@ -1,0 +1,113 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write   # required for AWS OIDC
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.filter.outputs.api }}
+      ui: ${{ steps.filter.outputs.ui }}
+      static: ${{ steps.filter.outputs.static }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'api/**'
+              - 'core/**'
+              - 'etc/**'
+              - 'share/**'
+              - 'Cargo.toml'
+              - 'Cargo.lock'
+            ui:
+              - 'energonsoftware/**'
+            static:
+              - 'static/**'
+
+  api:
+    needs: changes
+    if: needs.changes.outputs.api == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.tag.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: tag
+        run: echo "image_tag=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/github_actions_website_deploy
+          aws-region: us-west-2
+
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: api/Dockerfile
+          push: true
+          tags: ${{ steps.ecr.outputs.registry }}/energonsoftware-api:${{ steps.tag.outputs.image_tag }}
+
+      # Cross-repo trigger: default GITHUB_TOKEN can't fire workflows in another
+      # repo, so this uses a PAT/App token stored as a secret here.
+      - uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.INFRA_DISPATCH_TOKEN }}
+          repository: Luminoth/infrastructure
+          event-type: api-image-built
+          client-payload: '{"image_tag": "${{ steps.tag.outputs.image_tag }}"}'
+
+  ui:
+    needs: changes
+    if: needs.changes.outputs.ui == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: energonsoftware
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: energonsoftware/package-lock.json
+
+      - run: npm ci
+      - run: rm -rf dist/ && npx ng build
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/github_actions_website_deploy
+          aws-region: us-west-2
+
+      - run: aws s3 sync dist/energonsoftware/browser s3://energonsoftware-website --delete
+      - run: aws cloudfront create-invalidation --distribution-id ${{ vars.UI_DISTRIBUTION }} --paths "/*"
+
+  static:
+    needs: changes
+    if: needs.changes.outputs.static == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/github_actions_website_deploy
+          aws-region: us-west-2
+
+      - run: aws s3 sync static/ s3://energonsoftware-static --delete
