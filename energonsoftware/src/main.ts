@@ -6,6 +6,9 @@ import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/com
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app-routing.module';
 import { httpInterceptorProviders } from './app/http-interceptors';
+import { initNewRelicBrowserAgent } from './app/new-relic-browser';
+
+initNewRelicBrowserAgent();
 
 bootstrapApplication(AppComponent, {
   providers: [
