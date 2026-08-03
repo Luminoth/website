@@ -17,6 +17,13 @@ console-subscriber = "0.5"
 dotenvy = "0.15"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
 http = "1.4"
+opentelemetry = "0.32"
+opentelemetry-otlp = { version = "0.32", default-features = false, features = [
+    "trace",
+    "http-proto",
+    "reqwest-client",
+] }
+opentelemetry_sdk = "0.32"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 # tracing requires tokio_unstable in .cargo/config.toml
@@ -24,6 +31,7 @@ tokio = { version = "1.52", features = ["full", "tracing"] }
 tower = "0.5"
 tower-http = { version = "0.7", features = ["cors", "trace"] }
 tracing = "0.1"
+tracing-opentelemetry = "0.33"
 tracing-subscriber = "0.3"
 
 [dependencies.energonsoftware]

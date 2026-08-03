@@ -6,6 +6,7 @@ mod handlers;
 mod http_tracing;
 mod models;
 mod options;
+mod otel;
 mod routes;
 mod state;
 mod util;
@@ -18,6 +19,8 @@ use axum::{
     middleware,
 };
 use clap::Parser;
+use opentelemetry::trace::TracerProvider as _;
+use opentelemetry_sdk::trace::SdkTracerProvider;
 use tower::ServiceBuilder;
 use tower_http::{
     LatencyUnit,
@@ -25,19 +28,51 @@ use tower_http::{
     trace::{DefaultMakeSpan, DefaultOnFailure, TraceLayer},
 };
 use tracing::{Level, info, warn};
-use tracing_subscriber::FmtSubscriber;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use options::Options;
 use state::AppState;
 
-fn init_logging() -> anyhow::Result<()> {
-    let subscriber = FmtSubscriber::builder()
-        .with_max_level(Level::INFO)
-        .finish();
+fn init_logging() -> anyhow::Result<Option<SdkTracerProvider>> {
+    let tracer_provider = otel::init_tracer_provider()?;
 
-    tracing::subscriber::set_global_default(subscriber)?;
+    let otel_layer = tracer_provider.as_ref().map(|provider| {
+        tracing_opentelemetry::layer().with_tracer(provider.tracer("energonsoftware-api"))
+    });
 
-    Ok(())
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::filter::LevelFilter::from_level(
+            Level::INFO,
+        ))
+        .with(tracing_subscriber::fmt::layer())
+        .with(otel_layer)
+        .try_init()?;
+
+    Ok(tracer_provider)
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        tokio::signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        () = ctrl_c => {},
+        () = terminate => {},
+    }
 }
 
 pub fn init_cors_layer(options: &Options) -> anyhow::Result<CorsLayer> {
@@ -64,9 +99,10 @@ async fn main() -> anyhow::Result<()> {
 
     // TODO: make this not mutually exclusive
     // we should probably use `tracing_subscriber::registry().with(console_layer).with(fmt_layer).init()` ?
-    if options.tracing {
+    let tracer_provider = if options.tracing {
         println!("Enabling tracing ...");
         console_subscriber::init();
+        None
     } else {
         init_logging()?
     };
@@ -110,7 +146,12 @@ async fn main() -> anyhow::Result<()> {
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
     )
+    .with_graceful_shutdown(shutdown_signal())
     .await?;
+
+    if let Some(provider) = tracer_provider {
+        provider.shutdown()?;
+    }
 
     Ok(())
 }

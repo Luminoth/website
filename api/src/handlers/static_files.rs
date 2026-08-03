@@ -114,12 +114,18 @@ mod tests {
 
     #[test]
     fn unknown_extension_maps_to_octet_stream() {
-        assert_eq!(content_type_from_path("data.bin"), "application/octet-stream");
+        assert_eq!(
+            content_type_from_path("data.bin"),
+            "application/octet-stream"
+        );
     }
 
     #[test]
     fn no_extension_maps_to_octet_stream() {
-        assert_eq!(content_type_from_path("Makefile"), "application/octet-stream");
+        assert_eq!(
+            content_type_from_path("Makefile"),
+            "application/octet-stream"
+        );
     }
 
     #[test]
@@ -130,6 +136,9 @@ mod tests {
 
     #[test]
     fn path_with_directories_uses_final_extension() {
-        assert_eq!(content_type_from_path("images/vacation/photo.jpg"), "image/jpeg");
+        assert_eq!(
+            content_type_from_path("images/vacation/photo.jpg"),
+            "image/jpeg"
+        );
     }
 }
