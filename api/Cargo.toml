@@ -21,7 +21,7 @@ opentelemetry = "0.32"
 opentelemetry-otlp = { version = "0.32", default-features = false, features = [
     "trace",
     "http-proto",
-    "reqwest-client",
+    "reqwest-blocking-client",
 ] }
 opentelemetry_sdk = "0.32"
 serde = { version = "1.0", features = ["derive"] }
