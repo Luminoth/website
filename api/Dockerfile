@@ -32,7 +32,7 @@ RUN touch api/src/main.rs core/src/lib.rs && cargo install --path api/ --root .
 FROM alpine:latest
 
 # install dependencies
-RUN apk add --no-cache libgcc ca-certificates
+RUN apk add --no-cache libgcc ca-certificates wget
 
 RUN adduser -S -D appuser
 

@@ -18,8 +18,11 @@ dotenvy = "0.15"
 dynamodb_expression = { git = "https://github.com/Luminoth/dynamodb_expression" }
 http = "1.4"
 opentelemetry = "0.32"
+opentelemetry-appender-tracing = "0.32"
 opentelemetry-otlp = { version = "0.32", default-features = false, features = [
     "trace",
+    "metrics",
+    "logs",
     "http-proto",
     "reqwest-blocking-client",
     "reqwest-rustls",

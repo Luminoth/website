@@ -20,7 +20,7 @@ use axum::{
 };
 use clap::Parser;
 use opentelemetry::trace::TracerProvider as _;
-use opentelemetry_sdk::trace::SdkTracerProvider;
+use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
 use tower::ServiceBuilder;
 use tower_http::{
     LatencyUnit,
@@ -31,14 +31,18 @@ use tracing::{Level, info, warn};
 use tracing_subscriber::{filter::Targets, layer::SubscriberExt, util::SubscriberInitExt};
 
 use options::Options;
+use otel::{OtelProviders, SERVICE_NAME};
 use state::AppState;
 
-fn init_logging() -> anyhow::Result<Option<SdkTracerProvider>> {
-    let tracer_provider = otel::init_tracer_provider()?;
+fn init_logging() -> anyhow::Result<Option<OtelProviders>> {
+    let providers = otel::init_otel_providers()?;
 
-    let otel_layer = tracer_provider.as_ref().map(|provider| {
-        tracing_opentelemetry::layer().with_tracer(provider.tracer("energonsoftware-api"))
+    let otel_layer = providers.as_ref().map(|providers| {
+        tracing_opentelemetry::layer().with_tracer(providers.tracer_provider.tracer(SERVICE_NAME))
     });
+    let log_layer = providers
+        .as_ref()
+        .map(|providers| OpenTelemetryTracingBridge::new(&providers.logger_provider));
 
     // The AWS SDK crates log credential-chain resolution (including the access key ID)
     // at INFO by default, which is noisier than we want in normal operation.
@@ -50,12 +54,13 @@ fn init_logging() -> anyhow::Result<Option<SdkTracerProvider>> {
         .with(target_filter)
         .with(tracing_subscriber::fmt::layer())
         .with(otel_layer)
+        .with(log_layer)
         .try_init()?;
 
-    if tracer_provider.is_some() {
+    if providers.is_some() {
         info!(
             endpoint = std::env::var("OTEL_EXPORTER_OTLP_ENDPOINT").unwrap_or_default(),
-            "OTel trace exporter configured"
+            "OTel exporters configured"
         );
         if std::env::var("NEW_RELIC_LICENSE_KEY").is_err() {
             warn!("NEW_RELIC_LICENSE_KEY not set, exporting OTLP without an api-key header");
@@ -64,7 +69,7 @@ fn init_logging() -> anyhow::Result<Option<SdkTracerProvider>> {
         info!("OTEL_EXPORTER_OTLP_ENDPOINT not set, skipping OTel exporter setup");
     }
 
-    Ok(tracer_provider)
+    Ok(providers)
 }
 
 async fn shutdown_signal() {
@@ -115,7 +120,7 @@ async fn main() -> anyhow::Result<()> {
 
     // TODO: make this not mutually exclusive
     // we should probably use `tracing_subscriber::registry().with(console_layer).with(fmt_layer).init()` ?
-    let tracer_provider = if options.tracing {
+    let otel_providers = if options.tracing {
         println!("Enabling tracing ...");
         console_subscriber::init();
         None
@@ -161,8 +166,8 @@ async fn main() -> anyhow::Result<()> {
     .with_graceful_shutdown(shutdown_signal())
     .await?;
 
-    if let Some(provider) = tracer_provider {
-        provider.shutdown()?;
+    if let Some(providers) = otel_providers {
+        providers.shutdown()?;
     }
 
     Ok(())

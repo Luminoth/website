@@ -1,12 +1,28 @@
 use std::net::SocketAddr;
 use std::ops::Deref;
+use std::sync::LazyLock;
 use std::time::Instant;
 
-use axum::extract::ConnectInfo;
+use axum::extract::{ConnectInfo, MatchedPath};
 use http::header;
+use opentelemetry::{KeyValue, global, metrics::Histogram};
 use tracing::info;
 
+use crate::otel::{SERVICE_NAME, http_server_request_duration_boundaries};
 use crate::util::{self, OptFmt};
+
+// Per OTel HTTP semantic conventions: http.server.request.duration, unit seconds.
+// This is what New Relic's OTel APM experience uses to build the Summary view
+// (throughput/response time/error rate) - without it only the legacy span view
+// is available, regardless of how much trace data is exported.
+static HTTP_SERVER_REQUEST_DURATION: LazyLock<Histogram<f64>> = LazyLock::new(|| {
+    global::meter(SERVICE_NAME)
+        .f64_histogram("http.server.request.duration")
+        .with_unit("s")
+        .with_description("Duration of HTTP server requests")
+        .with_boundaries(http_server_request_duration_boundaries())
+        .build()
+});
 
 // TODO: if we can get an id into the Span then we can use
 // on_request and on_response instead of tracing_wrapper
@@ -73,6 +89,10 @@ pub async fn tracing_wrapper(
     let method = request.method().clone();
     let uri = request.uri().clone();
     let version = request.version();
+    let route = request
+        .extensions()
+        .get::<MatchedPath>()
+        .map(|matched_path| matched_path.as_str().to_owned());
     let referer = util::get_request_header(&request, header::REFERER).map(str::to_owned);
     let user_agent = util::get_request_header(&request, header::USER_AGENT).map(str::to_owned);
 
@@ -90,6 +110,18 @@ pub async fn tracing_wrapper(
     let now = Instant::now();
     let response = next.run(request).await;
     let elapsed = now.elapsed();
+
+    HTTP_SERVER_REQUEST_DURATION.record(
+        elapsed.as_secs_f64(),
+        &[
+            KeyValue::new("http.request.method", method.as_str().to_owned()),
+            KeyValue::new("http.route", route.unwrap_or_else(|| uri.path().to_owned())),
+            KeyValue::new(
+                "http.response.status_code",
+                response.status().as_u16() as i64,
+            ),
+        ],
+    );
 
     // don't log AWS health check requests
     if !user_agent
