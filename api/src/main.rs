@@ -25,7 +25,7 @@ use tower::ServiceBuilder;
 use tower_http::{
     LatencyUnit,
     cors::CorsLayer,
-    trace::{DefaultMakeSpan, DefaultOnFailure, TraceLayer},
+    trace::{DefaultOnFailure, TraceLayer},
 };
 use tracing::{Level, info, warn};
 use tracing_subscriber::{filter::Targets, layer::SubscriberExt, util::SubscriberInitExt};
@@ -148,7 +148,7 @@ async fn main() -> anyhow::Result<()> {
                 .layer(middleware::from_fn(http_tracing::tracing_wrapper))
                 .layer(
                     TraceLayer::new_for_http()
-                        .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
+                        .make_span_with(http_tracing::make_span)
                         //.on_request(http_tracing::on_request)
                         //.on_response(http_tracing::on_response),
                         .on_failure(DefaultOnFailure::new().latency_unit(LatencyUnit::Micros)),

@@ -6,7 +6,8 @@ use std::time::Instant;
 use axum::extract::{ConnectInfo, MatchedPath};
 use http::header;
 use opentelemetry::{KeyValue, global, metrics::Histogram};
-use tracing::info;
+use tower_http::trace::{DefaultMakeSpan, MakeSpan};
+use tracing::{Level, info};
 
 use crate::otel::{SERVICE_NAME, http_server_request_duration_boundaries};
 use crate::util::{self, OptFmt};
@@ -23,6 +24,22 @@ static HTTP_SERVER_REQUEST_DURATION: LazyLock<Histogram<f64>> = LazyLock::new(||
         .with_boundaries(http_server_request_duration_boundaries())
         .build()
 });
+
+fn is_health_check<B>(request: &http::Request<B>) -> bool {
+    util::get_request_header(request, header::USER_AGENT)
+        .is_some_and(|user_agent| user_agent.contains("HealthChecker"))
+}
+
+/// `MakeSpan` for `TraceLayer`: skips span creation entirely for AWS health
+/// checks (via `Span::none()`) so they don't show up as traces either, on top
+/// of already being excluded from logs and the request duration metric.
+pub fn make_span(request: &axum::extract::Request) -> tracing::Span {
+    if is_health_check(request) {
+        return tracing::Span::none();
+    }
+
+    DefaultMakeSpan::new().level(Level::INFO).make_span(request)
+}
 
 // TODO: if we can get an id into the Span then we can use
 // on_request and on_response instead of tracing_wrapper
@@ -93,6 +110,7 @@ pub async fn tracing_wrapper(
         .extensions()
         .get::<MatchedPath>()
         .map(|matched_path| matched_path.as_str().to_owned());
+    let is_health_check = is_health_check(&request);
     let referer = util::get_request_header(&request, header::REFERER).map(str::to_owned);
     let user_agent = util::get_request_header(&request, header::USER_AGENT).map(str::to_owned);
 
@@ -111,23 +129,20 @@ pub async fn tracing_wrapper(
     let response = next.run(request).await;
     let elapsed = now.elapsed();
 
-    HTTP_SERVER_REQUEST_DURATION.record(
-        elapsed.as_secs_f64(),
-        &[
-            KeyValue::new("http.request.method", method.as_str().to_owned()),
-            KeyValue::new("http.route", route.unwrap_or_else(|| uri.path().to_owned())),
-            KeyValue::new(
-                "http.response.status_code",
-                response.status().as_u16() as i64,
-            ),
-        ],
-    );
+    // don't log or record metrics for AWS health check requests
+    if !is_health_check {
+        HTTP_SERVER_REQUEST_DURATION.record(
+            elapsed.as_secs_f64(),
+            &[
+                KeyValue::new("http.request.method", method.as_str().to_owned()),
+                KeyValue::new("http.route", route.unwrap_or_else(|| uri.path().to_owned())),
+                KeyValue::new(
+                    "http.response.status_code",
+                    response.status().as_u16() as i64,
+                ),
+            ],
+        );
 
-    // don't log AWS health check requests
-    if !user_agent
-        .as_ref()
-        .is_some_and(|user_agent| user_agent.contains("HealthChecker"))
-    {
         info!(
             target: "energonsoftware::api",
             "{}{} \"{} {} {:?}\" {} \"{}\" \"{}\" {:?}",
