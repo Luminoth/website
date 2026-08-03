@@ -28,7 +28,7 @@ use tower_http::{
     trace::{DefaultMakeSpan, DefaultOnFailure, TraceLayer},
 };
 use tracing::{Level, info, warn};
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_subscriber::{filter::Targets, layer::SubscriberExt, util::SubscriberInitExt};
 
 use options::Options;
 use state::AppState;
@@ -40,10 +40,14 @@ fn init_logging() -> anyhow::Result<Option<SdkTracerProvider>> {
         tracing_opentelemetry::layer().with_tracer(provider.tracer("energonsoftware-api"))
     });
 
+    // The AWS SDK crates log credential-chain resolution (including the access key ID)
+    // at INFO by default, which is noisier than we want in normal operation.
+    let target_filter = Targets::new()
+        .with_default(Level::INFO)
+        .with_target("aws", Level::WARN);
+
     tracing_subscriber::registry()
-        .with(tracing_subscriber::filter::LevelFilter::from_level(
-            Level::INFO,
-        ))
+        .with(target_filter)
         .with(tracing_subscriber::fmt::layer())
         .with(otel_layer)
         .try_init()?;
@@ -139,11 +143,7 @@ async fn main() -> anyhow::Result<()> {
                 .layer(middleware::from_fn(http_tracing::tracing_wrapper))
                 .layer(
                     TraceLayer::new_for_http()
-                        .make_span_with(
-                            DefaultMakeSpan::new()
-                                //.level(Level::INFO)
-                                .include_headers(true),
-                        )
+                        .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
                         //.on_request(http_tracing::on_request)
                         //.on_response(http_tracing::on_response),
                         .on_failure(DefaultOnFailure::new().latency_unit(LatencyUnit::Micros)),
