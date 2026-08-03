@@ -12,6 +12,10 @@ const SERVICE_NAME: &str = "energonsoftware-api";
 /// New Relic's OTLP ingest expects the license key as an `api-key` header rather than
 /// the standard `OTEL_EXPORTER_OTLP_HEADERS` env var, so `NEW_RELIC_LICENSE_KEY` is
 /// translated into that header here.
+///
+/// Runs before the tracing subscriber is installed (its result builds the OTel layer
+/// that goes into that subscriber), so it can't log anything itself — the caller logs
+/// the outcome once the subscriber is live.
 pub fn init_tracer_provider() -> anyhow::Result<Option<SdkTracerProvider>> {
     if std::env::var("OTEL_EXPORTER_OTLP_ENDPOINT").is_err() {
         return Ok(None);

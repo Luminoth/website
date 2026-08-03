@@ -48,6 +48,18 @@ fn init_logging() -> anyhow::Result<Option<SdkTracerProvider>> {
         .with(otel_layer)
         .try_init()?;
 
+    if tracer_provider.is_some() {
+        info!(
+            endpoint = std::env::var("OTEL_EXPORTER_OTLP_ENDPOINT").unwrap_or_default(),
+            "OTel trace exporter configured"
+        );
+        if std::env::var("NEW_RELIC_LICENSE_KEY").is_err() {
+            warn!("NEW_RELIC_LICENSE_KEY not set, exporting OTLP without an api-key header");
+        }
+    } else {
+        info!("OTEL_EXPORTER_OTLP_ENDPOINT not set, skipping OTel exporter setup");
+    }
+
     Ok(tracer_provider)
 }
 
