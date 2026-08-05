@@ -167,6 +167,8 @@ async fn main() -> anyhow::Result<()> {
     .with_graceful_shutdown(shutdown_signal())
     .await?;
 
+    info!("Shutting down ...");
+
     if let Some(providers) = otel_providers {
         // shutdown() makes blocking network calls to flush pending telemetry;
         // bound it so a slow/unreachable collector can't hold up container
