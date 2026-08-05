@@ -170,6 +170,8 @@ async fn main() -> anyhow::Result<()> {
     info!("Shutting down ...");
 
     if let Some(providers) = otel_providers {
+        info!("Waiting for Otel providers to shut down ...");
+
         // shutdown() makes blocking network calls to flush pending telemetry;
         // bound it so a slow/unreachable collector can't hold up container
         // teardown past the ECS stop timeout
