@@ -11,6 +11,7 @@ mod routes;
 mod state;
 mod util;
 
+use std::io::IsTerminal;
 use std::net::SocketAddr;
 
 use axum::{
@@ -52,7 +53,7 @@ fn init_logging() -> anyhow::Result<Option<OtelProviders>> {
 
     tracing_subscriber::registry()
         .with(target_filter)
-        .with(tracing_subscriber::fmt::layer())
+        .with(tracing_subscriber::fmt::layer().with_ansi(std::io::stdout().is_terminal()))
         .with(otel_layer)
         .with(log_layer)
         .try_init()?;
@@ -167,7 +168,16 @@ async fn main() -> anyhow::Result<()> {
     .await?;
 
     if let Some(providers) = otel_providers {
-        providers.shutdown()?;
+        // shutdown() makes blocking network calls to flush pending telemetry;
+        // bound it so a slow/unreachable collector can't hold up container
+        // teardown past the ECS stop timeout
+        let shutdown = tokio::task::spawn_blocking(move || providers.shutdown());
+        match tokio::time::timeout(std::time::Duration::from_secs(15), shutdown).await {
+            Ok(Ok(Ok(()))) => {}
+            Ok(Ok(Err(err))) => warn!("Failed to shut down OTel providers: {err}"),
+            Ok(Err(err)) => warn!("OTel shutdown task panicked: {err}"),
+            Err(_) => warn!("Timed out shutting down OTel providers"),
+        }
     }
 
     Ok(())
