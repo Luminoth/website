@@ -14,9 +14,8 @@ pub fn init_routes(app: Router<AppState>) -> Router<AppState> {
     info!("Initializing routes...");
 
     let app = app
-        // TODO: is there a cleaner way to do this?
-        // it's needed for the ELB health checks
-        .route("/", get(|| async {}))
+        // used for the ELB and ECS health checks
+        .route("/healthz", get(|| async {}))
         .route("/status", get(handlers::get_status));
 
     // TODO: this is ugly

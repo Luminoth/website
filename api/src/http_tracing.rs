@@ -26,8 +26,7 @@ static HTTP_SERVER_REQUEST_DURATION: LazyLock<Histogram<f64>> = LazyLock::new(||
 });
 
 fn is_health_check<B>(request: &http::Request<B>) -> bool {
-    util::get_request_header(request, header::USER_AGENT)
-        .is_some_and(|user_agent| user_agent.contains("HealthChecker"))
+    request.uri().path() == "/healthz"
 }
 
 /// `MakeSpan` for `TraceLayer`: skips span creation entirely for AWS health
@@ -60,10 +59,7 @@ pub fn on_request<B>(request: &http::Request<B>, span: &tracing::Span) {
     let user_agent = util::get_request_header(request, header::USER_AGENT);
 
     // don't log AWS health check requests
-    if !user_agent
-        .as_ref()
-        .is_some_and(|user_agent| user_agent.contains("HealthChecker"))
-    {
+    if !is_health_check(request) {
         info!(
             target: "energonsoftware::api",
             "req:{} {}{} \"{} {} {:?}\" \"{}\" \"{}\"",
