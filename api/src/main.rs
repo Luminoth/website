@@ -22,7 +22,7 @@ use axum::{
 };
 use clap::Parser;
 use opentelemetry::trace::TracerProvider as _;
-use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
+use opentelemetry_appender_tracing::layer::{OpenTelemetryTracingBridge, TracingSpanAttributes};
 use tower::ServiceBuilder;
 use tower_http::{
     cors::CorsLayer,
@@ -41,9 +41,18 @@ fn init_logging() -> anyhow::Result<Option<OtelProviders>> {
     let otel_layer = providers.as_ref().map(|providers| {
         tracing_opentelemetry::layer().with_tracer(providers.tracer_provider.tracer(SERVICE_NAME))
     });
-    let log_layer = providers
-        .as_ref()
-        .map(|providers| OpenTelemetryTracingBridge::new(&providers.logger_provider));
+    // Copies fields from the enclosing tracing span (e.g. the "request" span
+    // in http_tracing.rs - method, uri, remote_addr, ...) onto every log
+    // record emitted within it. Without this, `DefaultOnRequest`/
+    // `DefaultOnResponse`'s bare "started processing request"/"finished
+    // processing request" events would ship to New Relic with none of that
+    // context, since the OTel log bridge only reads an event's own fields by
+    // default.
+    let log_layer = providers.as_ref().map(|providers| {
+        OpenTelemetryTracingBridge::builder(&providers.logger_provider)
+            .with_tracing_span_attributes(TracingSpanAttributes::all())
+            .build()
+    });
 
     // The AWS SDK crates log credential-chain resolution (including the access key ID)
     // at INFO by default, which is noisier than we want in normal operation.
