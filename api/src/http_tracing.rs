@@ -6,8 +6,6 @@ use std::time::Instant;
 use axum::extract::{ConnectInfo, MatchedPath};
 use http::header;
 use opentelemetry::{KeyValue, global, metrics::Histogram};
-use tower_http::trace::{DefaultMakeSpan, MakeSpan};
-use tracing::{Level, info};
 
 use crate::otel::{SERVICE_NAME, http_server_request_duration_boundaries};
 use crate::util::{self, OptFmt};
@@ -29,130 +27,82 @@ fn is_health_check<B>(request: &http::Request<B>) -> bool {
     request.uri().path() == "/healthz"
 }
 
+/// Resolves the requester's address for the request span, plus how it was
+/// resolved: `"x-forwarded-for"` when the header supplied it (production,
+/// behind the load balancer), `"socket"` when falling back to the raw TCP
+/// peer via `ConnectInfo` (local/direct connections).
+fn remote_addr<B>(request: &http::Request<B>) -> (Option<SocketAddr>, &'static str) {
+    if let Some(addr) = util::get_forwarded_addr(request) {
+        return (Some(addr), "x-forwarded-for");
+    }
+
+    let addr = request
+        .extensions()
+        .get::<ConnectInfo<SocketAddr>>()
+        .map(|x| x.deref())
+        .copied();
+    (addr, "socket")
+}
+
 /// `MakeSpan` for `TraceLayer`: skips span creation entirely for AWS health
-/// checks (via `Span::none()`) so they don't show up as traces either, on top
-/// of already being excluded from logs and the request duration metric.
+/// checks (via `Span::none()`) so they don't show up as logs or traces
+/// either, and carries the request's identifying fields (method, URI,
+/// remote address, referer, user agent) on the span itself so `TraceLayer`'s
+/// own request/response log lines get them for free, instead of each log
+/// call site formatting its own copy.
 pub fn make_span(request: &axum::extract::Request) -> tracing::Span {
     if is_health_check(request) {
         return tracing::Span::none();
     }
 
-    DefaultMakeSpan::new().level(Level::INFO).make_span(request)
+    let (remote_addr, remote_addr_source) = remote_addr(request);
+
+    tracing::info_span!(
+        "request",
+        method = %request.method(),
+        uri = %request.uri(),
+        version = ?request.version(),
+        remote_addr = %OptFmt(remote_addr),
+        remote_addr_source,
+        referer = %OptFmt(util::get_request_header(request, header::REFERER)),
+        user_agent = %OptFmt(util::get_request_header(request, header::USER_AGENT)),
+    )
 }
 
-// TODO: if we can get an id into the Span then we can use
-// on_request and on_response instead of tracing_wrapper
-
-#[allow(dead_code)]
-pub fn on_request<B>(request: &http::Request<B>, span: &tracing::Span) {
-    let mut forwarded = true;
-    let mut remote_addr = util::get_forwarded_addr(request);
-    if remote_addr.is_none() {
-        remote_addr = request
-            .extensions()
-            .get::<ConnectInfo<SocketAddr>>()
-            .map(|x| x.deref())
-            .copied();
-        forwarded = false;
-    }
-
-    let user_agent = util::get_request_header(request, header::USER_AGENT);
-
-    // don't log AWS health check requests
-    if !is_health_check(request) {
-        info!(
-            target: "energonsoftware::api",
-            "req:{} {}{} \"{} {} {:?}\" \"{}\" \"{}\"",
-            OptFmt(span.id().map(|x| x.into_u64())),
-            OptFmt(remote_addr),
-            if forwarded { " (forwarded)" } else { "" },
-            request.method(),
-            request.uri(),
-            request.version(),
-            OptFmt(util::get_request_header(request, header::REFERER)),
-            OptFmt(user_agent),
-        );
-    }
-}
-
-#[allow(dead_code)]
-pub fn on_response<B>(
-    response: &http::Response<B>,
-    latency: std::time::Duration,
-    span: &tracing::Span,
-) {
-    // TODO: need to not log if the User-Agent is the health checker
-
-    info!(
-        target: "energonsoftware::api",
-        "req:{} {} {:?}",
-        OptFmt(span.id().map(|x| x.into_u64())),
-        response.status().as_u16(),
-        latency,
-    );
-}
-
-// using this instead of TraceLayer
-// because I want to log everything about the
-// request / response together
-pub async fn tracing_wrapper(
+/// Records the `http.server.request.duration` OTel metric. Kept separate
+/// from `make_span`/`TraceLayer` because metrics and logs are independent
+/// pipelines with independent exporters (see `otel.rs`) - this only touches
+/// the former. Skips AWS health checks, same as `make_span`, so they don't
+/// pollute the metric either.
+pub async fn record_request_duration(
     request: axum::extract::Request,
     next: axum::middleware::Next,
-) -> Result<impl axum::response::IntoResponse, axum::response::Response> {
+) -> impl axum::response::IntoResponse {
+    if is_health_check(&request) {
+        return next.run(request).await;
+    }
+
     let method = request.method().clone();
-    let uri = request.uri().clone();
-    let version = request.version();
     let route = request
         .extensions()
         .get::<MatchedPath>()
-        .map(|matched_path| matched_path.as_str().to_owned());
-    let is_health_check = is_health_check(&request);
-    let referer = util::get_request_header(&request, header::REFERER).map(str::to_owned);
-    let user_agent = util::get_request_header(&request, header::USER_AGENT).map(str::to_owned);
+        .map(|matched_path| matched_path.as_str().to_owned())
+        .unwrap_or_else(|| request.uri().path().to_owned());
 
-    let mut forwarded = true;
-    let mut remote_addr = util::get_forwarded_addr(&request);
-    if remote_addr.is_none() {
-        remote_addr = request
-            .extensions()
-            .get::<ConnectInfo<SocketAddr>>()
-            .map(|x| x.deref())
-            .copied();
-        forwarded = false;
-    }
-
-    let now = Instant::now();
+    let start = Instant::now();
     let response = next.run(request).await;
-    let elapsed = now.elapsed();
 
-    // don't log or record metrics for AWS health check requests
-    if !is_health_check {
-        HTTP_SERVER_REQUEST_DURATION.record(
-            elapsed.as_secs_f64(),
-            &[
-                KeyValue::new("http.request.method", method.as_str().to_owned()),
-                KeyValue::new("http.route", route.unwrap_or_else(|| uri.path().to_owned())),
-                KeyValue::new(
-                    "http.response.status_code",
-                    response.status().as_u16() as i64,
-                ),
-            ],
-        );
+    HTTP_SERVER_REQUEST_DURATION.record(
+        start.elapsed().as_secs_f64(),
+        &[
+            KeyValue::new("http.request.method", method.as_str().to_owned()),
+            KeyValue::new("http.route", route),
+            KeyValue::new(
+                "http.response.status_code",
+                response.status().as_u16() as i64,
+            ),
+        ],
+    );
 
-        info!(
-            target: "energonsoftware::api",
-            "{}{} \"{} {} {:?}\" {} \"{}\" \"{}\" {:?}",
-            OptFmt(remote_addr),
-            if forwarded { " (forwarded)" } else { "" },
-            method,
-            uri,
-            version,
-            response.status().as_u16(),
-            OptFmt(referer),
-            OptFmt(user_agent),
-            elapsed,
-        );
-    }
-
-    Ok(response)
+    response
 }

@@ -24,9 +24,8 @@ use opentelemetry::trace::TracerProvider as _;
 use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
 use tower::ServiceBuilder;
 use tower_http::{
-    LatencyUnit,
     cors::CorsLayer,
-    trace::{DefaultOnFailure, TraceLayer},
+    trace::{DefaultOnFailure, DefaultOnRequest, DefaultOnResponse, TraceLayer},
 };
 use tracing::{Level, info, warn};
 use tracing_subscriber::{filter::Targets, layer::SubscriberExt, util::SubscriberInitExt};
@@ -148,13 +147,13 @@ async fn main() -> anyhow::Result<()> {
         .layer(init_cors_layer(&app_state.options)?)
         .layer(
             ServiceBuilder::new()
-                .layer(middleware::from_fn(http_tracing::tracing_wrapper))
+                .layer(middleware::from_fn(http_tracing::record_request_duration))
                 .layer(
                     TraceLayer::new_for_http()
                         .make_span_with(http_tracing::make_span)
-                        //.on_request(http_tracing::on_request)
-                        //.on_response(http_tracing::on_response),
-                        .on_failure(DefaultOnFailure::new().latency_unit(LatencyUnit::Micros)),
+                        .on_request(DefaultOnRequest::new().level(Level::INFO))
+                        .on_response(DefaultOnResponse::new().level(Level::INFO))
+                        .on_failure(DefaultOnFailure::new()),
                 )
                 .into_inner(),
         )
