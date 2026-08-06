@@ -95,6 +95,8 @@ async fn shutdown_signal() {
         () = ctrl_c => {},
         () = terminate => {},
     }
+
+    info!("Shutdown signal received ...");
 }
 
 pub fn init_cors_layer(options: &Options) -> anyhow::Result<CorsLayer> {
@@ -167,8 +169,6 @@ async fn main() -> anyhow::Result<()> {
     .with_graceful_shutdown(shutdown_signal())
     .await?;
 
-    info!("Shutting down ...");
-
     if let Some(providers) = otel_providers {
         info!("Waiting for Otel providers to shut down ...");
 
@@ -183,6 +183,8 @@ async fn main() -> anyhow::Result<()> {
             Err(_) => warn!("Timed out shutting down OTel providers"),
         }
     }
+
+    info!("Shutdown complete, exiting");
 
     Ok(())
 }
