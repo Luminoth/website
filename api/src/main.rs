@@ -18,6 +18,7 @@ use axum::{
     Router,
     http::{HeaderValue, Method},
     middleware,
+    routing::get,
 };
 use clap::Parser;
 use opentelemetry::trace::TracerProvider as _;
@@ -143,7 +144,7 @@ async fn main() -> anyhow::Result<()> {
         .parse::<SocketAddr>()
         .unwrap_or_else(|_| panic!("Invalid address: {}", app_state.options.address()));
 
-    let app = routes::init_routes(Router::new())
+    let traced = routes::init_routes(Router::new())
         .layer(init_cors_layer(&app_state.options)?)
         .layer(
             ServiceBuilder::new()
@@ -156,7 +157,14 @@ async fn main() -> anyhow::Result<()> {
                         .on_failure(DefaultOnFailure::new()),
                 )
                 .into_inner(),
-        )
+        );
+
+    // Merged in outside `traced` so ELB/ECS health checks never pass through
+    // CORS or the tracing/metrics layers at all, rather than relying on
+    // those layers to recognize and suppress them after the fact.
+    let app = Router::new()
+        .route("/healthz", get(|| async {}))
+        .merge(traced)
         .with_state(app_state.clone());
 
     info!("Listening on {}", addr);

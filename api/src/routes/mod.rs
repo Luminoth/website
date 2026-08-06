@@ -13,10 +13,11 @@ use crate::state::AppState;
 pub fn init_routes(app: Router<AppState>) -> Router<AppState> {
     info!("Initializing routes...");
 
-    let app = app
-        // used for the ELB and ECS health checks
-        .route("/healthz", get(|| async {}))
-        .route("/status", get(handlers::get_status));
+    // /healthz is deliberately not registered here: it's merged in by
+    // main.rs outside the CORS/tracing layers, so ELB/ECS health checks
+    // bypass them entirely instead of relying on the tracing layer to
+    // recognize and suppress them.
+    let app = app.route("/status", get(handlers::get_status));
 
     // TODO: this is ugly
     let app = downloads::init_routes(app);

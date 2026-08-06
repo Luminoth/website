@@ -23,10 +23,6 @@ static HTTP_SERVER_REQUEST_DURATION: LazyLock<Histogram<f64>> = LazyLock::new(||
         .build()
 });
 
-fn is_health_check<B>(request: &http::Request<B>) -> bool {
-    request.uri().path() == "/healthz"
-}
-
 /// Resolves the requester's address for the request span, plus how it was
 /// resolved: `"x-forwarded-for"` when the header supplied it (production,
 /// behind the load balancer), `"socket"` when falling back to the raw TCP
@@ -44,17 +40,13 @@ fn remote_addr<B>(request: &http::Request<B>) -> (Option<SocketAddr>, &'static s
     (addr, "socket")
 }
 
-/// `MakeSpan` for `TraceLayer`: skips span creation entirely for AWS health
-/// checks (via `Span::none()`) so they don't show up as logs or traces
-/// either, and carries the request's identifying fields (method, URI,
-/// remote address, referer, user agent) on the span itself so `TraceLayer`'s
-/// own request/response log lines get them for free, instead of each log
-/// call site formatting its own copy.
+/// `MakeSpan` for `TraceLayer`: carries the request's identifying fields
+/// (method, URI, remote address, referer, user agent) on the span itself so
+/// `TraceLayer`'s own request/response log lines get them for free, instead
+/// of each log call site formatting its own copy. AWS health checks never
+/// reach this — `main.rs` merges `/healthz` in outside the layer that calls
+/// this, rather than filtering it out here.
 pub fn make_span(request: &axum::extract::Request) -> tracing::Span {
-    if is_health_check(request) {
-        return tracing::Span::none();
-    }
-
     let (remote_addr, remote_addr_source) = remote_addr(request);
 
     tracing::info_span!(
@@ -72,16 +64,11 @@ pub fn make_span(request: &axum::extract::Request) -> tracing::Span {
 /// Records the `http.server.request.duration` OTel metric. Kept separate
 /// from `make_span`/`TraceLayer` because metrics and logs are independent
 /// pipelines with independent exporters (see `otel.rs`) - this only touches
-/// the former. Skips AWS health checks, same as `make_span`, so they don't
-/// pollute the metric either.
+/// the former. Like `make_span`, AWS health checks never reach this.
 pub async fn record_request_duration(
     request: axum::extract::Request,
     next: axum::middleware::Next,
 ) -> impl axum::response::IntoResponse {
-    if is_health_check(&request) {
-        return next.run(request).await;
-    }
-
     let method = request.method().clone();
     let route = request
         .extensions()
